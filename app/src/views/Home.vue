@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/goedgebekt-logo.png">
+    <img alt="Vue logo" src="../assets/goedgebekt-logo.jpg">
     <HelloWorld msg="Welcome to Good Snogged"/>
   </div>
 </template>

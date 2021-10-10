@@ -1,16 +1,28 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <h2 v-if="loading">Loading...</h2>
+    <ul>
+      <li v-for="(member, index) in members" :key="index">{{ member.firstName }}</li>
+    </ul>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useQuery, useResult } from '@vue/apollo-composable';
+import testQuery from '@/apollo/queries/testQuery';
 
 export default defineComponent({
   name: 'HelloWorld',
   props: {
     msg: String,
+  },
+  setup() {
+    const { result, loading } = useQuery(testQuery);
+    const members = useResult(result, null, (data) => data.memberCollection.items);
+    console.log(members);
+    return { loading, members };
   },
 });
 </script>

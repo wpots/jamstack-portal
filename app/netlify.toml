@@ -1,0 +1,8 @@
+# docs https://docs.netlify.com/configure-builds/file-based-configuration/#sample-file
+[[redirects]]
+  from = "/api/v1/content"
+  to = "/.netlify/functions/contentful"
+  status = 200
+
+[functions]
+  node_bundler = "esbuild"

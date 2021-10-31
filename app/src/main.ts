@@ -8,6 +8,7 @@ import store from './store';
 import './assets/styles/main.scss';
 
 /* PLUGINS IMPORT */
-import './composable/progressiveMedia';
+import lazyload from './plugins/lazyload';
 
-createApp(App).use(store).use(router).mount('#app');
+createApp(App).use(store).use(router).use(lazyload)
+  .mount('#app');

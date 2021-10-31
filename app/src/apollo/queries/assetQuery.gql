@@ -1,0 +1,6 @@
+query GetAsset($id: String!) {
+  asset(id: $id) {
+    url
+    title
+  }
+}

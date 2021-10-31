@@ -1,7 +1,12 @@
 <template>
   <a class="notes--bubbly js-notes" data-scroll href="#het-koor">
     <span class="sr-only">read more</span>
-    <svg class="animated infinite fadeInUp fadeOutUp" width="12" height="33" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="animated infinite fadeInUp fadeOutUp"
+      width="12"
+      height="33"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         class="note"
         id="svg_5"
@@ -13,7 +18,12 @@
       />
     </svg>
     <br />
-    <svg class="animated infinite fadeInUp fadeOutUp" width="12" height="33" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="animated infinite fadeInUp fadeOutUp"
+      width="12"
+      height="33"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         class="note"
         id="svg_5"
@@ -24,7 +34,12 @@
       />
     </svg>
 
-    <svg class="animated infinite fadeInUp fadeOutUp" width="22" height="33" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="animated infinite fadeInUp fadeOutUp"
+      width="22"
+      height="33"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         class="note"
         id="svg_4"
@@ -38,7 +53,12 @@
       />
     </svg>
     <br />
-    <svg class="animated infinite fadeInUp fadeOutUp" width="12" height="33" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="animated infinite fadeInUp fadeOutUp"
+      width="12"
+      height="33"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         class="note"
         id="svg_5"
@@ -50,7 +70,12 @@
       />
     </svg>
 
-    <svg class="animated infinite fadeInUp fadeOutUp" width="22" height="33" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="animated infinite fadeInUp fadeOutUp"
+      width="22"
+      height="33"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         class="note"
         id="svg_4"
@@ -64,7 +89,12 @@
       />
     </svg>
     <br />
-    <svg class="animated infinite fadeInUp fadeOutUp" width="12" height="33" xmlns="http://www.w3.org/2000/svg">
+    <svg
+      class="animated infinite fadeInUp fadeOutUp"
+      width="12"
+      height="33"
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <path
         class="note"
         id="svg_5"
@@ -79,9 +109,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'; //
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'PageLoader',
+  name: 'Loader',
 });
 </script>

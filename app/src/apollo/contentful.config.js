@@ -17,3 +17,5 @@ const apolloClient = new ApolloClient({
 });
 
 export default apolloClient;
+
+/* run netlify dev to debug locally */

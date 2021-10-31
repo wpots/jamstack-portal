@@ -39,7 +39,6 @@ export default defineComponent({
   setup() {
     const { result, loading } = useQuery(testQuery);
     const members = useResult(result, null, (data) => data.memberCollection.items);
-    console.log(members);
     return { loading, members };
   },
 });

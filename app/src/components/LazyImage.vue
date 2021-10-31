@@ -9,30 +9,42 @@
       />
 
       <img
-        :class="imageClasses"
-        :src="getImageInFormat(20)"
-        :sizes="sizes"
-        :data-src="getImageInFormat(2020)"
-        :data-srcset="getImageSrcSet('jpg')"
+        :class="imgClasses"
+        :src="media.landscape.src"
+        :sizes="media.landscape.sizes"
+        :data-src="media.landscape.src"
+        :data-srcset="getSrcset"
         loading="lazy"
-        :alt="alt"
-      />
+        :alt="media.landscape.alt"
       />
     </picture>
   </figure>
 </template>
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import MediaInterface from '@/interfaces/MediaInterface';
+import { defineComponent, PropType, computed } from 'vue';
+
+interface ImageInterface {
+  src: string;
+  srcset: [number];
+  sizes?: string;
+  alt?: string;
+}
+
+interface MediaInterface {
+  landscape: ImageInterface;
+  portrait?: ImageInterface;
+}
 
 export default defineComponent({
   name: 'LazyImage',
+  inject: ['lazyload'],
   props: {
     media: {
       type: Object as PropType<MediaInterface>,
-      default() {
+      default(this: void) {
         return {
           portrait: {
+            srcset: [300, 768, 1024, 3108],
             src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg',
           },
           landscape: {
@@ -45,15 +57,14 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const getSrcset = () => {
+    const imgClasses = 'top-right or whatever';
+    const getSrcset = computed(() => {
       const srcsetSizes = props.media.landscape.srcset.map(
-        /* e.g: http://test.com/my-image@360.jpeg 480w, */
-        // width => `${props.src}@${width}.${format} ${width}w`,
-        (width) => `${props.media.landscape.src}?auto=webp&format=pjpg&width${width} ${width}w`,
+        (width) => `${props.media.landscape.src}?width${width} ${width}w`,
       );
       return srcsetSizes.join(',');
-    };
-    return { getSrcset };
+    });
+    return { getSrcset, imgClasses };
   },
 });
 </script>

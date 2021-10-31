@@ -1,0 +1,115 @@
+.form-group {
+  position: relative;
+  margin: 20px;
+  min-height: 50px;
+
+  label {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    color: $gray;
+    font-size: 1em;
+    font-weight: 300;
+    text-transform: uppercase;
+    line-height: 4;
+    pointer-events: none;
+    transition: .2s ease-out;
+  }
+
+%reset-form {
+  appearance: none;
+  border: none;
+  border-radius: 0;
+  outline: none;
+}
+
+input {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: $smoke;
+  border-bottom: 1px solid $gray;
+
+  &:not([type="submit"]):focus, &:not([type="submit"]).ready {
+    height: calc(100% - 25px);
+    background: $smoke;
+    border-bottom: 1px solid $magenta; 
+  }
+ }
+
+ textarea {
+  width: 100%;
+  max-height: 200px;
+  padding-top: 50px;
+  background: $smoke;
+  border-bottom: 1px solid $gray;
+
+  &:focus {
+    background: $smoke;
+    border-bottom: 1px solid $magenta;
+  }
+
+  &:focus, &.ready {
+    padding-top: 25px;
+  }
+ }
+
+  input, textarea {
+    @extend %reset-form;
+
+    &:focus, &.ready {
+
+      & ~ label {
+        color: $magenta;
+        font-size: .7em;
+        line-height: 2;
+      }
+    }
+  }
+}
+
+.wpcf7-form-control-wrap {
+
+  & + br {
+    display: none;
+     + label {
+      position: relative;
+     }
+  }
+  select {
+
+  }
+}
+
+input[type="submit"] {
+  max-width: 200px;
+  text-transform: uppercase;
+  color: $white;
+  background: $magenta;
+  border: 0;
+  border-radius: 2px;
+  transition: .2s ease-in-out;
+  
+  &:hover {
+   
+  }
+}
+
+// contact form 7 styling
+.wpcf7 {
+  padding: 10px 0 !important;
+  @extend %card-look;
+
+}
+span.wpcf7-not-valid-tip {
+  color: $gray;
+  font-style: italic;
+  font-size: .6em;
+}
+div.wpcf7-validation-errors {
+  color: $gray;
+  font-style: italic;
+  border: 2px solid $magenta;
+}

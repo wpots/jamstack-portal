@@ -1,0 +1,6 @@
+{
+  "eslint.format.enable": false,
+  "prettier.trailingComma": "all",
+  "prettier.proseWrap": "always",
+  "prettier.printWidth": 100
+}

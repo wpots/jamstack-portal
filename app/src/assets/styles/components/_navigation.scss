@@ -1,0 +1,69 @@
+.nav--split {
+  display: flex;
+  flex-flow: row nowrap;
+  align-content: center;
+  font-family: $font-fam-nav;
+  font-weight: 700;
+  text-transform: uppercase;
+
+  .brand {
+    margin: auto;
+  }
+
+  ul {
+    display: inline;
+    margin: 10px auto;
+    padding: 0;
+    text-align: left;
+    
+    @include media-breakpoint-up(sm) {
+      margin: auto;
+      text-align: center;
+      
+    }
+
+
+    li {
+      display: block;
+      margin: 20px auto;
+      padding: 0 $banner-size-small;
+      height: $banner-size-small;
+      line-height: $banner-size-small;
+
+      @include media-breakpoint-up(sm) {
+        display: inline-block;
+        margin: 0;
+        padding: 0;
+        height: auto;
+        line-height: 1.6;    
+      }
+    }
+  }
+
+  li {
+    & + li {
+      @include media-breakpoint-up(sm) {
+        margin-left: 20px!important; //override more specific nav ul li        
+      }
+
+    }  
+  }
+}
+
+
+.nav--toggle {
+
+  button {
+    position: absolute;
+    left: 0;
+
+    @include media-breakpoint-up(sm) {
+      display: none;
+    }
+
+    & + button {
+      right: 0;
+      left: auto;
+    }
+  }
+}

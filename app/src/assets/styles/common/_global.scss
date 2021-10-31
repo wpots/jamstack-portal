@@ -1,0 +1,114 @@
+html {
+  position: relative;
+}
+body {
+
+
+    h1,h2,h3 {
+    font-weight: 700;
+    font-family: $font-fam-heading;
+    hyphens: auto;
+  }
+
+  p {
+    margin-top: 0;
+    font-family: $font-fam-body;
+  }
+
+  a {
+    color: currentColor;
+
+    &:focus {
+      text-decoration: none;
+
+    }
+  }
+}
+
+.brand {
+
+  .banner & {
+    height: $banner-size;
+    margin-top: 10px;
+    z-index: 1;
+    order: -1;
+
+    .header--floating & {
+
+      @include media-breakpoint-up(sm) {
+        width: 100%;
+        height: 100%;
+        width: auto;
+      }
+    }
+
+    @include media-breakpoint-up(sm) {
+      width: auto;
+      order: initial;    
+    }
+  }
+}
+.page-header {
+  width: 100%;
+}
+
+h1 {
+  .flex-box & {
+    margin: 0 0 1.2em 0;
+    @include media-breakpoint-down(sm) {
+      text-align: center;
+    }
+  }
+}
+//svg 
+.logo {
+    overflow: visible!important;
+    transform: scale(.8);
+
+    @include media-breakpoint-up(sm) {
+      height: 115px;
+      transform: scale(1) translateY(22px);//magic number, want the music note sticking out, cute!
+    }
+
+    .header--floating & {
+
+      @include media-breakpoint-up(sm) {
+        transform: scale(1) translateY(22px);
+    }
+
+    }
+}
+//mousemove animated elements
+.anm {
+  transition: all .3s ease;
+}
+
+.flex-box {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.section--template-intro {
+  padding-top: 0!important;
+}
+
+.wp-editor-content {
+    
+}
+ .fp-section:not(.section--home) {
+  height: auto!important;
+}
+
+.text--modest {
+  font-size: .8em;
+  font-style: italic;
+  opacity: .7;
+
+  a {
+    text-decoration: underline;
+    
+    &:hover {
+      text-decoration: none;
+    }
+  }
+}

@@ -1,0 +1,105 @@
+//keep aspect ratio
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+
+  &:before {
+    display: block;
+    content: '';
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    &.row {
+      margin: 0;
+    }
+  }
+}
+@mixin increase-delay($type: animation) {
+  @for $i from 1 to 10 {
+    &:nth-child(#{$i}) {
+      #{$type}-delay: $i * 0.1s;
+    }
+  }
+}
+
+%reset-ul {
+  padding: 0;
+  list-style-type: none;
+
+  li {
+    margin: 0;
+
+    a {
+      text-decoration: none;
+    }
+  }
+}
+
+.a--block {
+  display: block;
+}
+
+@mixin flex-fix($direction: 'row') {
+  display: flex;
+  display: -webkit-flex;
+  flex-flow: $direction wrap;
+  -webkit-flex-flow: $direction wrap;
+}
+
+.flex--space {
+  @include flex-fix();
+  align-content: space-between;
+
+  > * {
+    width: 100%;
+  }
+}
+
+.flex--around {
+  @include flex-fix();
+  align-content: space-around;
+  align-items: center;
+  padding: 0;
+
+  > * {
+    width: 100%;
+  }
+}
+
+.pull-up {
+  @include media-breakpoint-down(xs) {
+    order: -1;
+  }
+}
+
+.padless {
+  padding: 2px;
+
+  @include media-breakpoint-up(sm) {
+    padding: 0;
+  }
+}
+
+%card-look {
+  background: $smoke;
+  box-shadow: 1px 1px 1px rgba($black, 0.2);
+  border-radius: 2px;
+}
+
+@mixin object-fit($fit: cover, $pos: center) {
+  object-fit: $fit;
+  object-position: $pos;
+  /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
+  font-family: 'object-fit: #{$fit}; object-position: #{$pos}'; /* for polyfill object-fit-images */
+}
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}

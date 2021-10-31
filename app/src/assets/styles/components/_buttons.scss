@@ -1,0 +1,202 @@
+//reset
+.btn {
+  appearance: none;
+  padding: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+
+  &:focus, &:active {
+    outline: none;
+  }
+
+  .section & {
+      padding: .8rem 1.2rem;
+      border-radius: 2px;
+  }
+}
+
+//shapes
+
+.btn--square {
+  width: $button-height;
+  height: $button-height;
+}
+
+.btn--pink {
+  color: $white;
+  background: $magenta;
+
+  &.focus {
+    color: $black;
+    background: $smoke;
+    transition: .3s ease;
+  }
+
+  &:hover, &:focus, &:active {
+    color: $white;
+  } 
+}
+
+.btn--red {
+  color: $white;
+  background: $red;
+
+
+  &:hover, &:focus, &:active {
+    color: $white;
+  } 
+}
+//iconed
+
+.btn--phone {
+  font-size: 28px;
+  line-height: 28px;
+}
+
+.link--icon {
+  display: block;
+  width: $icon-size;
+  max-width: $icon-size;
+  height: $icon-size;
+  color: $white;
+  text-align: center;
+  line-height: $icon-size;
+  overflow: hidden;
+  background: $magenta;
+  border-radius: calc(#{$icon-size}/2);
+  transition: all .5s ease;
+
+  span {
+    top: -3px;
+    white-space: nowrap;
+    font-size: 12px;
+    transition: .5s ease;
+  }
+
+  &:hover {
+    width: auto;
+    max-width: 700px;
+    padding: 0 10px;
+    color: $white;
+    text-decoration: none;
+    transition: .5s ease;
+
+    span {
+      position: relative;
+      width: auto;
+      margin: 0;
+      padding-left: 10px; 
+    }
+  }
+
+}
+
+.btn--dismiss {
+  display: none;
+  position: absolute;
+  top: 7px;
+  right: 11px;
+  color: $tundora;
+  font-family: $font-fam-heading;
+  z-index: 5;
+  transform: scaleX(1.4);
+
+  .focus &,
+  .expanded & {
+    display: block;
+  }
+  .focus & {
+    color: rgba($tundora, .7);
+  }
+  .expanded & {
+    color: $white;
+  }
+}
+
+//toggle menu
+.btn--hamburger-cross {
+  font-size: 0;
+  z-index: 4;
+  cursor: pointer;
+  transition: background $button-transition-duration;
+
+  & span {
+    display: block;
+    position: absolute;
+    top: ($button-height / 2) - ($bar-thickness / 2);
+    left: $button-pad;
+    right: $button-pad;
+    height: $bar-thickness;
+    background: currentColor;
+    transition: background 0s $button-transition-duration;
+  }
+
+  &.focus span {
+    color: $black;
+    background: none;
+  }
+
+  & span::before,
+  & span::after {
+    position: absolute;
+    display: block;
+    left: 0;
+    width: 100%;
+    height: $bar-thickness;
+    background-color: currentColor;
+    content: "";
+    transition-duration: $button-transition-duration, $button-transition-duration;
+    transition-delay: $button-transition-duration, 0s;
+  }
+
+  &.focus span::before,
+  &.focus span::after {
+    transition-delay: 0s, $button-transition-duration;
+  }
+
+  & span::before {
+    top: -$bar-thickness - $button-bar-space;
+    transition-property: top, transform;
+  }
+
+  &.focus span::before {
+    top: 0;
+    transform: rotate(45deg);
+  }
+
+  & span::after {
+    bottom: -$bar-thickness - $button-bar-space;
+    transition-property: bottom, transform;
+  }
+
+  &.focus span::after {
+    bottom: 0;
+    transform: rotate(-45deg);
+  }
+}
+
+
+
+  $list: (facebook, youtube, spotify, itunes);
+  $bgcolors: ($magenta, $red, $green, $white);
+   $colors: (indigo, $white, $black, #d34fe1);
+
+  @each $item in $list {
+    $i: index($list, $item);
+    .link--#{$item} {
+        @extend .icon-#{$item};
+        color: nth($colors, $i);
+        background: nth($bgcolors, $i);
+
+        &:hover {
+          color: nth($colors, $i);
+        }
+
+        &::before {
+          position: absolute;
+          font-size: 25px;
+          top: 2px;
+        }
+    }
+  }

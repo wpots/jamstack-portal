@@ -1,4 +1,4 @@
-query GetAsset($id: String!) {
+query getAsset($id: String!) {
   asset(id: $id) {
     url
     title

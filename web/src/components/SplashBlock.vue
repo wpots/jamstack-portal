@@ -7,7 +7,6 @@
   </div>
 </template>
 <script>
-// eslint-disable-next-line
 import { computed, defineComponent } from 'vue';
 import { useQuery, useResult } from '@vue/apollo-composable';
 import assetQuery from '@/apollo/queries/assetQuery.gql';
@@ -21,7 +20,7 @@ export default defineComponent({
     LazyImage,
   },
   setup() {
-    const { result } = useQuery(assetQuery, { id: 'XRcvrUdZuKsuwKVxAmXYP' });
+    const { result } = useQuery(assetQuery, { id: '36AIo1n0AUMwNHAF9vyYbt' });
     const image = useResult(result, null, (data) => data.asset);
 
     const getMedia = computed(() => {

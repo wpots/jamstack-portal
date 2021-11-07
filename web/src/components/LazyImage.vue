@@ -1,5 +1,11 @@
 <template>
-  <figure role="presentation" ref="root" v-lazyload class>
+  <figure
+    role="presentation"
+    ref="root"
+    v-lazyload="setSrcset"
+    class
+    :class="loaded ? 'loaded' : false"
+  >
     <picture>
       <source
         ref="portrait"
@@ -14,8 +20,6 @@
         :class="media.classes"
         :src="getImgBySize(20)"
         :sizes="media.landscape.sizes"
-        :data-src="getImgBySize(2020)"
-        :srcset="getSrcset(media.landscape)"
         loading="lazy"
         :alt="media.landscape.alt"
       />
@@ -65,19 +69,27 @@ export default defineComponent({
 
   setup(props) {
     const root = ref<HTMLElement | null>(null);
+    const landscape = ref<HTMLImageElement | null>(null);
     const getImgBySize = computed(() => (width) => `${props.media.landscape.src}?w=${width}`);
-    const initialized = computed(() => root?.value?.classList?.contains('initialized') || false);
-    const getSrcset = computed(() => (image) => {
+    const loaded = ref(false);
+    const getSrcset = computed(() => {
       const isInitialized: boolean = root?.value?.classList?.contains('initialized') || false;
-      if (isInitialized && image.src) {
-        const srcsetSizes = props.srcset.map((width) => `${image.src}?w=${width} ${width}w`);
-        root?.value?.classList?.add('loaded');
+      if (isInitialized && props.media.landscape.src) {
+        const srcsetSizes = props.srcset.map(
+          (width) => `${props.media.landscape.src}?w=${width} ${width}w`,
+        );
         return srcsetSizes.join(',');
       }
+      return '';
     });
 
+    const setSrcset = () => {
+      if (landscape.value) landscape.value.srcset = getSrcset.value;
+      loaded.value = true;
+    };
+
     // eslint-disable-next-line
-    return { root, getSrcset, getImgBySize };
+    return { root, getSrcset, getImgBySize, setSrcset, loaded, landscape };
   },
 });
 </script>
@@ -100,6 +112,9 @@ figure {
 
     &.top-left {
       @include object-fit(cover, left top);
+    }
+    &.contain-center {
+      @include object-fit(contain, center);
     }
   }
 }

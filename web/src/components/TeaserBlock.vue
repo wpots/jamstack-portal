@@ -1,5 +1,5 @@
 <template>
-  <div id="het-koor" class="section section--het-koor" data-anchor="het-koor">
+  <div id="het-koor" class="section section--het-koor teaserblock" data-anchor="het-koor">
     <div class="container-fluid">
       <article class="flex-box row" id="content-het-koor">
         <div class="col-sm-6">
@@ -22,22 +22,7 @@
         </div>
 
         <div class="img__frame col-sm-6 pull-up">
-          <div class="img--framed">
-            <div class="content">
-              <img
-                class="img--round"
-                src="/core/wp-content/uploads/2016/06/IMG_2017_sq-150x150.jpg"
-                srcset="
-                  /core/wp-content/uploads/2016/06/IMG_2017_sq.jpg           2336w,
-                  /core/wp-content/uploads/2016/06/IMG_2017_sq-150x150.jpg    150w,
-                  /core/wp-content/uploads/2016/06/IMG_2017_sq-300x300.jpg    300w,
-                  /core/wp-content/uploads/2016/06/IMG_2017_sq-768x768.jpg    768w,
-                  /core/wp-content/uploads/2016/06/IMG_2017_sq-1024x1024.jpg 1024w
-                "
-                sizes="(max-width: 2336px) 100vw, 2336px"
-              />
-            </div>
-          </div>
+          <LazyImage :media="getContentMedia" />
           <svg xmlns="http://www.w3.org/2000/svg">
             <circle
               cx="43%"
@@ -46,7 +31,7 @@
               fill="#EB008B"
               data-animate="rotateIn"
               class=""
-              style="opacity: 1;"
+              style="opacity: 1"
             ></circle>
             <circle
               cx="58%"
@@ -55,7 +40,7 @@
               fill="#fe265e"
               data-animate="rotateIn"
               class=""
-              style="opacity: 1;"
+              style="opacity: 1"
             ></circle>
             <circle
               cx="45%"
@@ -64,7 +49,7 @@
               fill="#3beca8"
               data-animate="rotateIn"
               class=""
-              style="opacity: 1;"
+              style="opacity: 1"
             ></circle>
             <circle
               cx="58%"
@@ -73,41 +58,44 @@
               fill="#a9f946"
               data-animate="rotateIn"
               class=""
-              style="opacity: 1;"
+              style="opacity: 1"
             ></circle>
           </svg>
         </div>
       </article>
     </div>
-
     <div class="spacer"></div>
-    <picture>
-      <source
-        srcset="http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg"
-        type="image/jpeg"
-        media="(orientation:portrait)"
-      />
-      <!-- herte -->
-
-      <img
-        class="bg-img"
-        src="/core/wp-content/uploads/2016/06/IMG_2028-300x200.jpg"
-        srcset="
-          /core/wp-content/uploads/2016/06/IMG_2028.jpg          3504w,
-          /core/wp-content/uploads/2016/06/IMG_2028-300x200.jpg   300w,
-          /core/wp-content/uploads/2016/06/IMG_2028-768x512.jpg   768w,
-          /core/wp-content/uploads/2016/06/IMG_2028-1024x683.jpg 1024w
-        "
-        sizes="(max-width: 3504px) 100vw, 3504px"
-        style="position: fixed;"
-      />
-    </picture>
+    <lazyImage :media="getBgMedia" />
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
+import { useQuery, useResult } from '@vue/apollo-composable';
+import assetQuery from '@/apollo/queries/assetQuery.gql';
+import LazyImage from './LazyImage.vue';
 
 export default defineComponent({
+  components: { LazyImage },
   name: 'TeaserBlock',
+  setup() {
+    const { result } = useQuery(assetQuery, { id: '2FY8Pj16TmuVrVCXQ0dop2' });
+    const image = useResult(result, null, (data) => data.asset);
+
+    const getContentMedia = computed(() => {
+      const landscape = {
+        src: image.value?.url,
+        alt: image.value?.title,
+      };
+      return { landscape, classes: 'img--framed contain-center' };
+    });
+    const getBgMedia = reactive({
+      landscape: {
+        src: 'https://images.ctfassets.net/o4cfwi1cgj8a/1HXysXm8lZL4Nfr9FOwbWD/2d2d6f847fdb680585436aaa2b2b8beb/DSCF7405-1.jpg',
+      },
+      classes: 'img--bg',
+    });
+
+    return { getContentMedia, getBgMedia };
+  },
 });
 </script>

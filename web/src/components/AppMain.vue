@@ -21,8 +21,8 @@ export default defineComponent({
       type: Array,
       default: () => [
         { template: SplashBlock },
-        // { template: TeaserBlock },
-        // { template: QuoteBlock },
+        { template: TeaserBlock },
+        { template: QuoteBlock },
         // { template: RepertoirBlock },
         // { template: FormBlock },
         // { template: FormBlock },

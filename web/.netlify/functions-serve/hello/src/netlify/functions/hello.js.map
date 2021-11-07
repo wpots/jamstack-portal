@@ -1,7 +1,7 @@
 {
   "version": 3,
   "sources": ["../../../../../../Users/wietekepots/Web/jamstack-portal/web/netlify/functions/hello.js"],
-  "sourceRoot": "/var/folders/15/8r1fqb757b9bnddlgnd8b17r0000gn/T/tmp-11648-htGW2df015cH",
+  "sourceRoot": "/var/folders/15/8r1fqb757b9bnddlgnd8b17r0000gn/T/tmp-35188-HIy1SYw7Pmow",
   "sourcesContent": ["exports.handler = async event => {\n  const subject = event.queryStringParameters.name || 'World'\n  return {\n    statusCode: 200,\n    body: `Hello ${subject}!`,\n  }\n}"],
   "mappings": ";AAAA,QAAQ,UAAU,OAAM,UAAS;AAC/B,QAAM,UAAU,MAAM,sBAAsB,QAAQ;AACpD,SAAO;AAAA,IACL,YAAY;AAAA,IACZ,MAAM,SAAS;AAAA;AAAA;",
   "names": []

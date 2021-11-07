@@ -4,8 +4,9 @@ export default {
     const { userAgent } = window.navigator;
     const isIe = userAgent.match(/Trident/g);
 
-    function initialized(image) {
-      image.classList.add('initialized');
+    function initialized(elem) {
+      elem.classList.add('initialized');
+      elem.dispatchEvent(new CustomEvent('lazyload'));
     }
 
     const intersectAction = (entries, self) => {
@@ -26,8 +27,15 @@ export default {
 
     // use v-lazyload on component
     app.directive('lazyload', {
-      mounted(el) {
+      mounted(el, binding) {
         if (observer) observer.observe(el);
+        const callback = binding.value;
+        el.addEventListener('lazyload', (e) => {
+          callback();
+        });
+      },
+      upMounted(el) {
+        el.removeEventListener('lazyload');
       },
     });
   },

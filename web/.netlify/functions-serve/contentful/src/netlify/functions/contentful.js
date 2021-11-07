@@ -3648,7 +3648,17 @@ var require_streams = __commonJS({
     var POOL_SIZE2 = 65536;
     if (!globalThis.ReadableStream) {
       try {
-        Object.assign(globalThis, require("stream/web"));
+        const process2 = require("node:process");
+        const { emitWarning } = process2;
+        try {
+          process2.emitWarning = () => {
+          };
+          Object.assign(globalThis, require("node:stream/web"));
+          process2.emitWarning = emitWarning;
+        } catch (error) {
+          process2.emitWarning = emitWarning;
+          throw error;
+        }
       } catch (error) {
         Object.assign(globalThis, require_ponyfill_es2018());
       }
@@ -3698,13 +3708,13 @@ var import_util = __toModule(require("util"));
 var import_streams = __toModule(require_streams());
 var POOL_SIZE = 65536;
 async function* toIterator(parts, clone2 = true) {
-  for (let part of parts) {
+  for (const part of parts) {
     if ("stream" in part) {
       yield* part.stream();
     } else if (ArrayBuffer.isView(part)) {
       if (clone2) {
         let position = part.byteOffset;
-        let end = part.byteOffset + part.byteLength;
+        const end = part.byteOffset + part.byteLength;
         while (position !== end) {
           const size = Math.min(end - position, POOL_SIZE);
           const chunk = part.buffer.slice(position, position + size);
@@ -3731,8 +3741,19 @@ var _Blob = (_a = class {
     __privateAdd(this, _parts, []);
     __privateAdd(this, _type, "");
     __privateAdd(this, _size, 0);
-    let size = 0;
-    const parts = blobParts.map((element) => {
+    if (typeof blobParts !== "object" || blobParts === null) {
+      throw new TypeError("Failed to construct 'Blob': The provided value cannot be converted to a sequence.");
+    }
+    if (typeof blobParts[Symbol.iterator] !== "function") {
+      throw new TypeError("Failed to construct 'Blob': The object must have a callable @@iterator property.");
+    }
+    if (typeof options !== "object" && typeof options !== "function") {
+      throw new TypeError("Failed to construct 'Blob': parameter 2 cannot convert to dictionary.");
+    }
+    if (options === null)
+      options = {};
+    const encoder = new TextEncoder();
+    for (const element of blobParts) {
       let part;
       if (ArrayBuffer.isView(element)) {
         part = new Uint8Array(element.buffer.slice(element.byteOffset, element.byteOffset + element.byteLength));
@@ -3741,15 +3762,13 @@ var _Blob = (_a = class {
       } else if (element instanceof _a) {
         part = element;
       } else {
-        part = new TextEncoder().encode(element);
+        part = encoder.encode(element);
       }
-      size += ArrayBuffer.isView(part) ? part.byteLength : part.size;
-      return part;
-    });
+      __privateSet(this, _size, __privateGet(this, _size) + (ArrayBuffer.isView(part) ? part.byteLength : part.size));
+      __privateGet(this, _parts).push(part);
+    }
     const type = options.type === void 0 ? "" : String(options.type);
-    __privateSet(this, _type, /[^\u0020-\u007E]/.test(type) ? "" : type);
-    __privateSet(this, _size, size);
-    __privateSet(this, _parts, parts);
+    __privateSet(this, _type, /^[\x20-\x7E]*$/.test(type) ? type : "");
   }
   get size() {
     return __privateGet(this, _size);
@@ -3760,7 +3779,7 @@ var _Blob = (_a = class {
   async text() {
     const decoder = new TextDecoder();
     let str = "";
-    for await (let part of toIterator(__privateGet(this, _parts), false)) {
+    for await (const part of toIterator(__privateGet(this, _parts), false)) {
       str += decoder.decode(part, { stream: true });
     }
     str += decoder.decode();
@@ -3777,11 +3796,14 @@ var _Blob = (_a = class {
   }
   stream() {
     const it = toIterator(__privateGet(this, _parts), true);
-    return new ReadableStream({
+    return new globalThis.ReadableStream({
       type: "bytes",
       async pull(ctrl) {
         const chunk = await it.next();
         chunk.done ? ctrl.close() : ctrl.enqueue(chunk.value);
+      },
+      async cancel() {
+        await it.return();
       }
     });
   }
@@ -3810,6 +3832,7 @@ var _Blob = (_a = class {
           chunk = part.slice(relativeStart, Math.min(size2, relativeEnd));
           added += chunk.size;
         }
+        relativeEnd -= size2;
         blobParts.push(chunk);
         relativeStart = 0;
       }
@@ -4760,4 +4783,5 @@ async function handler(event, context) {
 0 && (module.exports = {
   handler
 });
+/*! fetch-blob. MIT License. Jimmy Wärting <https://jimmy.warting.se/opensource> */
 //# sourceMappingURL=contentful.js.map

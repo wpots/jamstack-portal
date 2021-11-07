@@ -10,7 +10,6 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "strictNullChecks": false,
     "sourceMap": true,
     "baseUrl": ".",
     "types": [
@@ -35,7 +34,7 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-, "src/plugins/lazyload.js"  ],
+  ],
   "exclude": [
     "node_modules"
   ]

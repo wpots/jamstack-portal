@@ -21,6 +21,7 @@
         :src="getImgBySize(20)"
         :sizes="media.landscape.sizes"
         loading="lazy"
+        :srcset="getSrcset"
         :alt="media.landscape.alt"
       />
     </picture>
@@ -70,11 +71,10 @@ export default defineComponent({
   setup(props) {
     const root = ref<HTMLElement | null>(null);
     const landscape = ref<HTMLImageElement | null>(null);
-    const getImgBySize = computed(() => (width) => `${props.media.landscape.src}?w=${width}`);
     const loaded = ref(false);
+    const getImgBySize = computed(() => (width) => `${props.media.landscape.src}?w=${width}`);
     const getSrcset = computed(() => {
-      const isInitialized: boolean = root?.value?.classList?.contains('initialized') || false;
-      if (isInitialized && props.media.landscape.src) {
+      if (loaded.value && props.media.landscape.src) {
         const srcsetSizes = props.srcset.map(
           (width) => `${props.media.landscape.src}?w=${width} ${width}w`,
         );
@@ -84,12 +84,11 @@ export default defineComponent({
     });
 
     const setSrcset = () => {
-      if (landscape.value) landscape.value.srcset = getSrcset.value;
       loaded.value = true;
     };
 
     // eslint-disable-next-line
-    return { root, getSrcset, getImgBySize, setSrcset, loaded, landscape };
+    return { root, getSrcset, getImgBySize, setSrcset, landscape, loaded };
   },
 });
 </script>

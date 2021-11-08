@@ -35,7 +35,7 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-.splashblock::v-deep .img--bg {
+.splashblock::v-deep(.img--bg) {
   position: fixed;
 }
 </style>

@@ -72,7 +72,9 @@ export default defineComponent({
     const root = ref<HTMLElement | null>(null);
     const landscape = ref<HTMLImageElement | null>(null);
     const loaded = ref(false);
-    const getImgBySize = computed(() => (width) => `${props.media.landscape.src}?w=${width}`);
+    const getImgBySize = computed(
+      () => (width: number) => `${props.media.landscape.src}?w=${width}`,
+    );
     const getSrcset = computed(() => {
       if (loaded.value && props.media.landscape.src) {
         const srcsetSizes = props.srcset.map(

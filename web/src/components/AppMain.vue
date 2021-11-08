@@ -22,8 +22,8 @@ export default defineComponent({
       default: () => [
         { template: SplashBlock },
         { template: TeaserBlock },
+        { template: RepertoirBlock },
         { template: QuoteBlock },
-        // { template: RepertoirBlock },
         // { template: FormBlock },
         // { template: FormBlock },
       ],

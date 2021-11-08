@@ -2,7 +2,7 @@
   "name": "web",
   "version": "0.1.0",
   "private": true,
-    "scripts": {
+  "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build --modern",
     "test:unit": "vue-cli-service test:unit",
@@ -51,6 +51,8 @@
     "style-resources-loader": "^1.4.1",
     "typescript": "~4.1.5",
     "vue-cli-plugin-style-resources-loader": "~0.1.5",
-    "vue-jest": "^5.0.0-0"
+    "vue-jest": "^5.0.0-0",
+    "vue-slick-carousel": "^1.0.6",
+    "vue3-carousel": "^0.1.30"
   }
 }

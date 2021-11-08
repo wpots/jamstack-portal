@@ -14,7 +14,9 @@
     </div>
     <picture>
       <source
-        srcset="http://www.goedgebekt.comhttp://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg"
+        srcset="
+          http://www.goedgebekt.comhttp://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg
+        "
         type="image/jpeg"
         media="(orientation:portrait)"
       />
@@ -38,7 +40,7 @@
 import { defineComponent } from 'vue';
 import RepertoirList from './RepertoirList.vue';
 import Sortable from './Sortable.vue';
-
+// https://next--vue-dataset-demo.netlify.app/components/#props
 export default defineComponent({
   name: 'RepertoirBlock',
   components: { RepertoirList, Sortable },

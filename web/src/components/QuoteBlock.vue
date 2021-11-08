@@ -1,7 +1,7 @@
 <template>
   <div id="quotes" class="section section--quotes quoteblock">
     <div class="quotes">
-      <Carousel :autoplay="3000" wrap-around="true" transition="1500">
+      <Carousel :autoplay="3000" :wrap-around="true" :transition="1500">
         <slide class="quote">
           <div class="quote__item">
             <q>Wij hebben van jullie genoten!</q>

@@ -2,7 +2,7 @@
   <figure
     role="presentation"
     ref="root"
-    v-lazyload="setSrcset"
+    v-lazyload="{ callback: setSrcset }"
     class
     :class="loaded ? 'loaded' : false"
   >

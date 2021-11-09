@@ -1,5 +1,5 @@
 <template>
-  <header class="header header--floating" data-anm-on>
+  <header class="header" ref="root">
     <div class="banner container">
       <nav class="nav--split nav--toggle" data-focus-parent="toggle-mob-nav">
         <button
@@ -44,14 +44,18 @@
   </header>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script>
+import { defineComponent, ref } from 'vue';
 import Logo from '@/components/Logo.vue';
 
 export default defineComponent({
   name: 'AppHeader',
   components: {
     Logo,
+  },
+  setup() {
+    const root = ref(null);
+    return { root };
   },
 });
 </script>

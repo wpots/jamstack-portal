@@ -7,7 +7,6 @@ import { defineComponent, defineAsyncComponent } from 'vue';
 import { useQuery, useResult } from '@vue/apollo-composable';
 import testQuery from '@/apollo/queries/testQuery';
 
-const SplashBlock = defineAsyncComponent(() => import('@/components/SplashBlock.vue'));
 const TeaserBlock = defineAsyncComponent(() => import('@/components/TeaserBlock.vue'));
 const QuoteBlock = defineAsyncComponent(() => import('@/components/QuoteBlock.vue'));
 const FormBlock = defineAsyncComponent(() => import('@/components/FormBlock.vue'));
@@ -20,7 +19,6 @@ export default defineComponent({
     contentBlocks: {
       type: Array,
       default: () => [
-        { template: SplashBlock },
         { template: TeaserBlock },
         { template: RepertoirBlock },
         { template: QuoteBlock },
@@ -30,7 +28,6 @@ export default defineComponent({
     },
   },
   components: {
-    SplashBlock,
     TeaserBlock,
     RepertoirBlock,
     QuoteBlock,

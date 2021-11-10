@@ -22,7 +22,7 @@
         </div>
 
         <div class="img__frame col-sm-6 pull-up">
-          <LazyImage :media="getContentMedia" />
+          <LazyImage :media="getContentMedia" class="inline-img" />
           <svg xmlns="http://www.w3.org/2000/svg">
             <circle
               cx="43%"
@@ -64,8 +64,6 @@
         </div>
       </article>
     </div>
-    <div class="spacer"></div>
-    <lazyImage :media="getBgMedia" />
   </div>
 </template>
 <script lang="ts">
@@ -88,14 +86,8 @@ export default defineComponent({
       };
       return { landscape, classes: 'img--framed contain-center' };
     });
-    const getBgMedia = reactive({
-      landscape: {
-        src: 'https://images.ctfassets.net/o4cfwi1cgj8a/1HXysXm8lZL4Nfr9FOwbWD/2d2d6f847fdb680585436aaa2b2b8beb/DSCF7405-1.jpg',
-      },
-      classes: 'img--bg',
-    });
 
-    return { getContentMedia, getBgMedia };
+    return { getContentMedia };
   },
 });
 </script>

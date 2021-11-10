@@ -1,6 +1,4 @@
-[class*='section--']:not(.section--home) {
-  min-height: 100vh;
-
+[class*='section--'] {
   & > .container-fluid {
     background: $white;
   }
@@ -14,9 +12,6 @@
       padding: 50px 30px;
     }
   }
-  // &:last-of-type {
-  //   min-height: auto;
-  // }
 }
 
 .section {

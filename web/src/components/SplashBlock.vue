@@ -1,15 +1,8 @@
 <template>
-  <div
-    id="home"
-    ref="root"
-    class="section section--home splashblock"
-    data-anchor="home"
-    v-lazyload="loadConfig"
-  >
+  <div id="home" ref="root" class="section splashblock" data-anchor="home" v-lazyload="loadConfig">
     <div class="overlay--dark"></div>
-    <Loader />
-    <div class="spacer"></div>
-    <LazyImage :media="getMedia" />
+    <Loader :to="'#het-koor'" />
+    <LazyImage :media="getMedia" class="bg-img splashblock__bg" />
   </div>
 </template>
 <script>
@@ -40,6 +33,7 @@ export default defineComponent({
       },
       persist: true,
     });
+
     const { result } = useQuery(assetQuery, { id: '36AIo1n0AUMwNHAF9vyYbt' });
     const image = useResult(result, null, (data) => data.asset);
 
@@ -48,14 +42,21 @@ export default defineComponent({
         src: image.value?.url,
         alt: image.value?.title,
       };
-      return { landscape, classes: 'img--bg' };
+      return { landscape };
     });
+
     return { getMedia, loadConfig, root };
   },
 });
 </script>
 <style lang="scss" scoped>
-.splashblock::v-deep(.img--bg) {
-  position: fixed;
+.splashblock {
+  width: 100vw;
+  height: 100vh;
+
+  &::v-deep(.bg-img) {
+    position: fixed !important;
+    top: 0 !important;
+  }
 }
 </style>

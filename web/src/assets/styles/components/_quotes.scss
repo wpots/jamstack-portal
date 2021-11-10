@@ -1,35 +1,40 @@
-
+.quotes {
+  height: 60vh;
+}
 .quote {
   position: relative;
   height: $spacer-size;
 
   .quote__item {
     position: absolute;
-    bottom: 10%;
+    bottom: 40%;
     left: 5%;
     max-width: 90%;
     padding: 5px 20px;
     color: $white;
-    background: rgba(#fe265e, .8);
+    background: rgba(#fe265e, 0.8);
   }
 
   .quote__origin {
-    font-size: .8em;
+    font-size: 0.8em;
     text-align: right;
   }
 
-  q { 
+  q {
     font-size: 1.4em;
     font-weight: 700;
     font-style: italic;
-    quotes: '"' '"' "'" "'" ;
+    quotes: '"' '"' "'" "'";
 
     @include media-breakpoint-up(sm) {
       font-size: 2em;
     }
 
-
-    &::before { content: open-quote }
-    &::after  { content: close-quote }
+    &::before {
+      content: open-quote;
+    }
+    &::after {
+      content: close-quote;
+    }
   }
 }

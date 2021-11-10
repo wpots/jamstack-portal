@@ -1,7 +1,16 @@
 <template>
   <div id="quotes" class="section section--quotes quoteblock">
+    <LazyImage
+      class="bg-img quoteblock__bg"
+      :media="getMedia"
+      :lazySettings="{
+        persist: true,
+        settings: { margin: '0px 0px 0px 0px', threshold: [0, 1] },
+      }"
+      :sticky="true"
+    />
     <div class="quotes">
-      <Carousel :autoplay="3000" :wrap-around="true" :transition="1500">
+      <Carousel :autoplay="5000" :wrap-around="true" :transition="1500">
         <slide class="quote">
           <div class="quote__item">
             <q>Wij hebben van jullie genoten!</q>
@@ -16,7 +25,6 @@
         </slide>
       </Carousel>
     </div>
-    <LazyImage class="ding" :media="getMedia" />
   </div>
 </template>
 
@@ -36,7 +44,7 @@ export default defineComponent({
     LazyImage,
   },
   setup() {
-    const { result } = useQuery(assetQuery, { id: '36AIo1n0AUMwNHAF9vyYbt' });
+    const { result } = useQuery(assetQuery, { id: '3fjaf1GXAV6u3mNVWurViI' });
     const image = useResult(result, null, (data) => data.asset);
 
     const getMedia = computed(() => {
@@ -44,21 +52,9 @@ export default defineComponent({
         src: image.value?.url,
         alt: image.value?.title,
       };
-      return { landscape, classes: 'img--bg' };
+      return { landscape, classes: 'bg-img' };
     });
     return { getMedia };
   },
 });
 </script>
-<style lang="scss" scoped>
-.quoteblock {
-  position: relative;
-}
-.quoteblock::v-deep(.ding) {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: -1;
-}
-</style>

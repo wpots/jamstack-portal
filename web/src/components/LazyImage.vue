@@ -2,7 +2,8 @@
   <figure
     role="presentation"
     ref="root"
-    v-lazyload="{ callback: setSrcset }"
+    v-lazyload="{ ...lazySettings, callback: setSrcset }"
+    :style="{ position: sticky ? 'sticky' : 'relative' }"
     class
     :class="loaded ? 'loaded' : false"
   >
@@ -58,6 +59,21 @@ const defaultmedia: MediaInterface = {
 export default defineComponent({
   name: 'LazyImage',
   props: {
+    sticky: {
+      type: Boolean,
+      default: false,
+    },
+    lazySettings: {
+      type: Object || Boolean,
+      default: () => {
+        return {
+          settings: {
+            threshold: 0,
+          },
+          persist: false,
+        };
+      },
+    },
     srcset: {
       type: Array,
       default: () => [375, 650, 900, 1500, 2020, 2740, 3840],
@@ -84,7 +100,6 @@ export default defineComponent({
       }
       return '';
     });
-
     const setSrcset = () => {
       loaded.value = true;
     };

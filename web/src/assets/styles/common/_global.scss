@@ -2,9 +2,9 @@ html {
   position: relative;
 }
 body {
-
-
-    h1,h2,h3 {
+  h1,
+  h2,
+  h3 {
     font-weight: 700;
     font-family: $font-fam-heading;
     hyphens: auto;
@@ -20,13 +20,11 @@ body {
 
     &:focus {
       text-decoration: none;
-
     }
   }
 }
 
 .brand {
-
   .banner & {
     height: $banner-size;
     margin-top: 10px;
@@ -34,7 +32,6 @@ body {
     order: -1;
 
     .header--floating & {
-
       @include media-breakpoint-up(sm) {
         width: 100%;
         height: 100%;
@@ -44,7 +41,7 @@ body {
 
     @include media-breakpoint-up(sm) {
       width: auto;
-      order: initial;    
+      order: initial;
     }
   }
 }
@@ -60,27 +57,21 @@ h1 {
     }
   }
 }
-//svg 
+//svg
 .logo {
-    overflow: visible!important;
-    transform: scale(.8);
+  overflow: visible !important;
+  transform: scale(0.8);
 
+  @include media-breakpoint-up(sm) {
+    height: 115px;
+    transform: scale(1) translateY(22px); //magic number, want the music note sticking out, cute!
+  }
+
+  .header--floating & {
     @include media-breakpoint-up(sm) {
-      height: 115px;
-      transform: scale(1) translateY(22px);//magic number, want the music note sticking out, cute!
+      transform: scale(1) translateY(22px);
     }
-
-    .header--floating & {
-
-      @include media-breakpoint-up(sm) {
-        transform: scale(1) translateY(22px);
-    }
-
-    }
-}
-//mousemove animated elements
-.anm {
-  transition: all .3s ease;
+  }
 }
 
 .flex-box {
@@ -89,26 +80,27 @@ h1 {
 }
 
 .section--template-intro {
-  padding-top: 0!important;
+  padding-top: 0 !important;
 }
 
-.wp-editor-content {
-    
-}
- .fp-section:not(.section--home) {
-  height: auto!important;
+.fp-section:not(.section--home) {
+  height: auto !important;
 }
 
 .text--modest {
-  font-size: .8em;
+  font-size: 0.8em;
   font-style: italic;
-  opacity: .7;
+  opacity: 0.7;
 
   a {
     text-decoration: underline;
-    
+
     &:hover {
       text-decoration: none;
     }
   }
+}
+
+.container-fluid {
+  padding-top: 70px;
 }

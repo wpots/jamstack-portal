@@ -12,37 +12,41 @@
         </div>
       </article>
     </div>
-    <picture>
-      <source
-        srcset="
-          http://www.goedgebekt.comhttp://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg
-        "
-        type="image/jpeg"
-        media="(orientation:portrait)"
-      />
-
-      <img
-        class="bg-img"
-        src="http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1-300x200.jpg"
-        srcset="
-          http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1.jpg          3108w,
-          http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1-300x200.jpg   300w,
-          http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1-768x512.jpg   768w,
-          http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1-1024x683.jpg 1024w
-        "
-        sizes="(max-width: 3108px) 100vw, 3108px"
-      />
-    </picture>
+    <LazyImage
+      class="bg-img repertoirblock__bg"
+      :media="getMedia"
+      :lazySettings="{
+        persist: true,
+        settings: { margin: '0px 0px 0px 0px', threshold: [0, 1] },
+      }"
+      :sticky="true"
+    />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
+import { useQuery, useResult } from '@vue/apollo-composable';
+import assetQuery from '@/apollo/queries/assetQuery.gql';
 import RepertoirList from './RepertoirList.vue';
 import Sortable from './Sortable.vue';
+import LazyImage from '@/components/LazyImage.vue';
 // https://next--vue-dataset-demo.netlify.app/components/#props
 export default defineComponent({
   name: 'RepertoirBlock',
-  components: { RepertoirList, Sortable },
+  components: { RepertoirList, Sortable, LazyImage },
+  setup() {
+    const { result } = useQuery(assetQuery, { id: '292Wyu9B0CfcMVY4Ji9kRQ' });
+    const image = useResult(result, null, (data) => data.asset);
+
+    const getMedia = computed(() => {
+      const landscape = {
+        src: image.value?.url,
+        alt: image.value?.title,
+      };
+      return { landscape, classes: 'bg-img' };
+    });
+    return { getMedia };
+  },
 });
 </script>

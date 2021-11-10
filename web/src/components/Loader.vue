@@ -1,5 +1,5 @@
 <template>
-  <a class="notes--bubbly js-notes" data-scroll href="#het-koor">
+  <a class="notes--bubbly js-notes" data-scroll :href="to">
     <span class="sr-only">read more</span>
     <svg
       class="animated infinite fadeInUp fadeOutUp"
@@ -108,10 +108,16 @@
   </a>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Loader',
+  props: {
+    to: {
+      type: String,
+      default: '#intro',
+    },
+  },
 });
 </script>

@@ -1,31 +1,14 @@
-.section--home {
-  width: 100vw;
-  
-  @include media-breakpoint-up(sm) {
-    height: 100vh;
-  }
-}
-
-.bg-img {
-  position: absolute;
+figure.bg-img {
   top: $banner-size-small;
   left: 0;
   width: 100%;
   object-fit: cover;
   z-index: -1;
 
-  .section--home & {
-    position: fixed;
-  }
-
   @include media-breakpoint-up(sm) {
-    top: 0;
-    height: 100%;
+    top: $banner-size-big;
+    height: 100vh;
   }
-}
-
-.bg-img--lazy {
-  position: relative;
 }
 
 .overlay--dark {
@@ -33,7 +16,7 @@
   top: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
-  @include gradient-y(rgba($chocolaterie, 0), rgba($chocolaterie, .7), 20%);
+  @include gradient-y(rgba($chocolaterie, 0), rgba($chocolaterie, 0.7), 20%);
 }

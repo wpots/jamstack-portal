@@ -2,14 +2,14 @@
   <component v-for="(component, index) in contentBlocks" :is="component.template" :key="index" />
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent, defineAsyncComponent } from 'vue';
 import { useQuery, useResult } from '@vue/apollo-composable';
 import testQuery from '@/apollo/queries/testQuery';
 
 const TeaserBlock = defineAsyncComponent(() => import('@/components/TeaserBlock.vue'));
 const QuoteBlock = defineAsyncComponent(() => import('@/components/QuoteBlock.vue'));
-const FormBlock = defineAsyncComponent(() => import('@/components/FormBlock.vue'));
+// const FormBlock = defineAsyncComponent(() => import('@/components/FormBlock.vue'));
 const RepertoirBlock = defineAsyncComponent(() => import('@/components/RepertoirBlock.vue'));
 
 export default defineComponent({
@@ -20,8 +20,8 @@ export default defineComponent({
       type: Array,
       default: () => [
         { template: TeaserBlock },
-        { template: RepertoirBlock },
         { template: QuoteBlock },
+        { template: RepertoirBlock },
         // { template: FormBlock },
         // { template: FormBlock },
       ],
@@ -31,7 +31,7 @@ export default defineComponent({
     TeaserBlock,
     RepertoirBlock,
     QuoteBlock,
-    FormBlock,
+    // FormBlock,
   },
   setup() {
     const { result, loading } = useQuery(testQuery);

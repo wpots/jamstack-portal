@@ -1,42 +1,42 @@
 .header {
-  position: fixed;
+  position: sticky;
   top: 0;
   width: 100%;
+  margin-top: 60vh;
   background: $white;
-  border-bottom: 1px solid rgba($chocolaterie, .3);
+  border-bottom: 1px solid rgba($chocolaterie, 0.3);
   z-index: 2;
   transform: translateY(0);
-  transition: transform .3s ease-in;
+  transition: transform 0.3s ease-in;
 
-  &.header--floating {
-    @include media-breakpoint-up(sm) {
-     transform: translateY(50vh);
-    }
-    @media screen and (orientation: portrait) {
-      transform: translateY(70vh);
-    }
-  }
+  // &.header--floating {
+  //   @include media-breakpoint-up(sm) {
+  //     transform: translateY(50vh);
+  //   }
+  //   @media screen and (orientation: portrait) {
+  //     transform: translateY(70vh);
+  //   }
+  // }
 }
 
 .banner {
   height: $banner-size-small;
   padding: 0;
   text-align: center;
-  transition: height .3s ease-in;
+  transition: height 0.3s ease-in;
 
   .header--floating & {
-    @include media-breakpoint-up(sm) {  
+    @include media-breakpoint-up(sm) {
       height: $banner-size-big;
     }
   }
 
   @include media-breakpoint-up(sm) {
-      height: 100px;  
+    height: 100px;
   }
   @include media-breakpoint-up(md) {
-      width: 100%;  
+    width: 100%;
   }
-
 }
 
 .page-header {
@@ -48,13 +48,11 @@
   }
 }
 
-[data-focus-parent="toggle-mob-nav"] {
-
-  [data-focus="toggle-mob-nav"] {
+[data-focus-parent='toggle-mob-nav'] {
+  [data-focus='toggle-mob-nav'] {
   }
 
-  [id*="toggle-menu"] {
-
+  [id*='toggle-menu'] {
     position: absolute;
     width: 100%;
     max-height: 0;
@@ -77,27 +75,24 @@
 
       .menu-item {
         opacity: 1;
-      }  
+      }
     }
-
 
     &.focus {
       max-height: 600px;
-      transition: max-height .9s ease;
-
+      transition: max-height 0.9s ease;
 
       .menu-item {
         opacity: 1;
         // border-bottom: 1px solid $magenta-tint60;
-        transition: opacity .3s ease-in;
+        transition: opacity 0.3s ease-in;
 
         @for $i from 1 to 10 {
-          &:nth-child(#{$i}) { 
-            transition-delay:  $i * 0.1s; 
+          &:nth-child(#{$i}) {
+            transition-delay: $i * 0.1s;
           }
         }
       }
     }
   }
 }
-

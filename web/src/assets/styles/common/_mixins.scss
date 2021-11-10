@@ -45,11 +45,11 @@
   display: block;
 }
 
-@mixin flex-fix($direction: 'row') {
+@mixin flex-fix() {
   display: flex;
   display: -webkit-flex;
-  flex-flow: $direction wrap;
-  -webkit-flex-flow: $direction wrap;
+  flex-flow: row wrap;
+  -webkit-flex-flow: row wrap;
 }
 
 .flex--space {
@@ -102,4 +102,19 @@
 @mixin size($width, $height: $width) {
   width: $width;
   height: $height;
+}
+// Vertical gradient, from top to bottom
+//
+// Creates two color stops, start and end, by specifying a color and position for each color stop.
+@mixin gradient-y(
+  $start-color: $gray-700,
+  $end-color: $gray-800,
+  $start-percent: null,
+  $end-percent: null
+) {
+  background-image: linear-gradient(
+    to bottom,
+    $start-color $start-percent,
+    $end-color $end-percent
+  );
 }

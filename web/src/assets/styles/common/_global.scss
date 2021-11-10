@@ -17,11 +17,16 @@ body {
 
   a {
     color: currentColor;
+    text-decoration: none;
 
     &:focus {
       text-decoration: none;
     }
   }
+}
+
+h1 {
+  font-size: $font-size-h1;
 }
 
 .brand {

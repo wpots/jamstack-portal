@@ -1,14 +1,6 @@
 <template>
-  <div id="quotes" class="section section--quotes quoteblock">
-    <LazyImage
-      class="bg-img quoteblock__bg"
-      :media="getMedia"
-      :lazySettings="{
-        persist: true,
-        settings: { margin: '0px 0px 0px 0px', threshold: [0, 1] },
-      }"
-      :sticky="true"
-    />
+  <div class="section section--quotes quoteblock">
+    <LazyImage class="bg-img quoteblock__bg" :media="getMedia" :sticky="true" />
     <div class="quotes">
       <Carousel :autoplay="5000" :wrap-around="true" :transition="1500">
         <slide class="quote">
@@ -30,8 +22,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { useQuery, useResult } from '@vue/apollo-composable';
-import assetQuery from '@/apollo/queries/assetQuery.gql';
+
 import 'vue3-carousel/dist/carousel.css';
 import { Carousel, Slide } from 'vue3-carousel';
 import LazyImage from '@/components/LazyImage.vue';
@@ -43,17 +34,26 @@ export default defineComponent({
     Slide,
     LazyImage,
   },
-  setup() {
-    const { result } = useQuery(assetQuery, { id: '3fjaf1GXAV6u3mNVWurViI' });
-    const image = useResult(result, null, (data) => data.asset);
-
+  props: {
+    cms: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
+  setup(props) {
     const getMedia = computed(() => {
-      const landscape = {
-        src: image.value?.url,
-        alt: image.value?.title,
-      };
-      return { landscape, classes: 'bg-img' };
+      if (props.cms.backgroundImage) {
+        const landscape = {
+          src: props.cms.backgroundImage.url,
+          alt: props.cms.backgroundImage.title,
+        };
+        return { landscape };
+      }
+      return false;
     });
+
     return { getMedia };
   },
 });

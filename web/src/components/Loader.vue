@@ -1,5 +1,5 @@
 <template>
-  <a class="notes--bubbly js-notes" data-scroll :href="to">
+  <a class="notes--bubbly js-notes" data-scroll :href="href">
     <span class="sr-only">read more</span>
     <svg
       class="animated infinite fadeInUp fadeOutUp"
@@ -109,7 +109,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Loader',
@@ -118,6 +118,12 @@ export default defineComponent({
       type: String,
       default: '#intro',
     },
+  },
+  setup(props) {
+    const href = computed(() => {
+      return `#${props.to}`;
+    });
+    return { href };
   },
 });
 </script>

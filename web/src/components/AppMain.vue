@@ -1,42 +1,38 @@
 <template>
-  <component v-for="(component, index) in contentBlocks" :is="component.template" :key="index" />
+  <component
+    v-for="(contentEntry, index) in content"
+    :is="contentEntry.__typename"
+    :key="index"
+    :id="contentEntry.anchor"
+    :cms="contentEntry"
+  />
 </template>
 
 <script>
 import { defineComponent, defineAsyncComponent } from 'vue';
-import { useQuery, useResult } from '@vue/apollo-composable';
-import testQuery from '@/apollo/queries/testQuery';
 
-const TeaserBlock = defineAsyncComponent(() => import('@/components/TeaserBlock.vue'));
-const QuoteBlock = defineAsyncComponent(() => import('@/components/QuoteBlock.vue'));
-// const FormBlock = defineAsyncComponent(() => import('@/components/FormBlock.vue'));
-const RepertoirBlock = defineAsyncComponent(() => import('@/components/RepertoirBlock.vue'));
+const SplashBlock = defineAsyncComponent(() => import('@/components/Partials/SplashBlock.vue'));
+const TeaserBlock = defineAsyncComponent(() => import('@/components/Partials/TeaserBlock.vue'));
+const QuoteBlock = defineAsyncComponent(() => import('@/components/Partials/QuoteBlock.vue'));
+const RepertoirBlock = defineAsyncComponent(() =>
+  import('@/components/Partials/RepertoirBlock.vue'),
+);
 
 export default defineComponent({
   name: 'AppMain',
   props: {
     msg: String,
-    contentBlocks: {
+
+    content: {
       type: Array,
-      default: () => [
-        { template: TeaserBlock },
-        { template: QuoteBlock },
-        { template: RepertoirBlock },
-        // { template: FormBlock },
-        // { template: FormBlock },
-      ],
+      default: () => [],
     },
   },
   components: {
+    SplashBlock,
     TeaserBlock,
     RepertoirBlock,
     QuoteBlock,
-    // FormBlock,
-  },
-  setup() {
-    const { result, loading } = useQuery(testQuery);
-    const members = useResult(result, null, (data) => data.memberCollection.items);
-    return { loading, members };
   },
 });
 </script>

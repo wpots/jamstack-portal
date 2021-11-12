@@ -1,10 +1,11 @@
 query getHomePage($title: String!) {
-  homePageCollection(where: { title: $title }) {
+  homePageCollection(limit: 1, where: { title: $title }) {
     items {
       websiteTitle
       copyright
       pageBlocksCollection(limit: 8) {
         items {
+          ...SplashParts
           ...QuoteParts
           ...TeaserParts
           ...RepertoirParts
@@ -14,16 +15,33 @@ query getHomePage($title: String!) {
   }
 }
 
+fragment SplashParts on SplashBlock {
+  __typename
+  mediaCollection(limit: 8) {
+    items {
+      url
+      title
+    }
+  }
+  scrollTo {
+    ... on TeaserBlock {
+      anchor
+    }
+  }
+}
+
 fragment TeaserParts on TeaserBlock {
+  __typename
   title
   anchor
   backgroundImage {
     url
+    title
   }
   fullWidth
-  columnContentCollection(limit: 4) {
+  columnContentCollection(limit: 2) {
     items {
-      ... on ComponentContent {
+      ... on ContentTypeRichText {
         title
         body {
           json
@@ -32,12 +50,13 @@ fragment TeaserParts on TeaserBlock {
       ... on Form {
         forwardEmail
       }
-      ... on ComponentImage {
+      ... on Image {
         title
         imageRatio
         imageEffects
         image {
           url
+          title
         }
         classes
       }
@@ -49,6 +68,7 @@ fragment TeaserParts on TeaserBlock {
 }
 
 fragment QuoteParts on QuoteBlock {
+  __typename
   title
   backgroundImage {
     url
@@ -62,6 +82,7 @@ fragment QuoteParts on QuoteBlock {
 }
 
 fragment RepertoirParts on RepertoirBlock {
+  __typename
   title
   anchor
   backgroundImage {

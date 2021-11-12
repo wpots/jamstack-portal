@@ -1,4 +1,5 @@
-[class*='section--'] {
+.teaserblock,
+.repertoirblock {
   & > .container-fluid {
     background: $white;
   }

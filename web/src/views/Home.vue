@@ -1,10 +1,10 @@
 <template>
   <div class="home">
-    <AppHeader :class="headerClass" />
+    <AppHeader />
     <main class="sections">
-      <SplashBlock @splash-in-view="moveHeader" />
       <AppMain :content="contentEntries" />
     </main>
+    <div class="spacer"></div>
     <AppFooter :copyright="copyright" />
     <div v-if="error">
       {{ error.value }}
@@ -19,7 +19,6 @@ import { getHomePage } from './home.graphql';
 import AppHeader from '../components/AppHeader.vue';
 import AppMain from '../components/AppMain.vue';
 import AppFooter from '../components/AppFooter.vue';
-import SplashBlock from '../components/SplashBlock.vue';
 
 export default defineComponent({
   name: 'Home',
@@ -27,12 +26,10 @@ export default defineComponent({
     AppHeader,
     AppMain,
     AppFooter,
-    SplashBlock,
   },
-  emits: ['splashInView'],
+
   setup() {
     const error = ref({});
-    const headerClass = ref('header--floating');
     const { result, loading } = useQuery(getHomePage, { title: 'Home' });
     const contentEntries = useResult(
       result,
@@ -46,17 +43,7 @@ export default defineComponent({
       return true;
     });
 
-    const moveHeader = (e) => {
-      headerClass.value = e.detail === 'up' ? 'header--floating' : null;
-    };
-
-    return { loading, contentEntries, copyright, error, moveHeader, headerClass };
+    return { loading, contentEntries, copyright, error };
   },
 });
 </script>
-
-<style lang="scss" scoped>
-.toTop {
-  transform: translateY(0) !important;
-}
-</style>

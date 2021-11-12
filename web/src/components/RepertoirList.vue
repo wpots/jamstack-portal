@@ -631,3 +631,8 @@
     </ul>
   </div>
 </template>
+<style lang="scss" scoped>
+h3 {
+  font-size: 1em !important;
+}
+</style>

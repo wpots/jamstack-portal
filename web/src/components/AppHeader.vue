@@ -14,7 +14,7 @@
           <span>toggle menu</span>
         </button>
         <ul class="toggle-menu" :class="showMenu ? 'focus' : null">
-          <li class="menu-item" v-for="(item, index) in cms">
+          <li class="menu-item" v-for="(item, index) in cms" :key="index">
             <a :href="`#${item.anchor}`" @click="showMenu = !showMenu">{{ item.title }}</a>
           </li>
         </ul>

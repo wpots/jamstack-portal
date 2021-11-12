@@ -4,8 +4,9 @@
     <main class="sections">
       <AppMain :content="contentEntries" />
     </main>
-    <div class="spacer"></div>
+
     <AppFooter :copyright="copyright" />
+    <StickyWidget />
     <div v-if="error">
       {{ error.value }}
     </div>
@@ -19,6 +20,7 @@ import { getHomePage } from './home.graphql';
 import AppHeader from '../components/AppHeader.vue';
 import AppMain from '../components/AppMain.vue';
 import AppFooter from '../components/AppFooter.vue';
+import StickyWidget from '@/components/StickyWidget.vue';
 
 export default defineComponent({
   name: 'Home',
@@ -26,6 +28,7 @@ export default defineComponent({
     AppHeader,
     AppMain,
     AppFooter,
+    StickyWidget,
   },
 
   setup() {

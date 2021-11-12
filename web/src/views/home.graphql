@@ -1,0 +1,76 @@
+query getHomePage($title: String!) {
+  homePageCollection(where: { title: $title }) {
+    items {
+      websiteTitle
+      copyright
+      pageBlocksCollection(limit: 8) {
+        items {
+          ...QuoteParts
+          ...TeaserParts
+          ...RepertoirParts
+        }
+      }
+    }
+  }
+}
+
+fragment TeaserParts on TeaserBlock {
+  title
+  anchor
+  backgroundImage {
+    url
+  }
+  fullWidth
+  columnContentCollection(limit: 4) {
+    items {
+      ... on ComponentContent {
+        title
+        body {
+          json
+        }
+      }
+      ... on Form {
+        forwardEmail
+      }
+      ... on ComponentImage {
+        title
+        imageRatio
+        imageEffects
+        image {
+          url
+        }
+        classes
+      }
+      ... on YouTubeVideo {
+        videoId
+      }
+    }
+  }
+}
+
+fragment QuoteParts on QuoteBlock {
+  title
+  backgroundImage {
+    url
+  }
+  quotesCollection(limit: 3) {
+    items {
+      quote
+      origin
+    }
+  }
+}
+
+fragment RepertoirParts on RepertoirBlock {
+  title
+  anchor
+  backgroundImage {
+    url
+  }
+  songsCollection(limit: 10) {
+    items {
+      title
+      artist
+    }
+  }
+}

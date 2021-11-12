@@ -3,9 +3,9 @@
     <AppHeader :class="headerClass" />
     <main class="sections">
       <SplashBlock @splash-in-view="moveHeader" />
-      <AppMain />
+      <AppMain :content="contentEntries" />
     </main>
-    <AppFooter />
+    <AppFooter :copyright="copyright" />
     <div v-if="error">
       {{ error.value }}
     </div>
@@ -14,7 +14,8 @@
 
 <script>
 import { ref, defineComponent, onErrorCaptured } from 'vue';
-
+import { useQuery, useResult } from '@vue/apollo-composable';
+import { getHomePage } from './home.graphql';
 import AppHeader from '../components/AppHeader.vue';
 import AppMain from '../components/AppMain.vue';
 import AppFooter from '../components/AppFooter.vue';
@@ -32,6 +33,13 @@ export default defineComponent({
   setup() {
     const error = ref({});
     const headerClass = ref('header--floating');
+    const { result, loading } = useQuery(getHomePage, { title: 'Home' });
+    const contentEntries = useResult(
+      result,
+      null,
+      (data) => data.homePageCollection.items[0].pageBlocksCollection.items,
+    );
+    const copyright = useResult(result, null, (data) => data.homePageCollection.items[0].copyright);
 
     onErrorCaptured((e) => {
       error.value = e;
@@ -42,9 +50,7 @@ export default defineComponent({
       headerClass.value = e.detail === 'up' ? 'header--floating' : null;
     };
 
-    const contentEntries = false;
-    const loading = false;
-    return { loading, contentEntries, error, moveHeader, headerClass };
+    return { loading, contentEntries, copyright, error, moveHeader, headerClass };
   },
 });
 </script>

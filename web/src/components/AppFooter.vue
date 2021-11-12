@@ -1,18 +1,23 @@
 <template>
   <footer class="site-info">
-    <p>{{ copyright }}</p>
+    <p>{{ cms.copyright }}</p>
+    <VueContentfulRichText :document="cms.credits" />
   </footer>
 </template>
 
-<script lang="ts">
+<script>
 import { defineComponent } from 'vue';
+import VueContentfulRichText from '@anivive/vue-contentful-rich-text';
 
 export default defineComponent({
   name: 'AppFooter',
+  components: { VueContentfulRichText },
   props: {
-    copyright: {
-      type: String,
-      default: '',
+    cms: {
+      type: Object,
+      default: () => {
+        return {};
+      },
     },
   },
 });

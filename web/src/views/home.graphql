@@ -2,13 +2,30 @@ query getHomePage($title: String!) {
   homePageCollection(limit: 1, where: { title: $title }) {
     items {
       websiteTitle
-      copyright
+      pageScrollerCollection(limit: 4) {
+        items {
+          ... on RepertoirBlock {
+            title
+            anchor
+          }
+          ... on TeaserBlock {
+            title
+            anchor
+          }
+        }
+      }
       pageBlocksCollection(limit: 8) {
         items {
           ...SplashParts
           ...QuoteParts
           ...TeaserParts
           ...RepertoirParts
+        }
+      }
+      footer {
+        copyright
+        credits {
+          json
         }
       }
     }

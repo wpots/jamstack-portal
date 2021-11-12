@@ -6,7 +6,6 @@
 </template>
 <script>
 import { defineComponent } from 'vue';
-
 import VueContentfulRichText from '@anivive/vue-contentful-rich-text';
 
 export default defineComponent({

@@ -1,11 +1,11 @@
 <template>
-  <div class="home">
-    <AppHeader />
+  <div id="top" class="home">
+    <AppHeader :cms="headerContent" />
     <main class="sections">
       <AppMain :content="contentEntries" />
     </main>
 
-    <AppFooter :copyright="copyright" />
+    <AppFooter :cms="footerContent" />
     <StickyWidget />
     <div v-if="error">
       {{ error.value }}
@@ -39,14 +39,23 @@ export default defineComponent({
       null,
       (data) => data.homePageCollection.items[0].pageBlocksCollection.items,
     );
-    const copyright = useResult(result, null, (data) => data.homePageCollection.items[0].copyright);
+    const headerContent = useResult(
+      result,
+      null,
+      (data) => data.homePageCollection.items[0].pageScrollerCollection.items,
+    );
+    const footerContent = useResult(
+      result,
+      null,
+      (data) => data.homePageCollection.items[0].footer,
+    );
 
     onErrorCaptured((e) => {
       error.value = e;
       return true;
     });
 
-    return { loading, contentEntries, copyright, error };
+    return { loading, contentEntries, headerContent, footerContent, error };
   },
 });
 </script>

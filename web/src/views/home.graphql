@@ -105,10 +105,4 @@ fragment RepertoirParts on RepertoirBlock {
   backgroundImage {
     url
   }
-  songsCollection(limit: 10) {
-    items {
-      title
-      artist
-    }
-  }
 }

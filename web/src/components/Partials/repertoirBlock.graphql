@@ -1,0 +1,25 @@
+query getRepertoirBlock($anchor: String!) {
+  repertoirBlockCollection(where: { anchor: $anchor }, limit: 1) {
+    items {
+      songsCollection(limit: 9) {
+        items {
+          artist
+          title
+          albumart {
+            url
+          }
+        }
+      }
+    }
+  }
+  muziekGenresCollection {
+    items {
+      genre
+      linkedFrom {
+        scoreCollection {
+          total
+        }
+      }
+    }
+  }
+}

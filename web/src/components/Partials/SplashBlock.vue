@@ -1,10 +1,12 @@
 <template>
-  <div ref="root" class="section splashblock">
-    <div class="overlay--dark"></div>
-    <Loader :to="getScrollAnchor" />
-    <LazyImage :media="getMedia" class="bg-img splashblock__bg" />
-    <span id="next"></span>
-  </div>
+  <transition appear>
+    <div ref="root" class="section splashblock">
+      <div class="overlay--dark"></div>
+      <Loader :to="getScrollAnchor" />
+      <LazyImage :media="getMedia" class="bg-img splashblock__bg" />
+      <span id="next"></span>
+    </div>
+  </transition>
 </template>
 <script>
 import { computed, defineComponent } from 'vue';

@@ -98,43 +98,6 @@
           class="ajax-loader"
         ></span>
       </div>
-      <div class="inv-recaptcha-holder">
-        <div
-          class="grecaptcha-badge"
-          data-style="inline"
-          style="width: 256px; height: 60px; box-shadow: gray 0px 0px 5px"
-        >
-          <div class="grecaptcha-logo">
-            <iframe
-              title="reCAPTCHA"
-              src="https://www.google.com/recaptcha/api2/anchor?ar=1&amp;k=6LcvH4IUAAAAAAd8SpeDQIFrc7ixYkf9bP1YtLrX&amp;co=aHR0cDovL3d3dy5nb2VkZ2ViZWt0LmNvbTo4MA..&amp;hl=nl&amp;v=kcXVPRWG7fMILHmzon0--fD3&amp;size=invisible&amp;badge=inline&amp;cb=t986ljkicueo"
-              width="256"
-              height="60"
-              role="presentation"
-              name="a-kpamh376euhm"
-              frameborder="0"
-              scrolling="no"
-              sandbox="allow-forms allow-popups allow-same-origin allow-scripts allow-top-navigation allow-modals allow-popups-to-escape-sandbox"
-            ></iframe>
-          </div>
-          <div class="grecaptcha-error"></div>
-          <textarea
-            id="g-recaptcha-response-1"
-            name="g-recaptcha-response"
-            class="g-recaptcha-response"
-            style="
-              width: 250px;
-              height: 40px;
-              border: 1px solid rgb(193, 193, 193);
-              margin: 10px 25px;
-              padding: 0px;
-              resize: none;
-              display: none;
-            "
-          ></textarea>
-        </div>
-        <iframe style="display: none"></iframe>
-      </div>
       <div class="wpcf7-response-output" aria-hidden="true"></div>
     </form>
   </div>

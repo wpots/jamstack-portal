@@ -1,4 +1,3 @@
-
 .tag-cloud {
   width: 100%;
   max-width: 700px;
@@ -10,27 +9,30 @@
   font-family: $font-fam-nav;
 }
 
-[class*="tag-link"] {
+.tag-link {
   position: relative;
   display: inline-block;
-  margin-top: -.2em;
-  padding: .3em 1em;
+  margin-top: -0.2em;
+  padding: 0.3em 1em;
   color: $white;
-  text-shadow: 1px 1px 3px rgba($black, .2);
-  text-decoration: none!important;//because class is given by WP
+  text-shadow: 1px 1px 3px rgba($black, 0.2);
+  text-decoration: none !important; //because class is given by WP
   background-color: $magenta;
   mix-blend-mode: multiply;
-  transition: transform .3s ease-in-out, luminosity .5s ease-out;
+  transition: transform 0.3s ease-in-out, luminosity 0.5s ease-out;
+  cursor: pointer;
 
   @include media-breakpoint-up(sm) {
-    margin-top: -.5em;
+    margin-top: -0.5em;
   }
 
   &:hover {
     transform: scale(1.2);
   }
 
-  &:hover, &:active, &:focus {
+  &:hover,
+  &:active,
+  &:focus {
     color: $white;
   }
 
@@ -41,15 +43,23 @@
   .filter-is-on & {
     mix-blend-mode: luminosity;
 
-    &.active, 
+    &.active,
     &:hover {
       color: $white;
       mix-blend-mode: normal;
     }
   }
-  
-  &:nth-of-type(4n+1) {background-color: $magenta;}
-  &:nth-of-type(2n) {background-color: #fe265e;}
-  &:nth-of-type(3n) {background-color: #3beca8;}
-  &:nth-of-type(4) {background-color: #a9f946;}
+
+  &:nth-of-type(4n + 1) {
+    background-color: $magenta;
+  }
+  &:nth-of-type(2n) {
+    background-color: #fe265e;
+  }
+  &:nth-of-type(3n) {
+    background-color: #3beca8;
+  }
+  &:nth-of-type(4) {
+    background-color: #a9f946;
+  }
 }

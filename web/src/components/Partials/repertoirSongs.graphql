@@ -1,0 +1,16 @@
+query getRepertoirSongs {
+  scoreCollection(limit: 60) {
+    items {
+      title
+      artist
+      albumart {
+        url
+      }
+      genreCollection {
+        items {
+          genre
+        }
+      }
+    }
+  }
+}

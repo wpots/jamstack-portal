@@ -1,10 +1,10 @@
 <template>
   <div class="list__items col-xs-12">
-    <ul class="row shuffle">
+    <ul class="row shuffle" v-if="songs?.length > 0">
       <li v-for="(song, index) in songs" class="list__item col-6 col-md-4" :key="index">
         <div class="list__content row">
           <div class="list__figure col-3">
-            <img class="content" :src="song.albumart.url" :alt="song.title" />
+            <img class="content" :src="song.albumart?.url" :alt="song.title" />
           </div>
 
           <div class="list__details col-9">

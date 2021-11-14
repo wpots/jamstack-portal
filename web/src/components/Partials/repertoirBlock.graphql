@@ -1,7 +1,7 @@
 query getRepertoirBlock($anchor: String!) {
   repertoirBlockCollection(where: { anchor: $anchor }, limit: 1) {
     items {
-      songsCollection(limit: 9) {
+      songsCollection(limit: 12) {
         items {
           artist
           title
@@ -12,7 +12,7 @@ query getRepertoirBlock($anchor: String!) {
       }
     }
   }
-  muziekGenresCollection {
+  muziekGenresCollection(limit: 20) {
     items {
       genre
       linkedFrom {

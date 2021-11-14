@@ -8,8 +8,9 @@
 
         <div class="list list--figure row">
           <Sortable :items="filterGenres" @updatesortable="onUpdateSortable" />
-
-          <RepertoirList :songs="sortedSongs" />
+          <transition name="fade">
+            <RepertoirList :songs="sortedSongs" />
+          </transition>
         </div>
       </article>
     </div>

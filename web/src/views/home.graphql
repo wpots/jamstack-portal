@@ -65,6 +65,7 @@ fragment TeaserParts on TeaserBlock {
         }
       }
       ... on Form {
+        naam
         forwardEmail
       }
       ... on Image {

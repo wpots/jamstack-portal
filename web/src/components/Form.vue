@@ -1,64 +1,70 @@
 <template>
-  <form name="ask-question" class="form" netlify netlify-honeypot="bot-field">
-    <input type="hidden" name="form-name" value="ask-question" />
+  <form
+    :name="cms.naam"
+    class="form"
+    netlify
+    netlify-honeypot="bot-field"
+    v-on:submit.prevent="onSubmit"
+  >
+    <input type="hidden" name="form-name" :value="cms.naam" />
     <p class="hidden">
       <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
     </p>
     <div class="form-group">
       <input
         type="text"
-        name="your-name"
-        value=""
+        :id="uniqueId('naam')"
+        name="naam"
+        v-model="form.naam"
         size="40"
         class="form-control"
-        aria-required="true"
-        aria-invalid="false"
       /><br />
-      <label class="">Naam</label>
+      <label :for="uniqueId('naam')">Naam</label>
     </div>
     <div class="form-group">
       <input
         type="email"
-        name="your-email"
-        value=""
+        :id="uniqueId('email')"
+        name="email"
+        v-model="form.email"
         size="40"
         class="form-control"
         aria-required="true"
-        aria-invalid="false"
       /><br />
-      <label class="">E-mail</label>
+      <label :for="uniqueId('email')">E-mail</label>
     </div>
     <div class="form-group">
       <input
         type="text"
+        :id="uniqueId('subject')"
         name="your-subject"
-        value=""
+        v-model="form.subject"
         size="40"
         class="form-control"
-        aria-invalid="false"
       /><br />
-      <label>Onderwerp</label>
+      <label :for="uniqueId('subject')">Onderwerp</label>
     </div>
 
     <div class="form-group">
       <textarea
+        :id="uniqueId('message')"
         name="your-message"
+        v-model="form.message"
         cols="40"
         rows="10"
         class="form-control"
-        aria-invalid="false"
       ></textarea
       ><br />
-      <label>Bericht</label>
+      <label :for="uniqueId('message')">Bericht</label>
     </div>
     <div data-netlify-recaptcha="true"></div>
     <div class="form-group">
-      <input type="submit" value="Verstuur" class="form-submit" /><span class="ajax-loader"></span>
+      <input type="submit" value="Verstuur" class="form-submit" />
     </div>
   </form>
 </template>
 <script>
-import { defineComponent } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 
 export default defineComponent({
   name: 'Form',
@@ -70,6 +76,38 @@ export default defineComponent({
         return {};
       },
     },
+  },
+  setup(props) {
+    const form = reactive({
+      'form-name': props.cms.naam,
+      naam: null,
+      email: null,
+      subject: null,
+      message: null,
+    });
+    const response = reactive({
+      status: null,
+      message: null,
+    });
+
+    const uniqueId = computed(() => (field) => {
+      return `${props.cms.naam}-${field}`;
+    });
+    const encode = (data) => {
+      return Object.keys(data)
+        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+        .join('&');
+    };
+    const onSubmit = () => {
+      fetch('/', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: encode(form),
+      })
+        .then(() => (response.message = 'Form successfully submitted'))
+        .catch((error) => alert(error));
+    };
+    return { form, uniqueId, onSubmit, response };
   },
 });
 </script>

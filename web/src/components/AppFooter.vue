@@ -24,6 +24,19 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .site-info {
+  width: 100%;
+  color: var(--bs-gray-700);
+  font-size: 0.8em;
+  min-height: 10vh;
+  background-color: var(--bs-gray-400);
+  display: flex;
+  align-items: flex-end;
   justify-content: space-evenly;
+  position: relative;
+  z-index: 1;
+
+  a {
+    color: currentColor;
+  }
 }
 </style>

@@ -13,3 +13,12 @@ export default defineComponent({
   name: 'StickyWidget',
 });
 </script>
+<style lang="scss" scoped>
+.meta-info {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  color: white;
+  z-index: 2;
+}
+</style>

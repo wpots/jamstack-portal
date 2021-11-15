@@ -1,17 +1,17 @@
 <template>
-  <footer class="site-info">
+  <footer class="site-info" v-if="cms">
     <p>{{ cms.copyright }}</p>
-    <VueContentfulRichText :document="cms.credits" />
+    <ContentfulRichText :document="cms.credits" class="credits" />
   </footer>
 </template>
 
 <script>
 import { defineComponent } from 'vue';
-import VueContentfulRichText from '@anivive/vue-contentful-rich-text';
+import ContentfulRichText from './ContentfulRichText.vue';
 
 export default defineComponent({
   name: 'AppFooter',
-  components: { VueContentfulRichText },
+  components: { ContentfulRichText },
   props: {
     cms: {
       type: Object,
@@ -22,3 +22,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss">
+.site-info {
+  justify-content: space-evenly;
+}
+</style>

@@ -5,20 +5,23 @@
   }
 
   .list__items {
-
-    ul{
+    ul {
       @extend %reset-ul;
     }
   }
 
   .list__title {
-    margin: .4em 0;
+    margin: 0.4em 0;
   }
 
   .list__figure {
     padding: 0;
-    @include aspect-ratio(1,1);
+    @include aspect-ratio(1, 1);
     overflow: hidden;
+
+    & > .content {
+      height: 100%;
+    }
   }
 
   .list__details {
@@ -30,7 +33,6 @@
     padding: 10px;
     overflow: hidden;
 
-    
     .list__content {
       position: relative;
       margin: 0;
@@ -39,10 +41,9 @@
       min-height: 75px;
       @extend %card-look;
       overflow: hidden;
-      
+
       @include media-breakpoint-up(sm) {
       }
-
 
       .list__cta {
         position: relative;
@@ -56,10 +57,10 @@
         bottom: 0;
         left: 0;
         opacity: 0;
-        background: rgba($white, .7);
+        background: rgba($white, 0.7);
         transform: translateY(100%);
-        box-shadow: 1px 1px 1px rgba($black,.2);
-        
+        box-shadow: 1px 1px 1px rgba($black, 0.2);
+
         > * {
           height: 100%;
         }
@@ -68,21 +69,20 @@
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
-          color: rgba($black, .5);
+          color: rgba($black, 0.5);
           font-size: 36px;
         }
       }
     }
 
-    &:nth-of-type(-n+3) {
+    &:nth-of-type(-n + 3) {
       .list__content {
       }
     }
 
     &:hover {
-
       * {
-        transition:  .1s ease-out;
+        transition: 0.1s ease-out;
       }
 
       .list__cta {
@@ -95,10 +95,10 @@
     }
   }
   .list__meta {
-    margin: 0 0 .5em;
+    margin: 0 0 0.5em;
     color: lighten($black, 50%);
     font-family: $font-fam-body;
-    font-size: .9em;
+    font-size: 0.9em;
     line-height: 1;
   }
 
@@ -113,7 +113,6 @@
   display: flex;
   align-items: center;
   padding-bottom: 5px;
-
 }
 
 .list__link {
@@ -123,11 +122,11 @@
   min-width: 80px;
   height: 35px;
   padding: 0 5px;
-  font-size: .7em;
-  text-shadow: 1px 1px 8px rgba($black,.1);
+  font-size: 0.7em;
+  text-shadow: 1px 1px 8px rgba($black, 0.1);
   line-height: 35px;
   border-radius: 2px;
-  box-shadow: 1px 1px 1px rgba($black,.2);
+  box-shadow: 1px 1px 1px rgba($black, 0.2);
 
   span {
     margin-left: 30px;

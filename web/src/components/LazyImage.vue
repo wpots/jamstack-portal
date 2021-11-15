@@ -3,7 +3,7 @@
     role="presentation"
     ref="root"
     v-lazyload="{ ...lazySettings, callback: setSrcset }"
-    :style="{ position: sticky ? 'sticky' : 'relative' }"
+    :style="{ position: sticky ? 'sticky' : null }"
     class
     :class="loaded ? 'loaded' : false"
   >
@@ -115,7 +115,6 @@ figure {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  min-height: 40vh;
 
   img {
     @include size(100%);

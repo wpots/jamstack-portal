@@ -17,7 +17,7 @@ export default defineComponent({
   },
   setup(props) {
     const videoSrc = computed(() => {
-      return `https://www.youtube.com/embed/${props.videoId}`;
+      return `https://www.youtube.com/embed/${props.cms.videoId}`;
     });
     return { videoSrc };
   },

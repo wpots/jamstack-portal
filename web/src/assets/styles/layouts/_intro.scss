@@ -4,6 +4,7 @@ figure.bg-img {
   width: 100%;
   object-fit: cover;
   z-index: -1;
+  min-height: 40vh;
 
   @include media-breakpoint-up(sm) {
     top: $banner-size;

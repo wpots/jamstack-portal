@@ -4,7 +4,11 @@
       <li v-for="song in songs" class="list__item shuffle-item col-6 col-md-4" :key="song.title">
         <div class="list__content row">
           <div class="list__figure col-3">
-            <img class="content" :src="song.albumart?.url" :alt="song.title" />
+            <LazyImage
+              class="content"
+              :srcset="[100]"
+              :media="{ landscape: { src: song.albumart?.url, alt: song.title } }"
+            />
           </div>
 
           <div class="list__details col-9">
@@ -17,7 +21,9 @@
   </div>
 </template>
 <script>
+import LazyImage from './LazyImage.vue';
 export default {
+  components: { LazyImage },
   name: 'RepertoirList',
   props: {
     songs: {
@@ -46,10 +52,6 @@ h3 {
 }
 .shuffle {
   position: relative;
-}
-.shuffle-enter-active,
-.shuffle-leave-active {
-  // position: absolute;
 }
 
 .shuffle-move {

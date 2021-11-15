@@ -1,16 +1,16 @@
 <template>
   <div class="rich-text">
     <h1 v-if="cms.title">{{ cms.title }}</h1>
-    <VueContentfulRichText :document="cms.body" />
+    <ContentfulRichText :document="cms.body" />
   </div>
 </template>
 <script>
 import { defineComponent } from 'vue';
-import VueContentfulRichText from '@anivive/vue-contentful-rich-text';
+import ContentfulRichText from './ContentfulRichText.vue';
 
 export default defineComponent({
   name: 'RichText',
-  components: { VueContentfulRichText },
+  components: { ContentfulRichText },
   props: {
     cms: {
       type: Object,

@@ -44,7 +44,11 @@ export default defineComponent({
       null,
       (data) => data.homePageCollection.items[0].pageScrollerCollection.items,
     );
-    const footerContent = useResult(result, {}, (data) => data.homePageCollection.items[0].footer);
+    const footerContent = useResult(
+      result,
+      null,
+      (data) => data.homePageCollection.items[0].footer,
+    );
 
     onErrorCaptured((e) => {
       error.value = e;

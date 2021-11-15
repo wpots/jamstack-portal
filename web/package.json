@@ -24,7 +24,6 @@
     "vuex": "^4.0.0-0"
   },
   "devDependencies": {
-    "@anivive/vue-contentful-rich-text": "^1.0.1",
     "@contentful/rich-text-html-renderer": "^15.8.0",
     "@sendgrid/mail": "^7.6.0",
     "@types/jest": "^24.0.19",

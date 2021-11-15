@@ -2,21 +2,24 @@
   position: sticky;
   top: 0;
   width: 100%;
-  margin-top: 60vh;
   background: $white;
   border-bottom: 1px solid rgba($chocolaterie, 0.3);
   z-index: 2;
   transform: translateY(0);
   transition: transform 0.3s ease-in;
 
-  // &.header--floating {
-  //   @include media-breakpoint-up(sm) {
-  //     transform: translateY(50vh);
-  //   }
-  //   @media screen and (orientation: portrait) {
-  //     transform: translateY(70vh);
-  //   }
-  // }
+  @include media-breakpoint-up(sm) {
+    margin-top: 60vh;
+  }
+
+  &.header--floating {
+    @include media-breakpoint-up(sm) {
+      transform: translateY(50vh);
+    }
+    @media screen and (orientation: portrait) {
+      transform: translateY(70vh);
+    }
+  }
 }
 
 .banner {

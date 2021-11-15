@@ -53,6 +53,7 @@ export default defineComponent({
   &::v-deep(.bg-img) {
     position: fixed !important;
     top: 0 !important;
+    min-height: 100vh;
   }
 }
 </style>

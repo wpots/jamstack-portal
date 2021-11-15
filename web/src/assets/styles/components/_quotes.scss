@@ -1,6 +1,14 @@
 .quotes {
-  height: 60vh;
+  @include media-breakpoint-up(sm) {
+    height: 60vh;
+  }
+  .carousel__viewport {
+    @include media-breakpoint-down(sm) {
+      overflow: visible;
+    }
+  }
 }
+
 .quote {
   position: relative;
   height: $spacer-size;

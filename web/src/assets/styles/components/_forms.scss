@@ -53,7 +53,7 @@
     }
 
     &:focus,
-    &.ready {
+    &:not(:empty) {
       padding-top: 25px;
     }
   }
@@ -63,7 +63,7 @@
     @extend %reset-form;
 
     &:focus,
-    &.ready {
+    &:not(:empty) {
       & ~ label {
         color: $magenta;
         font-size: 0.7em;

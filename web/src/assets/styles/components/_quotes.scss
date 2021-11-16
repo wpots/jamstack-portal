@@ -3,7 +3,9 @@
     height: 60vh;
   }
   .carousel {
-    background-color: $smoke;
+    @include media-breakpoint-down(sm) {
+      background-color: $smoke;
+    }
   }
 }
 
@@ -12,7 +14,7 @@
   height: $spacer-size;
 
   .quote__item {
-    position: absolute;
+    position: absubsolute;
     bottom: 40%;
     left: 5%;
     max-width: 90%;

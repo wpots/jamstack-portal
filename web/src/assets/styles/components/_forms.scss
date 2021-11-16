@@ -33,7 +33,7 @@
     border-bottom: 1px solid $gray;
 
     &:not([type='submit']):focus,
-    &:not([type='submit']).ready {
+    &:not([type='submit']).filled {
       height: calc(100% - 25px);
       background: $smoke;
       border-bottom: 1px solid $magenta;
@@ -63,7 +63,7 @@
     @extend %reset-form;
 
     &:focus,
-    &:not(:empty) {
+    &.filled {
       & ~ label {
         color: $magenta;
         font-size: 0.7em;
@@ -92,9 +92,6 @@ input[type='submit'] {
   border: 0;
   border-radius: 2px;
   transition: 0.2s ease-in-out;
-
-  &:hover {
-  }
 }
 
 // contact form 7 styling

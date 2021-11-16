@@ -18,6 +18,7 @@
         v-model="form.naam"
         size="40"
         class="form-control"
+        :class="{ filled: form.naam }"
       /><br />
       <label :for="uniqueId('naam')">Naam</label>
     </div>
@@ -29,6 +30,7 @@
         v-model="form.email"
         size="40"
         class="form-control"
+        :class="{ filled: form.email }"
         aria-required="true"
       /><br />
       <label :for="uniqueId('email')">E-mail</label>
@@ -41,6 +43,7 @@
         v-model="form.subject"
         size="40"
         class="form-control"
+        :class="{ filled: form.subject }"
       /><br />
       <label :for="uniqueId('subject')">Onderwerp</label>
     </div>
@@ -53,6 +56,7 @@
         cols="40"
         rows="10"
         class="form-control"
+        :class="{ filled: form.message }"
       ></textarea
       ><br />
       <label :for="uniqueId('message')">Bericht</label>
@@ -101,7 +105,7 @@ export default defineComponent({
     const onSubmit = () => {
       fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 'Content-Type': 'multipart/form-data' },
         body: encode(form),
       })
         .then(() => (response.message = 'Form successfully submitted'))

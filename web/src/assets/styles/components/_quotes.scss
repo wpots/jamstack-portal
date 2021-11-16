@@ -2,10 +2,8 @@
   @include media-breakpoint-up(sm) {
     height: 60vh;
   }
-  .carousel__viewport {
-    @include media-breakpoint-down(sm) {
-      overflow: visible;
-    }
+  carousel {
+    background-color: $smoke;
   }
 }
 

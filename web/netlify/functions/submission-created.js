@@ -40,17 +40,17 @@ export async function handler(event, context, callback) {
     .send(msg)
     .then((data) => {
       console.log('SENDGRID SUCCESS');
-      return callback(null, {
+      return {
         statusCode: 200,
         body: JSON.stringify(data),
-      });
+      };
     })
     .catch((error) => {
       console.error('SENDGRID ERROR');
-      return callback(null, {
+      return {
         statusCode: 418,
         body: JSON.stringify(error),
-      });
+      };
     });
   return callback(null, {
     statusCode: 200,

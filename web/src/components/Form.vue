@@ -2,6 +2,7 @@
   <form
     :name="cms.naam"
     class="form"
+    :class="{ pending: pending }"
     netlify
     netlify-honeypot="bot-field"
     v-on:submit.prevent="onSubmit"
@@ -31,7 +32,7 @@
         size="40"
         class="form-control"
         :class="{ filled: form.email }"
-        aria-required="true"
+        required
       /><br />
       <label :for="uniqueId('email')">E-mail</label>
     </div>
@@ -57,6 +58,7 @@
         rows="10"
         class="form-control"
         :class="{ filled: form.message }"
+        required
       ></textarea
       ><br />
       <label :for="uniqueId('message')">Bericht</label>
@@ -65,10 +67,13 @@
     <div class="form-group">
       <input type="submit" value="Verstuur" class="form-submit" />
     </div>
+    <small v-if="response.message"
+      ><i>{{ response.message }}</i></small
+    >
   </form>
 </template>
 <script>
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 
 export default defineComponent({
   name: 'Form',
@@ -82,13 +87,17 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const form = reactive({
-      'form-name': props.cms.naam,
-      formId: props.cms.sys.id,
+    const pending = ref(false);
+    const cleanForm = {
       naam: null,
       email: null,
       subject: null,
       message: null,
+    };
+    const form = reactive({
+      'form-name': props.cms.naam,
+      formId: props.cms.sys.id,
+      ...cleanForm,
     });
     const response = reactive({
       status: null,
@@ -103,21 +112,40 @@ export default defineComponent({
         .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
         .join('&');
     };
+
+    const onSuccessFullSubmit = () => {
+      pending.value = true;
+      response.message = 'Form successfully submitted';
+      setTimeout(() => {
+        Object.assign(form, cleanForm);
+        pending.value = false;
+        response.message = null;
+      }, 8000);
+    };
     const onSubmit = () => {
       fetch('/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encode(form),
       })
-        .then(() => (response.message = 'Form successfully submitted'))
+        .then(() => {
+          onSuccessFullSubmit();
+        })
         .catch((error) => alert(error));
     };
-    return { form, uniqueId, onSubmit, response };
+    return { form, uniqueId, onSubmit, response, pending };
   },
 });
 </script>
 <style lang="scss" scoped>
 .hidden {
   display: none;
+}
+
+.pending {
+  pointer-events: none;
+  .form-group {
+    opacity: 0.3;
+  }
 }
 </style>

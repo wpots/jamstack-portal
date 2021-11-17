@@ -1,0 +1,6 @@
+query getAsset($id: String!) {
+  form(id: $id) {
+    url
+    title
+  }
+}

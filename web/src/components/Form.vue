@@ -84,6 +84,7 @@ export default defineComponent({
   setup(props) {
     const form = reactive({
       'form-name': props.cms.naam,
+      'send-to': props.cms.forwardEmail,
       naam: null,
       email: null,
       subject: null,
@@ -105,7 +106,7 @@ export default defineComponent({
     const onSubmit = () => {
       fetch('/', {
         method: 'POST',
-        headers: { 'Content-Type': 'multipart/form-data' },
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: encode(form),
       })
         .then(() => (response.message = 'Form successfully submitted'))

@@ -84,7 +84,7 @@ export default defineComponent({
   setup(props) {
     const form = reactive({
       'form-name': props.cms.naam,
-      'send-to': props.cms.forwardEmail,
+      formId: props.cms.sys.id,
       naam: null,
       email: null,
       subject: null,

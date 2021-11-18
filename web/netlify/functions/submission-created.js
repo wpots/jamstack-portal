@@ -27,7 +27,7 @@ export async function handler(event, context, callback) {
       return data;
     });
   const msg = {
-    to: 'website@goedgebekt.com',
+    to: sendTo.form.forwardEmail,
     from: 'wieteke@pettico.de', // must be verified sender in sendgrid
     subject: `Contactformulier Goedgebekt.com: ${data.subject}`,
     text: data.naam + ' : ' + data.message + 'from: ' + data.email,

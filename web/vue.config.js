@@ -12,9 +12,4 @@ module.exports = {
       .use('graphql-tag/loader')
       .loader('graphql-tag/loader');
   },
-  configureWebpack: {
-    externals: {
-      jquery: 'jQuery',
-    },
-  },
 };

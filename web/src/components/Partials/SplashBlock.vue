@@ -47,7 +47,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .splashblock {
-  width: 100vw;
+  width: 100%;
   height: 100vh;
 
   &::v-deep(.bg-img) {

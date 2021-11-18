@@ -10,6 +10,10 @@ figure.bg-img {
     top: $banner-size;
     height: 100vh;
   }
+
+  & + div {
+    margin-top: -20vh;
+  }
 }
 
 .overlay--dark {

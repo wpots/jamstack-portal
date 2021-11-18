@@ -9,10 +9,10 @@ figure.bg-img {
   @include media-breakpoint-up(sm) {
     top: $banner-size;
     height: 100vh;
-  }
 
-  & + div {
-    margin-top: -20vh;
+    & + div {
+      margin-top: -20vh;
+    }
   }
 }
 

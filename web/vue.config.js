@@ -12,4 +12,7 @@ module.exports = {
       .use('graphql-tag/loader')
       .loader('graphql-tag/loader');
   },
+  pwa: {
+    themeColor: '#eb008b',
+  },
 };

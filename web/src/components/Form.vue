@@ -40,7 +40,7 @@
       <input
         type="text"
         :id="uniqueId('subject')"
-        name="your-subject"
+        name="subject"
         v-model="form.subject"
         size="40"
         class="form-control"
@@ -52,7 +52,7 @@
     <div class="form-group">
       <textarea
         :id="uniqueId('message')"
-        name="your-message"
+        name="message"
         v-model="form.message"
         cols="40"
         rows="10"

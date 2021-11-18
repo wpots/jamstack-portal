@@ -12,7 +12,21 @@
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>
     <div id="app"></div>
-    <form name="boeken" netlify netlify-honeypot="bot-field" hidden></form>
-    <form name="leden" netlify netlify-honeypot="bot-field" hidden></form>
+    <form name="boeken" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" :value="boeken" />
+      <input type="hidden" name="naam" :value="boeken" />
+      <input type="hidden" name="email" :value="boeken" />
+      <input type="hidden" name="subject" :value="boeken" />
+      <textarea type="hidden" name="message" :value="boeken"></textarea>
+      <div data-netlify-recaptcha="true"></div>
+    </form>
+    <form name="leden" netlify netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" :value="leden" />
+      <input type="hidden" name="naam" :value="boeken" />
+      <input type="hidden" name="email" :value="boeken" />
+      <input type="hidden" name="subject" :value="boeken" />
+      <textarea type="hidden" name="message" :value="boeken"></textarea>
+      <div data-netlify-recaptcha="true"></div>
+    </form>
   </body>
 </html>

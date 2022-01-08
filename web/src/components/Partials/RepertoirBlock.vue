@@ -4,7 +4,7 @@
       <article class="flex-box">
         <div class="page-header">
           <h1>{{ cms.title }}</h1>
-          <div>{{ cms.intro }}</div>
+          <ContentfulRichText v-if="cms.intro" :document="cms.intro" />
         </div>
 
         <div class="list list--figure row">
@@ -28,11 +28,12 @@ import { getRepertoirBlock } from './repertoirBlock.graphql';
 import { getRepertoirSongs } from './repertoirSongs.graphql';
 import RepertoirList from '../RepertoirList.vue';
 import Sortable from '../Sortable.vue';
+import ContentfulRichText from '../ContentfulRichText.vue';
 
 // https://next--vue-dataset-demo.netlify.app/components/#props
 export default defineComponent({
   name: 'RepertoirBlock',
-  components: { RepertoirList, Sortable },
+  components: { RepertoirList, Sortable, ContentfulRichText },
   props: {
     cms: {
       type: Object,

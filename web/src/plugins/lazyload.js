@@ -49,7 +49,7 @@ export default {
           if (callback) callback(e.detail);
         });
       },
-      upMounted(el) {
+      unMounted(el) {
         el.removeEventListener('lazyload');
         if (persist) observer.unobserve(el);
       },

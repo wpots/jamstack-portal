@@ -104,6 +104,7 @@ fragment QuoteParts on QuoteBlock {
 fragment RepertoirParts on RepertoirBlock {
   __typename
   title
+  intro
   anchor
   backgroundImage {
     url

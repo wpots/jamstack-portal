@@ -4,6 +4,7 @@
       <article class="flex-box">
         <div class="page-header">
           <h1>{{ cms.title }}</h1>
+          <div>{{ cms.intro }}</div>
         </div>
 
         <div class="list list--figure row">

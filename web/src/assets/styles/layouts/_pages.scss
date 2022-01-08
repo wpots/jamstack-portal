@@ -74,9 +74,7 @@
 
     .sections .section:last-of-type & {
       height: calc(#{$spacer-size}/ 2);
-      background: $smoke;
-      background: $gray;
-      // background: $magenta;
+      background-color: $smoke;
     }
   }
 }

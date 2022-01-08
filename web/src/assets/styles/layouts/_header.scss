@@ -45,10 +45,6 @@
 .page-header {
   order: -1;
   text-align: center;
-
-  h1 {
-    // margin: 2.2em 0;
-  }
 }
 
 .toggle-menu {
@@ -83,7 +79,6 @@
 
     .menu-item {
       opacity: 1;
-      // border-bottom: 1px solid $magenta-tint60;
       transition: opacity 0.3s ease-in;
 
       @for $i from 1 to 10 {

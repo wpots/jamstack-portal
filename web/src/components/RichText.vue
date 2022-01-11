@@ -1,5 +1,5 @@
 <template>
-  <div class="rich-text">
+  <div class="rich-text" :class="cms.classes">
     <h1 v-if="cms.title">{{ cms.title }}</h1>
     <ContentfulRichText :document="cms.body" />
   </div>
@@ -23,7 +23,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .rich-text {
-  & div:only-child {
+  &.drop div:only-child {
     margin-top: 256px;
   }
 }

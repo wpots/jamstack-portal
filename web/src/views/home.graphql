@@ -63,6 +63,7 @@ fragment TeaserParts on TeaserBlock {
         body {
           json
         }
+        classes
       }
       ... on Form {
         naam

@@ -24,14 +24,16 @@ export async function handler(event, context, callback) {
   })
     .then((response) => response.json())
     .then(({ data }) => {
+      console.log(data);
       return data;
     })
     .catch((error) => {
       console.log(error);
       return { form: { forwardEmail: 'website@goedgebekt.com' } };
     });
+  console.log(sendTo);
   const msg = {
-    to: sendTo.form.forwardEmail,
+    to: sendTo?.form?.forwardEmail || 'website@goedgebekt.com',
     from: 'website@goedgebekt.com', // must be verified sender in sendgrid
     subject: `Contactformulier Goedgebekt.com: ${data.subject}`,
     text: data.naam + ' : ' + data.message + 'from: ' + data.email,

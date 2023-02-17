@@ -25,6 +25,10 @@ export async function handler(event, context, callback) {
     .then((response) => response.json())
     .then(({ data }) => {
       return data;
+    })
+    .catch((error) => {
+      console.log(error);
+      return { form: { forwardEmail: 'website@goedgebekt.com' } };
     });
   const msg = {
     to: sendTo.form.forwardEmail,

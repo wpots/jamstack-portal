@@ -52,5 +52,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .flex-box {
   justify-content: center;
+  margin: auto;
 }
 </style>

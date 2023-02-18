@@ -41,3 +41,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+.tag-cloud {
+  margin: 2rem 0;
+}
+</style>

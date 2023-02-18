@@ -2,7 +2,7 @@ import fetch from 'node-fetch';
 import sgMail from '@sendgrid/mail';
 
 const getEmailToFromCms = async (formId) => {
-  return await fetch(`${process.env.URL}/.netlify/functions/contentful`, {
+  return await fetch(`${process.env.URL}/.netlify/functions/content`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

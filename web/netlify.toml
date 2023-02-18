@@ -2,7 +2,12 @@
 [[redirects]]
   from = "/api/v1/content"
   to = "/.netlify/functions/contentful"
-  status = 200
+  status = 301
+
+[[redirects]]
+  from = "/api/v1/mail"
+  to = "/.netlify/functions/sendgrid"
+  status = 301
 
 [functions]
   node_bundler = "esbuild"

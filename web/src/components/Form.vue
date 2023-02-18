@@ -1,16 +1,7 @@
 <template>
-  <form
-    :name="cms.naam"
-    class="form"
-    :class="{ pending: pending }"
-    netlify
-    netlify-honeypot="bot-field"
-    v-on:submit.prevent="onSubmit"
-  >
+  <form :name="cms.naam" class="form" :class="{ pending: pending }" v-on:submit.prevent="onSubmit">
     <input type="hidden" name="form-name" :value="cms.naam" />
-    <p class="hidden">
-      <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
-    </p>
+
     <div class="form-group">
       <input
         type="text"
@@ -107,29 +98,28 @@ export default defineComponent({
     const uniqueId = computed(() => (field) => {
       return `${props.cms.naam}-${field}`;
     });
-    const encode = (data) => {
-      return Object.keys(data)
-        .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-        .join('&');
-    };
+    // const encode = (data) => {
+    //   return Object.keys(data)
+    //     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+    //     .join('&');
+    // };
 
-    const onSuccessFullSubmit = () => {
+    const onSuccessFulSubmit = () => {
       pending.value = true;
       response.message = 'Form successfully submitted';
       setTimeout(() => {
         Object.assign(form, cleanForm);
         pending.value = false;
         response.message = null;
-      }, 8000);
+      }, 4000);
     };
     const onSubmit = () => {
-      fetch('/', {
+      fetch('/api/v1/mail', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: encode(form),
+        body: JSON.stringify(form),
       })
         .then(() => {
-          onSuccessFullSubmit();
+          onSuccessFulSubmit();
         })
         .catch((error) => alert(error));
     };
@@ -146,6 +136,10 @@ export default defineComponent({
   pointer-events: none;
   .form-group {
     opacity: 0.3;
+    transition: 0.2s ease-out;
   }
+}
+small {
+  padding: 2rem;
 }
 </style>

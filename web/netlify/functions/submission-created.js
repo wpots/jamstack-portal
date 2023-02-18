@@ -22,7 +22,10 @@ export async function handler(event, context, callback) {
       },
     }),
   })
-    .then((response) => response.json())
+    .then((response) => {
+      console.log(response);
+      response.json();
+    })
     .then(({ data }) => {
       console.log(data);
       return data;

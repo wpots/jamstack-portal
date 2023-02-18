@@ -178,14 +178,14 @@
 
 
 
-  $list: (facebook, youtube, spotify, itunes);
-  $bgcolors: ($magenta, $red, $green, $white);
-   $colors: (indigo, $white, $black, #d34fe1);
+  $list: (facebook, youtube, instagram);
+  $bgcolors: ($magenta, $red, $white);
+   $colors: (indigo, $white, #d34fe1);
 
   @each $item in $list {
     $i: index($list, $item);
     .link--#{$item} {
-        @extend .icon-#{$item};
+        @extend .icon-#{$item} !optional;
         color: nth($colors, $i);
         background: nth($bgcolors, $i);
 

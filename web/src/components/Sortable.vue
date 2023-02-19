@@ -44,5 +44,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .tag-cloud {
   margin: 2rem 0;
+  a {
+    color: $white;
+  }
 }
 </style>

@@ -18,10 +18,12 @@
     
     @include media-breakpoint-up(sm) {
       margin: auto;
-      text-align: center;
-      
+      text-align: right;
     }
+        @include media-breakpoint-up(lg) {
 
+          text-align: center;
+        }
 
     li {
       display: block;

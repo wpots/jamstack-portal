@@ -63,7 +63,7 @@
   text-align: center;
   line-height: $icon-size;
   overflow: hidden;
-  background: $magenta;
+  background: var(--icon-bg-color, $magenta);
   border-radius: calc(#{$icon-size}/2);
   transition: all .5s ease;
 
@@ -78,7 +78,6 @@
     width: auto;
     max-width: 700px;
     padding: 0 10px;
-    color: $white;
     text-decoration: none;
     transition: .5s ease;
 
@@ -116,7 +115,7 @@
 
 //toggle menu
 .btn--hamburger-cross {
-  font-size: 0;
+  font-size: 0!important;
   z-index: 4;
   cursor: pointer;
   transition: background $button-transition-duration;

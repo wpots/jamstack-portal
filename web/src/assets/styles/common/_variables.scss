@@ -62,3 +62,13 @@ $button-transition-duration : .3s;
 $enable-flex                : true;
 
 $grid-gutter-width          : 30px;
+
+
+$theme-color-primary: $magenta;
+$theme-color-secondary:#fe265e;
+$theme-color-accent: #3beca8;
+
+// bootstrap overrides
+$link-color:currentColor;
+$link-hover-color: currentColor;
+$link-hover-decoration: none;

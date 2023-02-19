@@ -59,4 +59,10 @@ export default defineComponent({
     height: 25px;
   }
 }
+.icon-facebook {
+  --icon-bg-color: #{$theme-color-accent};
+}
+.icon-youtube {
+  --icon-bg-color: #{$theme-color-secondary};
+}
 </style>

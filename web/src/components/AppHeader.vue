@@ -47,3 +47,13 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+.menu-item:not(:first-child) {
+  @include media-breakpoint-up(sm) {
+    ::before {
+      content: '/';
+      margin-right: 0.5rem;
+    }
+  }
+}
+</style>

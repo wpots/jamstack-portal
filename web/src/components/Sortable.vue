@@ -35,7 +35,7 @@ export default defineComponent({
       emit('updatesortable', isActive.value);
     };
     const getFontSize = computed(() => (count) => {
-      return { fontSize: ` ${count * 0.7 + 8}pt` };
+      return { fontSize: ` ${count * 0.7 + 8}pt`, borderRadius: `${count * 0.7 + 8}pt` };
     });
     return { isActive, activeHandle, getFontSize };
   },
@@ -43,6 +43,8 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .tag-cloud {
+  max-width: 100%;
+  width: 548px;
   margin: 2rem 0;
   a {
     color: $white;

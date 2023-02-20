@@ -2,6 +2,16 @@ query getHomePage($title: String!) {
   homePageCollection(limit: 1, where: { title: $title }) {
     items {
       websiteTitle
+      callToAction {
+        inPageAnchor {
+          ... on TeaserBlock {
+            anchor
+            title
+          }
+        }
+        iconName
+        linkText
+      }
       pageScrollerCollection(limit: 4) {
         items {
           ... on RepertoirBlock {
@@ -56,7 +66,7 @@ fragment TeaserParts on TeaserBlock {
     title
   }
   fullWidth
-  columnContentCollection(limit: 2) {
+  columnContentCollection(limit: 4) {
     items {
       ... on ContentTypeRichText {
         title
@@ -83,6 +93,28 @@ fragment TeaserParts on TeaserBlock {
       }
       ... on YouTubeVideo {
         videoId
+      }
+      ...EventFragment
+    }
+  }
+}
+
+fragment EventFragment on EventList {
+  __typename
+  title
+  eventlistCollection(limit: 5) {
+    items {
+      title
+      date
+      venue
+      location {
+        lat
+        lon
+      }
+      description
+      externalLink {
+        linkText
+        url
       }
     }
   }

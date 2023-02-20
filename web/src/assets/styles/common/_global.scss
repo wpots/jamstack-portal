@@ -55,7 +55,7 @@ h1 {
 }
 
 h1 {
-  .flex-box & {
+  .row & {
     margin: 0 0 1.2em 0;
     @include media-breakpoint-down(sm) {
       text-align: center;
@@ -79,10 +79,6 @@ h1 {
   }
 }
 
-.flex-box {
-  display: flex;
-  flex-flow: row wrap;
-}
 
 .section--template-intro {
   padding-top: 0 !important;
@@ -107,5 +103,15 @@ h1 {
 }
 
 .container-fluid {
-  padding-top: 70px;
+  &:not(.banner){
+    padding-top: 70px;
+      >.row {
+          padding-top: 3rem;
+          padding-bottom:3rem;
+        }
+  }
+  > .row {
+    padding-left: 2rem;
+    padding-right:2rem;
+  }
 }

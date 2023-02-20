@@ -2,7 +2,12 @@
   <div class="section section--quotes quoteblock">
     <LazyImage class="bg-img quoteblock__bg" :media="getMedia" :sticky="true" />
     <div class="quotes">
-      <Carousel :autoplay="5000" :wrap-around="true" :transition="1500">
+      <Carousel
+        :autoplay="5000"
+        :wrap-around="true"
+        :transition="1500"
+        :pauseAutoplayOnHover="false"
+      >
         <slide class="quote">
           <div class="quote__item">
             <q>Wij hebben van jullie genoten!</q>

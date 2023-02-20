@@ -8,10 +8,6 @@
   transform: translateY(0);
   transition: transform 0.3s ease-in;
 
-  @include media-breakpoint-up(sm) {
-    margin-top: 60vh;
-  }
-
   &.header--floating {
     @include media-breakpoint-up(sm) {
       transform: translateY(50vh);

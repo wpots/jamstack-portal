@@ -39,11 +39,12 @@ export default defineComponent({
       null,
       (data) => data.homePageCollection.items[0].pageBlocksCollection.items,
     );
-    const headerContent = useResult(
-      result,
-      null,
-      (data) => data.homePageCollection.items[0].pageScrollerCollection.items,
-    );
+    const headerContent = useResult(result, null, (data) => {
+      return {
+        nav: data.homePageCollection.items[0].pageScrollerCollection.items,
+        cta: data.homePageCollection.items[0].callToAction,
+      };
+    });
     const footerContent = useResult(
       result,
       null,

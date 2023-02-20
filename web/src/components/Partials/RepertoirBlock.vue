@@ -1,13 +1,13 @@
 <template>
   <div class="section repertoirblock" v-lazyload="{ callback: onComponentInView }">
     <div class="container-fluid">
-      <article class="flex-box">
+      <article class="row">
         <div class="page-header">
           <h1>{{ cms.title }}</h1>
           <ContentfulRichText v-if="cms.intro" :document="cms.intro" />
         </div>
 
-        <div class="list list--figure row">
+        <div class="list list--figure row justify-content-center">
           <Sortable :items="filterGenres" @updatesortable="onUpdateSortable" />
           <transition name="fade">
             <RepertoirList :songs="sortedSongs" />
@@ -42,6 +42,7 @@ export default defineComponent({
       },
     },
   },
+
   setup() {
     const sortBy = ref(false);
     const queryOptions = ref({

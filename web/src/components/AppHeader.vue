@@ -1,49 +1,34 @@
 <template>
   <header class="header" ref="root">
-    <div class="banner container">
-      <nav class="nav--split nav--toggle">
-        <a class="brand" href="#top">
-          <Logo />
-        </a>
-        <button
-          @click="showMenu = !showMenu"
-          type="button"
-          class="btn btn--square btn--hamburger-cross"
-          :class="showMenu ? 'focus' : null"
-        >
-          <span>toggle menu</span>
-        </button>
-        <ul class="toggle-menu" :class="showMenu ? 'focus' : null">
-          <li class="menu-item" v-for="(item, index) in cms" :key="index">
-            <a :href="`#${item.anchor}`" @click="showMenu = !showMenu">{{ item.title }}</a>
-          </li>
-        </ul>
-      </nav>
+    <div class="banner container-fluid">
+      <div class="row">
+        <AppNavigation class="col-xs-12" v-if="cms && cms.nav" :cms="cms.nav" />
+        <div class="col-auto ml-auto">
+          <CallToAction v-if="cms && cms.cta" :cms="cms.cta" />
+        </div>
+      </div>
     </div>
   </header>
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
-import Logo from '@/components/Logo.vue';
+import { defineComponent } from 'vue';
+import AppNavigation from '@/components/AppNavigation.vue';
+import CallToAction from '@/components/CallToAction.vue';
 
 export default defineComponent({
   name: 'AppHeader',
   components: {
-    Logo,
+    AppNavigation,
+    CallToAction,
   },
   props: {
     cms: {
-      type: Array,
+      type: Object,
       default: () => {
-        return [];
+        return {};
       },
     },
-  },
-  setup() {
-    const showMenu = ref(false);
-
-    return { showMenu };
   },
 });
 </script>
@@ -55,5 +40,8 @@ export default defineComponent({
       margin-right: 0.5rem;
     }
   }
+}
+.ml-auto {
+  margin-left: auto;
 }
 </style>

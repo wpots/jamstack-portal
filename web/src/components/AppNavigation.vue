@@ -1,0 +1,63 @@
+<template>
+  <nav class="nav--split nav--toggle d-flex align-items-center">
+    <div class="col-auto">
+      <a class="brand" href="#top">
+        <Logo />
+      </a>
+    </div>
+    <div class="col-auto">
+      <button
+        @click="showMenu = !showMenu"
+        type="button"
+        class="btn btn--square btn--hamburger-cross"
+        :class="showMenu ? 'focus' : null"
+      >
+        <span>toggle menu</span>
+      </button>
+      <ul class="toggle-menu" :class="showMenu ? 'focus' : null">
+        <li class="menu-item" v-for="(item, index) in cms" :key="index">
+          <a :href="`#${item.anchor}`" @click="showMenu = !showMenu">{{ item.title }}</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</template>
+
+<script>
+import { defineComponent, ref } from 'vue';
+import Logo from '@/components/Logo.vue';
+
+export default defineComponent({
+  name: 'AppNavigation',
+  components: {
+    Logo,
+  },
+  props: {
+    cms: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
+  },
+  setup() {
+    const showMenu = ref(false);
+
+    return { showMenu };
+  },
+});
+</script>
+<style lang="scss" scoped>
+.menu-item:not(:first-child) {
+  @include media-breakpoint-up(sm) {
+    ::before {
+      content: '/';
+      margin-right: 0.5rem;
+    }
+  }
+}
+.nav--split {
+  gap: 1rem;
+  justify-content: space-between;
+}
+</style>

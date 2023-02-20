@@ -2,7 +2,7 @@
   <div class="section teaserblock">
     <LazyImage v-if="getMedia" class="bg-img teaserblock__bg" :media="getMedia" :sticky="true" />
     <div class="container-fluid">
-      <article class="flex-box row" id="content-het-koor">
+      <article class="row">
         <div
           class="col-sm-6"
           v-for="(item, index) in cms.columnContentCollection.items"
@@ -21,9 +21,10 @@ const ContentTypeRichText = defineAsyncComponent(() => import('@/components/Rich
 const Image = defineAsyncComponent(() => import('@/components/Image.vue'));
 const YouTubeVideo = defineAsyncComponent(() => import('@/components/YouTubeVideo.vue'));
 const Form = defineAsyncComponent(() => import('@/components/Form.vue'));
+const EventList = defineAsyncComponent(() => import('@/components/EventList.vue'));
 
 export default defineComponent({
-  components: { LazyImage, ContentTypeRichText, Image, YouTubeVideo, Form },
+  components: { LazyImage, ContentTypeRichText, Image, YouTubeVideo, Form, EventList },
   name: 'TeaserBlock',
   props: {
     cms: {
@@ -49,9 +50,4 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
-.flex-box {
-  justify-content: center;
-  margin: auto;
-}
-</style>
+<style lang="scss" scoped></style>

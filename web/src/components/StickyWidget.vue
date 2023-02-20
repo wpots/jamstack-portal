@@ -6,7 +6,7 @@
       target="_blank"
       rel="nofollow"
     >
-      <svg><use xlink:href="#icon-instagram"></use></svg>
+      <svg><use href="#icon-instagram"></use></svg>
       <span class="sr-only">volg ons via instagram</span></a
     >
     <a
@@ -15,7 +15,7 @@
       target="_blank"
       rel="nofollow"
     >
-      <svg><use xlink:href="#icon-youtube"></use></svg>
+      <svg><use href="#icon-youtube"></use></svg>
       <span class="sr-only">subscribe op onze youtube channel</span></a
     >
     <a
@@ -24,7 +24,7 @@
       target="_blank"
       rel="nofollow"
     >
-      <svg><use xlink:href="#icon-facebook"></use></svg
+      <svg><use href="#icon-facebook"></use></svg
       ><span class="sr-only">blijf op de hoogte via facebook</span></a
     >
   </aside>

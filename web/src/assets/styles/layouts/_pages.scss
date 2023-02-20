@@ -1,6 +1,7 @@
 .teaserblock,
 .repertoirblock {
-  & > .container-fluid {
+  & > .container-fluid,
+  &>.container {
     background: $white;
   }
 

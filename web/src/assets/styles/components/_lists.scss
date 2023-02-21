@@ -4,12 +4,6 @@
     margin: 0;
   }
 
-  .list__items {
-    ul {
-      @extend %reset-ul;
-    }
-  }
-
   .list-item__title {
     margin: 0.4em 0;
       font-size: 1em !important;
@@ -136,3 +130,10 @@
     margin-left: 30px;
   }
 }
+
+
+    .list__items {
+      ul {
+        @extend %reset-ul;
+      }
+    }

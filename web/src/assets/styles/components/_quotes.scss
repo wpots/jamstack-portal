@@ -14,13 +14,13 @@
   height: $spacer-size;
 
   .quote__item {
-    position: absubsolute;
+    position: absolute;
     bottom: 40%;
     left: 5%;
     max-width: 90%;
     padding: 32px 48px;
     color: $white;
-    background: rgba(#fe265e, 0.8);
+    background: rgba(#ac1f65, 0.95);
   }
 
   .quote__origin {
@@ -29,7 +29,7 @@
   }
 
   q {
-    font-family: var(--bs-font-sans-serif);
+    font-family: var(--font-family-quote);
     font-size: 1.4em;
     font-weight: 700;
     font-style: italic;

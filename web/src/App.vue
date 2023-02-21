@@ -14,5 +14,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Julius+Sans+One|Montserrat:400,700|Muli|Yeseva+One");
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One|Montserrat:400,700|Muli|Satisfy');
 </style>

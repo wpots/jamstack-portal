@@ -1,6 +1,6 @@
 <template>
   <div class="list__items col-xs-12" v-if="events?.length > 0">
-    <transition-group class="row flow-in" name="flow-in" tag="ul">
+    <transition-group class="list--figure row flow-in" name="flow-in" tag="ul">
       <EventItem
         v-for="(event, index) in events"
         class="list__item flow-item col-xs-12"

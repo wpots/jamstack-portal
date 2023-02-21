@@ -24,13 +24,12 @@
       target="_blank"
       rel="nofollow"
     >
-      <svg><use href="#icon-facebook"></use></svg
-      ><span class="sr-only">blijf op de hoogte via facebook</span></a
+      <svg><use href="#icon-facebook"></use></svg>
+      <span class="sr-only">blijf op de hoogte via facebook</span></a
     >
   </aside>
 </template>
-<script>
-// Sticky section
+<script lang="ts">
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -60,9 +59,9 @@ export default defineComponent({
   }
 }
 .icon-facebook {
-  --icon-bg-color: #{$theme-color-accent};
+  --icon-bg-color: #2851a3;
 }
 .icon-youtube {
-  --icon-bg-color: #{$theme-color-secondary};
+  --icon-bg-color: #c00;
 }
 </style>

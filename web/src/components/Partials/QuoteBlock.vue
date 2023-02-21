@@ -3,10 +3,10 @@
     <LazyImage class="bg-img quoteblock__bg" :media="getMedia" :sticky="true" />
     <div class="quotes">
       <Carousel
-        :autoplay="5000"
+        :autoplay="8000"
         :wrap-around="true"
-        :transition="1500"
-        :pauseAutoplayOnHover="false"
+        :transition="1000"
+        :pauseAutoplayOnHover="true"
       >
         <slide class="quote">
           <div class="quote__item">
@@ -63,3 +63,8 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss" scoped>
+.quote {
+  --font-family-quote: 'Satisfy';
+}
+</style>

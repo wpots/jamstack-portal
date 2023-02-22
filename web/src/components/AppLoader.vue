@@ -109,14 +109,13 @@
 </template>
 
 <script>
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'Loader',
   props: {
     to: {
       type: String,
-      default: '#intro',
+      default: "#intro",
     },
   },
   setup(props) {

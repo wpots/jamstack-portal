@@ -1,16 +1,16 @@
 <template>
-  <footer class="site-info" v-if="cms">
-    <p>{{ cms.copyright }}</p>
-    <ContentfulRichText :document="cms.credits" class="credits" />
+  <footer class="site-info row align-items-end justify-content-evenly" v-if="cms">
+    <p class="col-xs-12 col-md-6">{{ cms.copyright }}</p>
+    <ContentfulRichText :document="cms.credits" class="credits col" />
   </footer>
 </template>
 
 <script>
-import { defineComponent } from 'vue';
-import ContentfulRichText from './ContentfulRichText.vue';
+import { defineComponent } from "vue";
+import ContentfulRichText from "./ContentfulRichText.vue";
 
 export default defineComponent({
-  name: 'AppFooter',
+  name: "AppFooter",
   components: { ContentfulRichText },
   props: {
     cms: {
@@ -24,14 +24,12 @@ export default defineComponent({
 </script>
 <style lang="scss">
 .site-info {
-  width: 100%;
+  margin: 0 !important;
+  padding: 1rem;
   color: var(--bs-gray-700);
   font-size: 0.8em;
   min-height: 10vh;
   background-color: var(--bs-gray-400);
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-evenly;
   position: relative;
   z-index: 1;
 

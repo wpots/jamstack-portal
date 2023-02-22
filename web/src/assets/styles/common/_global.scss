@@ -50,15 +50,12 @@ h1 {
     }
   }
 }
-.page-header {
-  width: 100%;
-}
 
 h1 {
   .row & {
     margin: 0 0 1.2em 0;
     @include media-breakpoint-down(sm) {
-      text-align: center;
+      // text-align: center;
     }
   }
 }
@@ -78,7 +75,6 @@ h1 {
     }
   }
 }
-
 
 .section--template-intro {
   padding-top: 0 !important;
@@ -103,15 +99,18 @@ h1 {
 }
 
 .container-fluid {
-  &:not(.banner){
+  &:not(.banner) {
     padding-top: 70px;
-      >.row {
-          padding-top: 3rem;
-          padding-bottom:3rem;
-        }
+    > .row {
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
   }
-  > .row {
-    padding-left: 2rem;
-    padding-right:2rem;
+
+  @include media-breakpoint-up(sm) {
+    > .row {
+      padding-left: 2rem;
+      padding-right: 2rem;
+    }
   }
 }

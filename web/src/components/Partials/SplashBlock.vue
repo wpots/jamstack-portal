@@ -2,22 +2,22 @@
   <transition appear>
     <div ref="root" class="section splashblock">
       <div class="overlay--dark"></div>
-      <Loader :to="getScrollAnchor" />
+      <AppLoader :to="getScrollAnchor" />
       <LazyImage :media="getMedia" class="bg-img splashblock__bg" />
       <span id="next"></span>
     </div>
   </transition>
 </template>
 <script>
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent } from "vue";
 
-import Loader from '@/components/Loader.vue';
-import LazyImage from '@/components/LazyImage.vue';
+import AppLoader from "@/components/AppLoader.vue";
+import LazyImage from "@/components/LazyImage.vue";
 
 export default defineComponent({
-  name: 'SplashBlock',
+  name: "SplashBlock",
   components: {
-    Loader,
+    AppLoader,
     LazyImage,
   },
   props: {
@@ -38,7 +38,7 @@ export default defineComponent({
     });
 
     const getScrollAnchor = computed(() => {
-      return props.cms.scrollTo?.anchor ? props.cms.scrollTo?.anchor : '#next';
+      return props.cms.scrollTo?.anchor ? props.cms.scrollTo?.anchor : "#next";
     });
 
     return { getMedia, getScrollAnchor };

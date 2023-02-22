@@ -1,17 +1,21 @@
 .quotes {
   @include media-breakpoint-up(sm) {
+    //min 576
     height: 60vh;
   }
-  .carousel {
-    @include media-breakpoint-down(sm) {
-      background-color: $smoke;
-    }
+
+  @include media-breakpoint-down(sm) {
+    //max 575.9
+    position: absolute;
+    width: 100%;
+    margin-top: -37%; //magic number based on image
+    z-index: 1;
   }
 }
 
 .quote {
   position: relative;
-  height: $spacer-size;
+  height: 45vh; //mgic, for landscape mobile
 
   .quote__item {
     position: absolute;
@@ -29,21 +33,23 @@
   }
 
   q {
+    display: block;
     font-family: var(--font-family-quote);
     font-size: 1.4em;
     font-weight: 700;
     font-style: italic;
-    quotes: '"' '"' "'" "'";
+    text-align: left;
 
     @include media-breakpoint-up(sm) {
       font-size: 2em;
     }
-
     &::before {
       content: open-quote;
-    }
-    &::after {
-      content: close-quote;
+      position: absolute;
+      top: -1rem;
+      left: 1rem;
+      font-size: 8rem;
+      opacity: 0.3;
     }
   }
 }

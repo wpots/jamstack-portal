@@ -64,11 +64,10 @@
   </form>
 </template>
 <script>
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref } from "vue";
 
 export default defineComponent({
-  name: 'Form',
-
+  name: "AppForm",
   props: {
     cms: {
       type: Object,
@@ -86,7 +85,7 @@ export default defineComponent({
       message: null,
     };
     const form = reactive({
-      'form-name': props.cms.naam,
+      "form-name": props.cms.naam,
       formId: props.cms.sys.id,
       ...cleanForm,
     });
@@ -95,7 +94,7 @@ export default defineComponent({
       message: null,
     });
 
-    const uniqueId = computed(() => (field) => {
+    const uniqueId = computed(() => field => {
       return `${props.cms.naam}-${field}`;
     });
     // const encode = (data) => {
@@ -106,7 +105,7 @@ export default defineComponent({
 
     const onSuccessFulSubmit = () => {
       pending.value = true;
-      response.message = 'Form successfully submitted';
+      response.message = "Form successfully submitted";
       setTimeout(() => {
         Object.assign(form, cleanForm);
         pending.value = false;
@@ -114,14 +113,14 @@ export default defineComponent({
       }, 4000);
     };
     const onSubmit = () => {
-      fetch('/api/v1/mail', {
-        method: 'POST',
+      fetch("/api/v1/mail", {
+        method: "POST",
         body: JSON.stringify(form),
       })
         .then(() => {
           onSuccessFulSubmit();
         })
-        .catch((error) => alert(error));
+        .catch(error => alert(error));
     };
     return { form, uniqueId, onSubmit, response, pending };
   },

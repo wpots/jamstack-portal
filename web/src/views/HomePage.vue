@@ -14,16 +14,16 @@
 </template>
 
 <script>
-import { ref, defineComponent, onErrorCaptured } from 'vue';
-import { useQuery, useResult } from '@vue/apollo-composable';
-import { getHomePage } from './home.graphql';
-import AppHeader from '../components/AppHeader.vue';
-import AppMain from '../components/AppMain.vue';
-import AppFooter from '../components/AppFooter.vue';
-import StickyWidget from '@/components/StickyWidget.vue';
+import { ref, defineComponent, onErrorCaptured } from "vue";
+import { useQuery, useResult } from "@vue/apollo-composable";
+import { getHomePage } from "./home.graphql";
+import AppHeader from "../components/AppHeader.vue";
+import AppMain from "../components/AppMain.vue";
+import AppFooter from "../components/AppFooter.vue";
+import StickyWidget from "@/components/StickyWidget.vue";
 
 export default defineComponent({
-  name: 'Home',
+  name: "HomePage",
   components: {
     AppHeader,
     AppMain,
@@ -33,25 +33,21 @@ export default defineComponent({
 
   setup() {
     const error = ref({});
-    const { result, loading } = useQuery(getHomePage, { title: 'Home' });
+    const { result, loading } = useQuery(getHomePage, { title: "Home" });
     const contentEntries = useResult(
       result,
       null,
-      (data) => data.homePageCollection.items[0].pageBlocksCollection.items,
+      data => data.homePageCollection.items[0].pageBlocksCollection.items,
     );
-    const headerContent = useResult(result, null, (data) => {
+    const headerContent = useResult(result, null, data => {
       return {
         nav: data.homePageCollection.items[0].pageScrollerCollection.items,
         cta: data.homePageCollection.items[0].callToAction,
       };
     });
-    const footerContent = useResult(
-      result,
-      null,
-      (data) => data.homePageCollection.items[0].footer,
-    );
+    const footerContent = useResult(result, null, data => data.homePageCollection.items[0].footer);
 
-    onErrorCaptured((e) => {
+    onErrorCaptured(e => {
       error.value = e;
       return true;
     });

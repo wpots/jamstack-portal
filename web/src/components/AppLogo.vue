@@ -287,20 +287,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: 'Logo',
+  name: "AppLogo",
 });
 </script>
 <style scoped>
-  .mouth {
-    fill: #f799d0;
-  }
-  .lips {
-    fill: #eb008b;
-  }
-  .gebekt {
-    fill: #231f20;
-  }
+.mouth {
+  fill: #f799d0;
+}
+.lips {
+  fill: #eb008b;
+}
+.gebekt {
+  fill: #231f20;
+}
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="list__items col-xs-12" v-if="events?.length > 0">
+  <div class="list__items" v-if="events?.length > 0">
     <transition-group class="list--figure row flow-in" name="flow-in" tag="ul">
       <EventItem
         v-for="(event, index) in events"
@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
-import EventItem from './EventItem.vue';
+import { defineComponent, computed } from "vue";
+import EventItem from "./EventItem.vue";
 
 export default defineComponent({
-  name: 'EventList',
+  name: "EventList",
   components: { EventItem },
   props: {
     cms: {

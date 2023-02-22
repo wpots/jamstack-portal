@@ -4,9 +4,9 @@
 
   &:before {
     display: block;
-    content: '';
+    content: "";
     width: 100%;
-    padding-top: ($height / $width) * 100%;
+    padding-top: calc((#{$height} / #{$width}) * 100%);
   }
   > .content {
     position: absolute;
@@ -29,7 +29,7 @@
 }
 
 %reset-ul {
-  padding: 0;
+  padding: 0 !important;
   list-style-type: none;
 
   li {
@@ -96,7 +96,7 @@
   object-fit: $fit;
   object-position: $pos;
   /* stylelint-disable-next-line font-family-no-missing-generic-family-keyword */
-  font-family: 'object-fit: #{$fit}; object-position: #{$pos}'; /* for polyfill object-fit-images */
+  font-family: "object-fit: #{$fit}; object-position: #{$pos}"; /* for polyfill object-fit-images */
 }
 
 @mixin size($width, $height: $width) {

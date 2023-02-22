@@ -33,10 +33,10 @@
   </li>
 </template>
 <script>
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref } from "vue";
 
 export default defineComponent({
-  name: 'EventItem',
+  name: "EventItem",
   props: {
     event: {
       type: Object,
@@ -49,14 +49,14 @@ export default defineComponent({
     const date = computed(() => new Date(props.event.date));
     const formattedDate = computed(() => {
       const [month, day, year] = [
-        new Intl.DateTimeFormat('nl-NL', { month: 'short' })
+        new Intl.DateTimeFormat("nl-NL", { month: "short" })
           .format(date.value)
-          .replace('.', '')
+          .replace(".", "")
           .toUpperCase(),
-        new Intl.DateTimeFormat('nl-NL', { day: 'numeric' }).format(date.value),
-        new Intl.DateTimeFormat('nl-NL', { year: 'numeric' }).format(date.value),
+        new Intl.DateTimeFormat("nl-NL", { day: "numeric" }).format(date.value),
+        new Intl.DateTimeFormat("nl-NL", { year: "numeric" }).format(date.value),
       ];
-      const time = new Intl.DateTimeFormat('nl-NL', { hour: 'numeric', minute: 'numeric' }).format(
+      const time = new Intl.DateTimeFormat("nl-NL", { hour: "numeric", minute: "numeric" }).format(
         date.value,
       );
       return {
@@ -90,10 +90,10 @@ export default defineComponent({
 }
 .date {
   position: relative;
-  font-family: 'Muli';
+  font-family: "Muli";
   width: 4rem;
   height: 4rem;
-  padding: 1rem 0.5rem 0.5rem 0.5rem;
+  padding: 1.4rem 0.5rem 0.5rem 0.5rem;
   text-align: center;
   z-index: 0;
   > * {
@@ -111,15 +111,16 @@ export default defineComponent({
     fill: $smoke;
   }
   .month {
+    font-size: 0.75em;
   }
   .day {
-    font-size: 2em;
+    font-size: 1.6em;
   }
 }
 
 .location__icon {
-  width: 32px;
-  height: 32px;
+  width: 2rem;
+  height: 2rem;
   fill: $smoke;
   display: inline-block;
 }

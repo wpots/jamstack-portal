@@ -40,11 +40,10 @@
   </svg>
 </template>
 <script>
-import { defineComponent, computed } from 'vue';
-import LazyImage from './LazyImage.vue';
+import { defineComponent, computed } from "vue";
+import LazyImage from "./LazyImage.vue";
 
 export default defineComponent({
-  name: 'Image',
   components: [LazyImage],
   props: {
     cms: {

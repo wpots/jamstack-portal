@@ -7,17 +7,18 @@
   border-radius: 0;
   display: inline-flex;
   align-items: center;
-  gap: .5rem;
+  gap: 0.5rem;
   font-family: $font-fam-nav;
   font-weight: bold;
 
-  &:focus, &:active {
+  &:focus,
+  &:active {
     outline: none;
   }
 
   .section & {
-      padding: .5rem 1rem;
-      border-radius: .25rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
   }
 }
 
@@ -25,19 +26,18 @@
 
 .btn--primary {
   @extend .btn;
-  padding: .8rem 1.2rem;
+  padding: 0.8rem 1.2rem;
   background-color: $theme-color-secondary;
   border-radius: 4px;
-  color: $white!important;
+  color: $white !important;
 
   &:hover {
-
   }
 
   &:focus,
-    &:active {
-      outline: none;
-    }
+  &:active {
+    outline: none;
+  }
 }
 
 .btn--square {
@@ -52,12 +52,14 @@
   &.focus {
     color: $black;
     background: $smoke;
-    transition: .3s ease;
+    transition: 0.3s ease;
   }
 
-  &:hover, &:focus, &:active {
+  &:hover,
+  &:focus,
+  &:active {
     color: $white;
-  } 
+  }
 }
 
 //icon link
@@ -72,14 +74,14 @@
   line-height: $icon-size;
   overflow: hidden;
   background: var(--icon-bg-color, $magenta);
-  border-radius: calc(#{$icon-size}/2);
-  transition: all .5s ease;
+  border-radius: calc(#{$icon-size}/ 2);
+  transition: all 0.5s ease;
 
   span {
     top: -3px;
     white-space: nowrap;
     font-size: 12px;
-    transition: .5s ease;
+    transition: 0.5s ease;
   }
 
   &:hover {
@@ -87,16 +89,15 @@
     max-width: 700px;
     padding: 0 10px;
     text-decoration: none;
-    transition: .5s ease;
+    transition: 0.5s ease;
 
     span {
       position: relative;
       width: auto;
       margin: 0;
-      padding-left: 10px; 
+      padding-left: 10px;
     }
   }
-
 }
 
 .btn--dismiss {
@@ -114,7 +115,7 @@
     display: block;
   }
   .focus & {
-    color: rgba($tundora, .7);
+    color: rgba($tundora, 0.7);
   }
   .expanded & {
     color: $white;
@@ -123,7 +124,8 @@
 
 //toggle menu
 .btn--hamburger-cross {
-  font-size: 0!important;
+  position: relative;
+  font-size: 0 !important;
   z-index: 4;
   cursor: pointer;
   transition: background $button-transition-duration;
@@ -131,7 +133,7 @@
   & span {
     display: block;
     position: absolute;
-    top: ($button-height / 2) - ($bar-thickness / 2);
+    top: calc((#{$button-height} / 2) - (#{$bar-thickness} / 2));
     left: $button-pad;
     right: $button-pad;
     height: $bar-thickness;
@@ -183,27 +185,25 @@
   }
 }
 
+$list: (facebook, youtube, instagram);
+$bgcolors: ($magenta, $red, $white);
+$colors: (indigo, $white, #d34fe1);
 
+@each $item in $list {
+  $i: index($list, $item);
+  .link--#{$item} {
+    @extend .icon-#{$item} !optional;
+    color: nth($colors, $i);
+    background: nth($bgcolors, $i);
 
-  $list: (facebook, youtube, instagram);
-  $bgcolors: ($magenta, $red, $white);
-   $colors: (indigo, $white, #d34fe1);
+    &:hover {
+      color: nth($colors, $i);
+    }
 
-  @each $item in $list {
-    $i: index($list, $item);
-    .link--#{$item} {
-        @extend .icon-#{$item} !optional;
-        color: nth($colors, $i);
-        background: nth($bgcolors, $i);
-
-        &:hover {
-          color: nth($colors, $i);
-        }
-
-        &::before {
-          position: absolute;
-          font-size: 25px;
-          top: 2px;
-        }
+    &::before {
+      position: absolute;
+      font-size: 25px;
+      top: 2px;
     }
   }
+}

@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <article class="row">
         <div
-          class="col-sm-6"
+          class="col-xs-12 col-sm"
           v-for="(item, index) in cms.columnContentCollection.items"
           :key="index"
         >
@@ -15,17 +15,18 @@
   </div>
 </template>
 <script>
-import { computed, defineComponent, defineAsyncComponent } from 'vue';
-import LazyImage from '../LazyImage.vue';
-const ContentTypeRichText = defineAsyncComponent(() => import('@/components/RichText.vue'));
-const Image = defineAsyncComponent(() => import('@/components/Image.vue'));
-const YouTubeVideo = defineAsyncComponent(() => import('@/components/YouTubeVideo.vue'));
-const Form = defineAsyncComponent(() => import('@/components/Form.vue'));
-const EventList = defineAsyncComponent(() => import('@/components/EventList.vue'));
+import { computed, defineComponent, defineAsyncComponent } from "vue";
+import LazyImage from "../LazyImage.vue";
+const ContentTypeRichText = defineAsyncComponent(() => import("@/components/RichText.vue"));
+const AppImage = defineAsyncComponent(() => import("@/components/AppImage.vue"));
+const YouTubeVideo = defineAsyncComponent(() => import("@/components/YouTubeVideo.vue"));
+const Form = defineAsyncComponent(() => import("@/components/AppForm.vue"));
+const EventList = defineAsyncComponent(() => import("@/components/EventList.vue"));
 
 export default defineComponent({
-  components: { LazyImage, ContentTypeRichText, Image, YouTubeVideo, Form, EventList },
-  name: 'TeaserBlock',
+  // eslint-disable-next-line vue/no-reserved-component-names
+  components: { LazyImage, ContentTypeRichText, AppImage, YouTubeVideo, Form, EventList },
+  name: "TeaserBlock",
   props: {
     cms: {
       type: Object,

@@ -16,6 +16,15 @@
         </slide>
         <slide class="quote">
           <div class="quote__item">
+            <q
+              >Jullie stemmen samen vormen een prachtige blend. Blijf zingen en deel jullie harmonie
+              met de wereld</q
+            >
+            <div class="quote__origin">Christiaan v.d. S.</div>
+          </div>
+        </slide>
+        <slide class="quote">
+          <div class="quote__item">
             <q>Fantastisch, een optreden vol energie.</q>
             <div class="quote__origin">Herman O.</div>
           </div>
@@ -26,14 +35,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent } from "vue";
 
-import 'vue3-carousel/dist/carousel.css';
-import { Carousel, Slide } from 'vue3-carousel';
-import LazyImage from '@/components/LazyImage.vue';
+import "vue3-carousel/dist/carousel.css";
+import { Carousel, Slide } from "vue3-carousel";
+import LazyImage from "@/components/LazyImage.vue";
 
 export default defineComponent({
-  name: 'QuoteBlock',
+  name: "QuoteBlock",
   components: {
     Carousel,
     Slide,
@@ -65,6 +74,6 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .quote {
-  --font-family-quote: 'Satisfy';
+  --font-family-quote: "Satisfy";
 }
 </style>

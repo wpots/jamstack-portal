@@ -2,14 +2,14 @@
   <nav class="nav--split nav--toggle d-flex align-items-center">
     <div class="col-auto">
       <a class="brand" href="#top">
-        <Logo />
+        <AppLogo />
       </a>
     </div>
     <div class="col-auto">
       <button
         @click="showMenu = !showMenu"
         type="button"
-        class="btn btn--square btn--hamburger-cross"
+        class="btn btn--square btn--hamburger-cross nav__btn--mobile"
         :class="showMenu ? 'focus' : null"
       >
         <span>toggle menu</span>
@@ -24,13 +24,13 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
-import Logo from '@/components/Logo.vue';
+import { defineComponent, ref } from "vue";
+import AppLogo from "@/components/AppLogo.vue";
 
 export default defineComponent({
-  name: 'AppNavigation',
+  name: "AppNavigation",
   components: {
-    Logo,
+    AppLogo,
   },
   props: {
     cms: {
@@ -51,7 +51,7 @@ export default defineComponent({
 .menu-item:not(:first-child) {
   @include media-breakpoint-up(sm) {
     ::before {
-      content: '/';
+      content: "/";
       margin-right: 0.5rem;
     }
   }

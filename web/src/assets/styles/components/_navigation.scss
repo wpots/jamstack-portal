@@ -15,15 +15,14 @@
     margin: 10px auto;
     padding: 0;
     text-align: left;
-    
+
     @include media-breakpoint-up(sm) {
       margin: auto;
       text-align: right;
     }
-        @include media-breakpoint-up(lg) {
-
-          text-align: center;
-        }
+    @include media-breakpoint-up(lg) {
+      text-align: center;
+    }
 
     li {
       display: block;
@@ -37,7 +36,7 @@
         margin: 0;
         padding: 0;
         height: auto;
-        line-height: 1.6;    
+        line-height: 1.6;
       }
     }
   }
@@ -45,27 +44,16 @@
   li {
     & + li {
       @include media-breakpoint-up(sm) {
-        margin-left: 20px!important; //override more specific nav ul li        
+        margin-left: 20px !important; //override more specific nav ul li
       }
-
-    }  
+    }
   }
 }
 
-
 .nav--toggle {
-
-  button {
-    position: absolute;
-    left: 0;
-
+  .nav__btn--mobile {
     @include media-breakpoint-up(sm) {
       display: none;
-    }
-
-    & + button {
-      right: 0;
-      left: auto;
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
-  <div class="list__items col-xs-12" v-if="songs?.length > 0">
-    <transition-group class="row shuffle" name="shuffle" tag="ul">
+  <div class="list__items" v-if="songs?.length > 0">
+    <transition-group class="list list--figure row shuffle" name="shuffle" tag="ul">
       <RepertoirItem
         v-for="song in songs"
         class="list__item shuffle-item col-6 col-md-4"
@@ -11,10 +11,10 @@
   </div>
 </template>
 <script>
-import RepertoirItem from './RepertoirItem.vue';
+import RepertoirItem from "./RepertoirItem.vue";
 export default {
   components: { RepertoirItem },
-  name: 'RepertoirList',
+  name: "RepertoirList",
   props: {
     songs: {
       type: Array,
@@ -29,6 +29,7 @@ export default {
 h3 {
   font-size: 1em !important;
 }
+
 .shuffle-item {
   transition: all 0.25s ease-in-out;
 }

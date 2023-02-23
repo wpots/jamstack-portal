@@ -4,7 +4,6 @@
     ref="root"
     v-lazyload="{ ...lazySettings, callback: setSrcset }"
     :style="{ position: sticky ? 'sticky' : null }"
-    class
     :class="loaded ? 'loaded' : false"
   >
     <picture>
@@ -15,14 +14,19 @@
         type="image/jpeg"
         media="(orientation:portrait)"
       />
-
-      <img
+      <source
         ref="landscape"
         :class="media.classes"
-        :src="getImgBySize(20)"
         :sizes="media.landscape.sizes"
         loading="lazy"
         :srcset="getSrcset"
+        :alt="media.landscape.alt"
+      />
+
+      <img
+        :class="media.classes"
+        :sizes="media.landscape.sizes"
+        :src="getImgBySize(20)"
         :alt="media.landscape.alt"
       />
     </picture>
@@ -30,7 +34,7 @@
 </template>
 <script lang="ts">
 // eslint-disable-next-line
-import { ref, defineComponent, PropType, computed } from 'vue';
+import { ref, defineComponent, PropType, computed, nextTick, watchEffect } from "vue";
 
 interface ImageInterface {
   src: string;
@@ -46,18 +50,18 @@ interface MediaInterface {
 
 const defaultmedia: MediaInterface = {
   portrait: {
-    src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg',
+    src: "http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg",
   },
   landscape: {
-    src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1.jpg ',
-    sizes: '(max-width: 3108px) 100vw, 3108px',
-    alt: 'placeholder default',
+    src: "http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1.jpg ",
+    sizes: "(max-width: 3108px) 100vw, 3108px",
+    alt: "placeholder default",
   },
-  classes: 'default-classes',
+  classes: "default-classes",
 };
 
 export default defineComponent({
-  name: 'LazyImage',
+  name: "LazyImage",
   props: {
     sticky: {
       type: Boolean,
@@ -68,7 +72,7 @@ export default defineComponent({
       default: () => {
         return {
           settings: {
-            threshold: 0,
+            threshold: 0.1,
           },
           persist: false,
         };
@@ -92,13 +96,14 @@ export default defineComponent({
       () => (width: number) => `${props.media.landscape.src}?w=${width}`,
     );
     const getSrcset = computed(() => {
+      let srcsetSizes;
       if (loaded.value && props.media.landscape.src) {
-        const srcsetSizes = props.srcset.map(
-          (width) => `${props.media.landscape.src}?w=${width} ${width}w`,
+        srcsetSizes = props.srcset.map(
+          width => `${props.media.landscape.src}?w=${width} ${width}w`,
         );
-        return srcsetSizes.join(',');
+        srcsetSizes.join(",");
       }
-      return '';
+      return srcsetSizes;
     });
     const setSrcset = () => {
       loaded.value = true;
@@ -135,5 +140,8 @@ figure {
 }
 .loaded img {
   filter: none;
+}
+.n00b {
+  display: none;
 }
 </style>

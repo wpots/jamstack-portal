@@ -12,10 +12,10 @@
   </div>
 </template>
 <script>
-import { ref, defineComponent, computed } from 'vue';
+import { ref, defineComponent, computed } from "vue";
 
 export default defineComponent({
-  emits: ['updatesortable'],
+  emits: ["updatesortable"],
   props: {
     items: {
       type: Array,
@@ -26,15 +26,15 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const isActive = ref(null);
-    const activeHandle = (item) => {
+    const activeHandle = item => {
       if (isActive.value === item.genre) {
         isActive.value = null;
       } else {
         isActive.value = item.genre;
       }
-      emit('updatesortable', isActive.value);
+      emit("updatesortable", isActive.value);
     };
-    const getFontSize = computed(() => (count) => {
+    const getFontSize = computed(() => count => {
       return { fontSize: ` ${count * 0.7 + 8}pt`, borderRadius: `${count * 0.7 + 8}pt` };
     });
     return { isActive, activeHandle, getFontSize };
@@ -45,7 +45,7 @@ export default defineComponent({
 .tag-cloud {
   max-width: 100%;
   width: 548px;
-  margin: 2rem 0;
+  margin: 2rem auto;
   a {
     color: $white;
   }

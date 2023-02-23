@@ -3,7 +3,11 @@
     <div ref="root" class="section splashblock">
       <div class="overlay--dark"></div>
       <AppLoader :to="getScrollAnchor" />
-      <LazyImage :media="getMedia" class="bg-img splashblock__bg" />
+      <LazyImage
+        :lazySettings="{ persist: true }"
+        :media="getMedia"
+        class="bg-img splashblock__bg"
+      />
       <span id="next"></span>
     </div>
   </transition>
@@ -34,7 +38,10 @@ export default defineComponent({
         src: props.cms.mediaCollection.items[0].url,
         alt: props.cms.mediaCollection.items[0].title,
       };
-      return { landscape };
+      const portrait = {
+        src: `${props.cms.mediaCollection.items[0].url}?f=left&w=2250&h=4000&fit=crop`,
+      };
+      return { landscape, portrait };
     });
 
     const getScrollAnchor = computed(() => {

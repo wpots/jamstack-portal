@@ -20,9 +20,9 @@ export default defineComponent({
   components: { EventItem },
   props: {
     cms: {
-      type: Array,
+      type: Object,
       default: () => {
-        return [];
+        return {};
       },
     },
   },

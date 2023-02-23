@@ -10,6 +10,17 @@
       >
         <slide class="quote">
           <div class="quote__item">
+            <q>Vriendinnen, het is goed te zien. Heerlijk hoe jullie MET elkaar zingen.</q>
+            <div class="quote__origin">Alinda T</div>
+          </div>
+        </slide>
+        <slide class="quote">
+          <div class="quote__item">
+            <q>Zit veel swing in, leuke groep om naar te kijken!</q>
+          </div>
+        </slide>
+        <slide class="quote">
+          <div class="quote__item">
             <q>Wij hebben van jullie genoten!</q>
             <div class="quote__origin">Flevo's mannen koor</div>
           </div>

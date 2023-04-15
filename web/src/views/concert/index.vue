@@ -1,11 +1,11 @@
 <template>
-  <div class="portal"></div>
+  <div class=""></div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "PortalPage",
+  name: "ConcertPage",
 });
 </script>

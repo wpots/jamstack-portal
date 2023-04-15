@@ -12,6 +12,16 @@ const routes: Array<RouteRecordRaw> = [
     name: "Portal",
     component: () => import(/* webpackChunkName: "portal" */ "../views/PortalPage.vue"),
   },
+  {
+    path: "/concerts/:id",
+    name: "concert",
+    component: () => import(/* webpackChunkName: "portal" */ "../views/concert/index.vue"),
+  },
+  {
+    path: "/concerts/:id/programma",
+    name: "concert",
+    component: () => import(/* webpackChunkName: "portal" */ "../views/concert/setListPage.vue"),
+  },
 ];
 
 const router = createRouter({

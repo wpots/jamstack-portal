@@ -1,13 +1,13 @@
 <template>
-  <a v-if="getPageAnchor" class="btn--primary call-to-action" :href="getPageAnchor">
+  <router-link v-if="route.path" class="btn--primary call-to-action" :to="route">
     <svg v-if="getIconName"><use :href="getIconName"></use></svg>
     <span class="">{{ cms.linkText }}</span>
-  </a>
+  </router-link>
 </template>
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed } from "vue";
 export default defineComponent({
-  name: 'CallToAction',
+  name: "CallToAction",
   props: {
     cms: {
       type: Object,
@@ -20,10 +20,22 @@ export default defineComponent({
     const getIconName = computed(() => {
       return props.cms.iconName ? `#icon-${props.cms.iconName}` : false;
     });
+
     const getPageAnchor = computed(() => {
       return props.cms.inPageAnchor?.anchor ? `#${props.cms.inPageAnchor.anchor}` : false;
     });
-    return { getIconName, getPageAnchor };
+
+    const route = computed(() => {
+      if (getPageAnchor.value || props.cms.path) {
+        return {
+          path: getPageAnchor.value ? "/" : props.cms.path,
+          hash: getPageAnchor.value,
+        };
+      } else {
+        return false;
+      }
+    });
+    return { getIconName, getPageAnchor, route };
   },
 });
 </script>

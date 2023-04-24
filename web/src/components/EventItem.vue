@@ -28,15 +28,21 @@
 
       <div v-if="showDetails" class="event-body col-xs-12">
         <p>{{ event.description }}</p>
+        <CallToAction v-if="tickets" :cms="tickets" />
       </div>
     </div>
   </li>
 </template>
 <script>
 import { defineComponent, computed, ref } from "vue";
+import { toDomain } from "../composables/useContent/content.mapper";
+import CallToAction from "@/components/CallToAction.vue";
 
 export default defineComponent({
   name: "EventItem",
+  components: {
+    CallToAction,
+  },
   props: {
     event: {
       type: Object,
@@ -47,6 +53,14 @@ export default defineComponent({
   },
   setup(props) {
     const date = computed(() => new Date(props.event.date));
+    const tickets = computed(() => {
+      if (props.event.eventDetailPage) {
+        const id = toDomain.dateAsId(props.event.eventDetailPage.date);
+        return { linkText: "Koop Tickets", path: `/concerts/${id}` };
+      } else {
+        return false;
+      }
+    });
     const formattedDate = computed(() => {
       const [month, day, year] = [
         new Intl.DateTimeFormat("nl-NL", { month: "short" })
@@ -67,7 +81,7 @@ export default defineComponent({
 
     const showDetails = ref(false);
 
-    return { formattedDate, showDetails };
+    return { formattedDate, showDetails, tickets };
   },
 });
 </script>

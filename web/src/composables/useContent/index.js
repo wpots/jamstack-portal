@@ -6,7 +6,7 @@ import { toDomain, fromDomain } from "./content.mapper";
 import { getHomePageQuery } from "./queries/home.graphql";
 import { getLayoutComponentsQuery } from "./queries/layout.graphql";
 import { getTimeTableQuery } from "./queries/timeTableBlock.graphql";
-import { getConcertpageQuery } from "./queries/concert.graphql";
+import { getConcertPageQuery } from "./queries/concert.graphql";
 
 export function useContent(id) {
   const enableQuery = reactive({
@@ -30,7 +30,7 @@ export function useContent(id) {
     enabled: enableQuery.layout,
   }));
 
-  const { result: concertpage } = useQuery(getConcertpageQuery, { date }, () => ({
+  const { result: concertpage } = useQuery(getConcertPageQuery, { date }, () => ({
     enabled: enableQuery.concert,
   }));
 

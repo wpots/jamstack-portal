@@ -15,7 +15,6 @@ export default defineComponent({
   },
   setup() {
     const error = ref({});
-    const route = useRoute();
     const contentService = useContent("concert");
 
     const content = computed(() => contentService.getConcertpage.value);

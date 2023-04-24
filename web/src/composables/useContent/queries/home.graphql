@@ -88,6 +88,9 @@ fragment EventFragment on EventList {
         linkText
         url
       }
+      eventDetailPage {
+        date
+      }
     }
   }
 }

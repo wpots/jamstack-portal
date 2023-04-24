@@ -9,17 +9,20 @@
 </template>
 
 <script>
-import { defineComponent, defineAsyncComponent } from 'vue';
+import { defineComponent, defineAsyncComponent } from "vue";
 
-const SplashBlock = defineAsyncComponent(() => import('@/components/Partials/SplashBlock.vue'));
-const TeaserBlock = defineAsyncComponent(() => import('@/components/Partials/TeaserBlock.vue'));
-const QuoteBlock = defineAsyncComponent(() => import('@/components/Partials/QuoteBlock.vue'));
+const SplashBlock = defineAsyncComponent(() => import("@/components/Partials/SplashBlock.vue"));
+const TeaserBlock = defineAsyncComponent(() => import("@/components/Partials/TeaserBlock.vue"));
+const QuoteBlock = defineAsyncComponent(() => import("@/components/Partials/QuoteBlock.vue"));
 const RepertoirBlock = defineAsyncComponent(() =>
-  import('@/components/Partials/RepertoirBlock.vue'),
+  import("@/components/Partials/RepertoirBlock.vue"),
+);
+const EmbeddedTicketForm = defineAsyncComponent(() =>
+  import("@/components/Partials/EmbeddedTicketForm.vue"),
 );
 
 export default defineComponent({
-  name: 'AppMain',
+  name: "AppMain",
   props: {
     msg: String,
 
@@ -33,6 +36,7 @@ export default defineComponent({
     TeaserBlock,
     RepertoirBlock,
     QuoteBlock,
+    EmbeddedTicketForm,
   },
 });
 </script>

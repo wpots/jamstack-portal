@@ -15,16 +15,23 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: "/concerts/:id",
     name: "concert",
-    component: () => import(/* webpackChunkName: "portal" */ "../views/concert/index.vue"),
+    component: () => import(/* webpackChunkName: "concert" */ "../views/concert/index.vue"),
   },
   {
     path: "/concerts/:id/programma",
-    name: "concert",
-    component: () => import(/* webpackChunkName: "portal" */ "../views/concert/setListPage.vue"),
+    name: "program",
+    component: () => import(/* webpackChunkName: "program" */ "../views/concert/TimeTablePage.vue"),
   },
 ];
 
 const router = createRouter({
+  scrollBehavior(to, from, savedPosition) {
+    if (to.hash) {
+      return {
+        el: to.hash,
+      };
+    }
+  },
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });

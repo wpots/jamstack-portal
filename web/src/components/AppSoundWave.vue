@@ -1,24 +1,5 @@
 <template>
-  <div class="timeline">
-    <div class="sound-wave">
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
-    <div class="sound-wave large">
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-    </div>
+  <div v-if="size" class="timeline">
     <div class="sound-wave">
       <div class="line"></div>
     </div>
@@ -29,19 +10,8 @@
       <div class="wave"></div>
       <div class="wave"></div>
     </div>
-    <div class="sound-wave">
-      <div class="line"></div>
-      <div class="line"></div>
-    </div>
-    <div class="sound-wave large">
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
-      <div class="wave"></div>
+
+    <div class="sound-wave small rtl">
       <div class="wave"></div>
       <div class="wave"></div>
       <div class="wave"></div>
@@ -53,19 +23,77 @@
       <div class="line"></div>
     </div>
   </div>
+  <div v-else class="timeline">
+    <div class="sound-wave">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+    <div class="sound-wave large">
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+    </div>
+    <div class="sound-wave">
+      <div class="line"></div>
+    </div>
+    <div class="sound-wave small rtl">
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+      <div class="wave"></div>
+    </div>
+    <div class="sound-wave">
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+      <div class="line"></div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
 export default defineComponent({
-  name: "SetListPage",
+  name: "AppSoundWave",
+  props: {
+    size: {
+      type: [String, Boolean],
+      default: false,
+    },
+  },
 });
 </script>
 <style lang="scss" scoped>
 .timeline {
-  margin: 2rem;
+  position: relative;
+  margin: 0.5rem;
   display: flex;
+  align-self: center;
+  &::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: block;
+    width: 100%;
+
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
 }
 .sound-wave {
   display: flex;
@@ -82,6 +110,9 @@ export default defineComponent({
     --wave-decline: 5px;
     --wave-decline-height: 30px;
   }
+}
+.rtl {
+  direction: rtl;
 }
 .line {
   &::before,

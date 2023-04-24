@@ -1,12 +1,13 @@
 <template>
   <footer class="site-info row align-items-end justify-content-evenly" v-if="cms">
-    <p class="col-xs-12 col-md-6">{{ cms.copyright }}</p>
-    <ContentfulRichText :document="cms.credits" class="credits col" />
+    <p class="col-xs-12 col-md-6">{{ copyright }}</p>
+    <ContentfulRichText :document="credits" class="credits col" />
   </footer>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, computed } from "vue";
+import { useContent } from "../composables/useContent";
 import ContentfulRichText from "./ContentfulRichText.vue";
 
 export default defineComponent({
@@ -19,6 +20,12 @@ export default defineComponent({
         return {};
       },
     },
+  },
+  setup() {
+    const { getFooter } = useContent();
+    const copyright = computed(() => getFooter.value?.copyright);
+    const credits = computed(() => getFooter.value?.credits);
+    return { copyright, credits };
   },
 });
 </script>

@@ -1,0 +1,31 @@
+query getTimeTableQuery($date: DateTime!) {
+  pageBlockTimeTableCollection(where: { date: $date }, limit: 1) {
+    items {
+      date
+      title
+      introduction {
+        json
+      }
+      setlistCollection(limit: 5) {
+        items {
+          setlistCollection {
+            items {
+              title
+            }
+          }
+          description
+        }
+      }
+      setlist2Collection(limit: 5) {
+        items {
+          setlistCollection {
+            items {
+              title
+            }
+          }
+          description
+        }
+      }
+    }
+  }
+}

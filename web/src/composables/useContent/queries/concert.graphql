@@ -1,0 +1,28 @@
+query getConcertPageQuery($date: DateTime!) {
+  __typename
+  concertpageCollection(where: { date: $date }, limit: 1) {
+    items {
+      concertTitle
+      pageBlocksCollection(limit: 10) {
+        items {
+          ... on EmbeddedTicketForm {
+            formTitle
+            formId
+          }
+          ... on TeaserBlock {
+            title
+            columnContentCollection(limit: 2) {
+              items {
+                ... on ContentTypeRichText {
+                  body {
+                    json
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

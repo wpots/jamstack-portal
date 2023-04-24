@@ -1,4 +1,4 @@
-query getLayoutComponents($title: String!) {
+query getLayoutComponentsQuery($title: String!) {
   homePageCollection(limit: 1, where: { title: $title }) {
     items {
       websiteTitle

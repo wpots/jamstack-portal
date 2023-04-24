@@ -1,41 +1,13 @@
-query getHomePage($title: String!) {
+query getHomePageQuery($title: String!) {
   homePageCollection(limit: 1, where: { title: $title }) {
     items {
       websiteTitle
-      callToAction {
-        inPageAnchor {
-          ... on TeaserBlock {
-            anchor
-            title
-          }
-        }
-        iconName
-        linkText
-      }
-      pageScrollerCollection(limit: 4) {
-        items {
-          ... on RepertoirBlock {
-            title
-            anchor
-          }
-          ... on TeaserBlock {
-            title
-            anchor
-          }
-        }
-      }
       pageBlocksCollection(limit: 8) {
         items {
           ...SplashParts
           ...QuoteParts
           ...TeaserParts
           ...RepertoirParts
-        }
-      }
-      footer {
-        copyright
-        credits {
-          json
         }
       }
     }

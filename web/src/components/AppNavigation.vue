@@ -1,9 +1,9 @@
 <template>
   <nav class="nav--split nav--toggle d-flex align-items-center">
     <div class="col-auto">
-      <a class="brand" href="#top">
+      <router-link :to="{ path: '/', hash: '#top' }" class="brand">
         <AppLogo />
-      </a>
+      </router-link>
     </div>
     <div class="col-auto">
       <button
@@ -16,7 +16,9 @@
       </button>
       <ul class="toggle-menu" :class="showMenu ? 'focus' : null">
         <li class="menu-item" v-for="(item, index) in cms" :key="index">
-          <a :href="`#${item.anchor}`" @click="showMenu = !showMenu">{{ item.title }}</a>
+          <router-link :to="routerLocation(item)" @click="showMenu = !showMenu">{{
+            item.title
+          }}</router-link>
         </li>
       </ul>
     </div>
@@ -24,7 +26,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { computed, defineComponent, ref } from "vue";
 import AppLogo from "@/components/AppLogo.vue";
 
 export default defineComponent({
@@ -42,8 +44,13 @@ export default defineComponent({
   },
   setup() {
     const showMenu = ref(false);
-
-    return { showMenu };
+    const routerLocation = item => {
+      return {
+        path: item.link || "/",
+        hash: item.anchor ? `#${item.anchor}` : false,
+      };
+    };
+    return { showMenu, routerLocation };
   },
 });
 </script>

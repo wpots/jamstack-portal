@@ -1,9 +1,5 @@
 <template>
-  <AppIFrame
-    :src="src"
-    name="ticketshop"
-    style="width: 100%; max-width: 600px; min-height: 950px; overflow-y: auto; border: 0"
-  />
+  <AppIFrame :src="src" name="ticketshop" />
 </template>
 
 <script lang="ts">
@@ -16,11 +12,16 @@ export default defineComponent({
     AppIFrame,
   },
   props: {
-    formId: String,
+    cms: {
+      type: Object,
+      default: () => {
+        return {};
+      },
+    },
   },
   setup(props) {
     const baseUrl = `https://www.ticketkantoor.nl/shop`;
-    const src = computed(() => `${baseUrl}/${props.formId}&embed=1`);
+    const src = computed(() => `${baseUrl}/${props.cms.formId}&embed=1`);
     return { src };
   },
 });

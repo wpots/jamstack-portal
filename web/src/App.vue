@@ -2,7 +2,11 @@
   <div id="top">
     <AppHeader />
     <main class="sections">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <component :is="Component" />
+        </keep-alive>
+      </router-view>
     </main>
     <AppFooter />
     <StickyWidget />

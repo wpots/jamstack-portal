@@ -7,68 +7,66 @@
 
 // Colors
 
-$magenta                    : #EB008B;
-$green                      : #0CEC00;
-$yellow                     : #A9F900;
-$red                        : #FE0006;
-$gray                       : #a6a8a6;
-$white                      : #fff;
-$smoke                      : #f3f3f3;
-$chocolaterie               : #200d10;
-$black                      : #000;
-$tundora                    : #4A4244;
+$magenta: #eb008b;
+$green: #0cec00;
+$yellow: #a9f900;
+$red: #fe0006;
+$gray: #a6a8a6;
+$white: #fff;
+$smoke: #f3f3f3;
+$chocolaterie: #200d10;
+$black: #000;
+$tundora: #4a4244;
 
-
-$magenta-tint60             : mix($white, $magenta, 60%);
+$magenta-tint60: mix($white, $magenta, 60%);
 
 // $brand-primary           : $black;
 //font families
-$font-fam-heading           : 'Julius Sans One', serif;
-$font-fam-body              : 'Muli', sans-serif;
-$font-fam-nav               : 'Montserrat', sans-serif;
+$font-fam-heading: "Julius Sans One", serif;
+$font-fam-body: "Muli", sans-serif;
+$font-fam-nav: "Montserrat", sans-serif;
 
 //links
-$link-color                 : $black;
-$link-decoration            : none;
-$link-hover-color           : $black;
-$link-hover-decoration      : underline;
+$link-color: $black;
+$link-decoration: none;
+$link-hover-color: $black;
+$link-hover-decoration: underline;
 
 $icon-size: 40px;
 
-
 // sizes
-$font-size-h1               : 2.5rem !default;
-$font-size-h2               : 2rem !default;
-$font-size-h3               : 1em;
-$font-size-h4               : 1.5rem !default;
-$font-size-h5               : 1.25rem !default;
-$font-size-h6               : 1rem !default;
+$font-size-h1: 2.5rem !default;
+$font-size-h2: 2rem !default;
+$font-size-h3: 1em;
+$font-size-h4: 1.5rem !default;
+$font-size-h5: 1.25rem !default;
+$font-size-h6: 1rem !default;
 
-$banner-size                : 100px;
-$banner-size-small          : 70px;
-$banner-size-big            : 120px;
+$banner-size: 100px;
+$banner-size-small: 70px;
+$banner-size-big: 120px;
 
-$spacer-size                : 40vh;
+$spacer-size: 40vh;
 
 //hamburger-cross
-$button-width               : $banner-size-small;
-$button-height              : $banner-size-small;
-$bar-thickness              : 2px;
-$button-pad                 : 20px;
-$button-bar-space           : 5px;
-$button-transition-duration : .3s;
+$button-width: $banner-size-small;
+$button-height: $banner-size-small;
+$bar-thickness: 2px;
+$button-pad: 20px;
+$button-bar-space: 5px;
+$button-transition-duration: 0.3s;
 
+$enable-flex: true;
 
-$enable-flex                : true;
-
-$grid-gutter-width          : 30px;
-
+$grid-gutter-width: 30px;
 
 $theme-color-primary: $magenta;
-$theme-color-secondary:#fe265e;
+$theme-color-secondary: #fe265e;
 $theme-color-accent: #3beca8;
 
+$theme-color-disabled: $gray;
+
 // bootstrap overrides
-$link-color:currentColor;
+$link-color: currentColor;
 $link-hover-color: currentColor;
 $link-hover-decoration: none;

@@ -23,11 +23,10 @@
 }
 
 //shapes
-
-.btn--primary {
+.btn--default {
   @extend .btn;
   padding: 0.8rem 1.2rem;
-  background-color: $theme-color-secondary;
+  background-color: var(--btn-color, #{$theme-color-disabled});
   border-radius: 4px;
   color: $white !important;
 
@@ -38,6 +37,15 @@
   &:active {
     outline: none;
   }
+
+  &.primary {
+    --btn-color: #{$theme-color-secondary};
+  }
+}
+
+.btn--primary {
+  --btn-color: #{$theme-color-secondary};
+  @extend .btn--default;
 }
 
 .btn--square {

@@ -3,7 +3,7 @@
     v-for="(contentEntry, index) in content"
     :is="contentEntry.__typename"
     :key="index"
-    :id="contentEntry.anchor"
+    :id="contentEntry.anchor || contentEntry.__typename + index"
     :cms="contentEntry"
   />
 </template>

@@ -6,14 +6,23 @@ query getConcertPageQuery($date: DateTime!) {
       pageBlocksCollection(limit: 10) {
         items {
           ... on EmbeddedTicketForm {
+            __typename
             formTitle
             formId
           }
           ... on TeaserBlock {
+            __typename
             title
+            backgroundImage {
+              url
+              title
+            }
+            fullWidth
             columnContentCollection(limit: 2) {
               items {
                 ... on ContentTypeRichText {
+                  title
+                  classes
                   body {
                     json
                   }

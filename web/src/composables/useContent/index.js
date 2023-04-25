@@ -30,7 +30,7 @@ export function useContent(id) {
     enabled: enableQuery.layout,
   }));
 
-  const { result: concertpage } = useQuery(getConcertPageQuery, { date }, () => ({
+  const { result: concert } = useQuery(getConcertPageQuery, { date }, () => ({
     enabled: enableQuery.concert,
   }));
 
@@ -40,15 +40,19 @@ export function useContent(id) {
 
   const layoutComponents = computed(() => toDomain.mapLayout(layout.value));
   const getHomepage = computed(() => toDomain.mapHomepage(homepage.value));
-  const getConcertpage = computed(() => toDomain.mapConcertpage(concertpage.value));
+  const getConcertpage = computed(() => toDomain.mapConcertpage(concert.value));
   const getTimeTable = computed(() => toDomain.mapTimeTable(timetable.value));
 
   watch(layoutComponents, () => {
-    console.log("watch");
     if (layoutComponents.value?.footer) {
       store.dispatch("setLayout", { home: layoutComponents.value });
     }
   });
+  const fetchLayout = () => {
+    if (!store.state.layout?.footer) {
+      enableQuery.layout = true;
+    }
+  };
 
   const getHeader = computed(() => store.state.layout?.home?.header);
   const getFooter = computed(() => store.state.layout?.home?.footer);
@@ -56,8 +60,8 @@ export function useContent(id) {
   onMounted(() => {
     if (id) {
       enableQuery[id] = true;
-      enableQuery.layout = true;
     }
+    fetchLayout();
   });
 
   return { getHomepage, getConcertpage, getTimeTable, getHeader, getFooter };

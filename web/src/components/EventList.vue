@@ -1,8 +1,8 @@
 <template>
-  <div class="list__items" v-if="events?.length > 0">
+  <div class="list__items" v-if="upcomingEvents?.length > 0">
     <transition-group class="list--figure row flow-in" name="flow-in" tag="ul">
       <EventItem
-        v-for="(event, index) in events"
+        v-for="(event, index) in upcomingEvents"
         class="list__item flow-item col-xs-12"
         :key="index"
         :event="event"
@@ -28,7 +28,14 @@ export default defineComponent({
   },
   setup(props) {
     const events = computed(() => props.cms.eventlistCollection.items);
-    return { events };
+    const upcomingEvents = computed(() =>
+      events.value.filter(event => {
+        const now = new Date().setHours(0, 0, 0, 0);
+        const eventDate = new Date(event.date).setHours(0, 0, 0, 0);
+        return eventDate > now;
+      }),
+    );
+    return { upcomingEvents };
   },
 });
 </script>

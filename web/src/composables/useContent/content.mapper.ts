@@ -10,7 +10,9 @@ const toDomain = {
     firstSetlist: result?.pageBlockTimeTableCollection?.items[0].setlistCollection?.items,
     lastSetList: result?.pageBlockTimeTableCollection?.items[0].setlist2Collection?.items,
   }),
-  mapConcertpage: result => result?.concertPageCollection?.items[0].pageBlocksCollection?.items,
+  mapConcertpage: result => {
+    return result?.concertpageCollection?.items[0].pageBlocksCollection?.items;
+  },
   mapHomepage: result => result?.homePageCollection?.items[0].pageBlocksCollection.items,
   mapLayout: result => ({
     header: {

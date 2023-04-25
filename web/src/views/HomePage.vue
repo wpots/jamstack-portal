@@ -1,5 +1,7 @@
 <template>
-  <AppMain :content="content" />
+  <KeepAlive>
+    <AppMain :content="content" />
+  </KeepAlive>
 </template>
 
 <script>
@@ -16,7 +18,7 @@ export default defineComponent({
   setup() {
     const contentService = useContent("home");
     const content = computed(() => contentService.getHomepage.value);
-
+    console.log(content.value);
     return { content };
   },
 });

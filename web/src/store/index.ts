@@ -11,7 +11,6 @@ export default createStore({
   },
   actions: {
     setLayout({ commit }, layout) {
-      console.log("we are here", layout);
       commit("setLayout", layout);
     },
   },

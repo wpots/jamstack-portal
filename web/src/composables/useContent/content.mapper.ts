@@ -16,10 +16,10 @@ const toDomain = {
   mapHomepage: result => result?.homePageCollection?.items[0].pageBlocksCollection.items,
   mapLayout: result => ({
     header: {
-      nav: result?.homePageCollection?.items[0]?.pageScrollerCollection.items,
-      cta: result?.homePageCollection?.items[0]?.callToAction,
+      nav: result?.layoutCollection?.items[0]?.pageScrollerCollection.items,
+      cta: result?.layoutCollection?.items[0]?.callToAction,
     },
-    footer: result?.homePageCollection?.items[0]?.footer,
+    footer: result?.layoutCollection?.items[0]?.footer,
   }),
 };
 const fromDomain = {

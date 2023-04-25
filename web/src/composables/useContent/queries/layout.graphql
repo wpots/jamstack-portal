@@ -1,7 +1,6 @@
 query getLayoutComponentsQuery($title: String!) {
-  homePageCollection(limit: 1, where: { title: $title }) {
+  layoutCollection(limit: 1, where: { title: $title }) {
     items {
-      websiteTitle
       callToAction {
         inPageAnchor {
           ... on TeaserBlock {

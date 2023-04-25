@@ -8,7 +8,7 @@ import { getLayoutComponentsQuery } from "./queries/layout.graphql";
 import { getTimeTableQuery } from "./queries/timeTableBlock.graphql";
 import { getConcertPageQuery } from "./queries/concert.graphql";
 
-export function useContent(id) {
+export function useContent(id, ctx) {
   const enableQuery = reactive({
     layout: false,
     home: false,
@@ -21,12 +21,13 @@ export function useContent(id) {
 
   const concertId = route.params.id;
   const date = fromDomain.idAsDate(concertId);
+  const layoutName = ctx?.layout || "default";
 
   const { result: homepage } = useQuery(getHomePageQuery, { title: "Home" }, () => ({
     enabled: enableQuery.home,
   }));
 
-  const { result: layout } = useQuery(getLayoutComponentsQuery, { title: "Home" }, () => ({
+  const { result: layout } = useQuery(getLayoutComponentsQuery, { title: layoutName }, () => ({
     enabled: enableQuery.layout,
   }));
 

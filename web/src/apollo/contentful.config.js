@@ -1,10 +1,10 @@
-import { ApolloClient, createHttpLink, InMemoryCache } from '@apollo/client/core';
+import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client/core";
 
 // HTTP connection to the API
 const httpLink = createHttpLink({
   // You should use an absolute URL here
-  uri: '/.netlify/functions/content',
-  // uri: '/api/v1/content',
+  // uri: '/.netlify/functions/content',
+  uri: "/api/v1/content",
 });
 
 // Cache implementation

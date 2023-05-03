@@ -23,9 +23,10 @@
 
 <script>
 import { ref, defineComponent, onErrorCaptured, computed } from "vue";
-import { useQuery, useResult } from "@vue/apollo-composable";
+import { useQuery } from "@vue/apollo-composable";
 import { getRepertoirBlock } from "./repertoirBlock.graphql";
 import { getRepertoirSongs } from "./repertoirSongs.graphql";
+import { mapRepertoire } from "../../composables/useContent/content.mapper";
 import RepertoirList from "../RepertoirList.vue";
 import AppSortable from "../AppSortable.vue";
 import ContentfulRichText from "../ContentfulRichText.vue";
@@ -51,20 +52,9 @@ export default defineComponent({
 
     const { result: block } = useQuery(getRepertoirBlock, { anchor: "ons-repertoire" });
     const { result: sort, refetch, error } = useQuery(getRepertoirSongs, {}, queryOptions);
-    const featuredSongs = useResult(
-      block,
-      null,
-      data => data.repertoirBlockCollection.items[0].songsCollection.items,
-    );
-    const filterGenres = useResult(block, null, data => {
-      const allGenres = data.muziekGenresCollection.items;
-      const usedGenres = allGenres
-        .filter(genre => genre.linkedFrom.scoreCollection.total > 0)
-        .map(i => {
-          return { genre: i.genre, total: i.linkedFrom.scoreCollection.total };
-        });
-      return usedGenres;
-    });
+
+    const featuredSongs = computed(() => mapRepertoire(block?.value).featuredSongs);
+    const filterGenres = computed(() => mapRepertoire(block?.value).genreFilterItems);
 
     const onComponentInView = () => {
       //lazily get all songs when component is actually in viewport
@@ -76,9 +66,7 @@ export default defineComponent({
       sortBy.value = genre;
     };
 
-    const allSongs = useResult(sort, [], data => {
-      return data.scoreCollection.items;
-    });
+    const allSongs = computed(() => sort?.value?.scoreCollection.items);
 
     const sortedSongs = computed(() => {
       if (sortBy.value && allSongs.value) {

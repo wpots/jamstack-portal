@@ -5,6 +5,12 @@ const toDomain = {
   dateAsId: (date: string) => {
     return date.split("T", 1)[0];
   },
+  mapRepertoire: result => ({
+    featuredSongs: result?.repertoirBlockCollection?.items[0].songsCollection?.items,
+    genreFilterItems: result?.muziekGenresCollection?.items
+      .filter(genre => genre.linkedFrom?.scoreCollections?.total > 0)
+      .map(item => ({ genre: item.genre, total: item.linkedFrom.scoreCollection.total })),
+  }),
   mapTimeTable: result => ({
     introduction: result?.pageBlockTimeTableCollection?.items[0].introduction,
     firstSetlist: result?.pageBlockTimeTableCollection?.items[0].setlistCollection?.items,

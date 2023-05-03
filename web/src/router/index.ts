@@ -1,26 +1,29 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import HomePage from "../views/HomePage.vue";
+import PortalPage from "@/views/PortalPage.vue";
+import ConcertPage from "@/views/concert/index.vue";
+import TimeTablePage from "@/views/concert/TimeTablePage.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
-    name: "Home",
+
     component: HomePage,
   },
   {
     path: "/portal",
-    name: "Portal",
-    component: () => import(/* webpackChunkName: "portal" */ "../views/PortalPage.vue"),
+
+    component: PortalPage,
   },
   {
     path: "/concerts/:id",
-    name: "concert",
-    component: () => import(/* webpackChunkName: "concert" */ "../views/concert/index.vue"),
+
+    component: ConcertPage,
   },
   {
     path: "/concerts/:id/programma",
-    name: "program",
-    component: () => import(/* webpackChunkName: "program" */ "../views/concert/TimeTablePage.vue"),
+
+    component: TimeTablePage,
   },
 ];
 

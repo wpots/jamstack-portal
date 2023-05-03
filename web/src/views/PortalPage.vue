@@ -1,5 +1,5 @@
 <template>
-  <div class="portal"></div>
+  <div class="portal">Hello Portal</div>
 </template>
 
 <script lang="ts">

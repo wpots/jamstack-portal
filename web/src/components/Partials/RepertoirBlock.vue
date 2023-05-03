@@ -26,7 +26,7 @@ import { ref, defineComponent, onErrorCaptured, computed } from "vue";
 import { useQuery } from "@vue/apollo-composable";
 import { getRepertoirBlock } from "./repertoirBlock.graphql";
 import { getRepertoirSongs } from "./repertoirSongs.graphql";
-import { mapRepertoire } from "../../composables/useContent/content.mapper";
+import { toDomain } from "../../composables/useContent/content.mapper";
 import RepertoirList from "../RepertoirList.vue";
 import AppSortable from "../AppSortable.vue";
 import ContentfulRichText from "../ContentfulRichText.vue";
@@ -53,8 +53,8 @@ export default defineComponent({
     const { result: block } = useQuery(getRepertoirBlock, { anchor: "ons-repertoire" });
     const { result: sort, refetch, error } = useQuery(getRepertoirSongs, {}, queryOptions);
 
-    const featuredSongs = computed(() => mapRepertoire(block?.value).featuredSongs);
-    const filterGenres = computed(() => mapRepertoire(block?.value).genreFilterItems);
+    const featuredSongs = computed(() => toDomain.mapRepertoire(block?.value).featuredSongs);
+    const filterGenres = computed(() => toDomain.mapRepertoire(block?.value).genreFilterItems);
 
     const onComponentInView = () => {
       //lazily get all songs when component is actually in viewport

@@ -43,6 +43,7 @@ export function useContent(id, ctx) {
   const getHomepage = computed(() => toDomain.mapHomepage(homepage.value));
   const getConcertpage = computed(() => toDomain.mapConcertpage(concert.value));
   const getTimeTable = computed(() => toDomain.mapTimeTable(timetable.value));
+  const getRepertoir = computed(() => toDomain.mapRepertoire(timetable.value));
 
   watch(layoutComponents, () => {
     if (layoutComponents.value?.footer) {

@@ -42,7 +42,6 @@ export default defineComponent({
     const sortBy = ref(false);
 
     const { getRepertoirePage, sortSongs, fetchSongs } = useContent("repertoire");
-    console.log(getRepertoirePage);
     const filterGenres = computed(() => getRepertoirePage.value.genreFilterItems);
     const featuredSongs = computed(() => getRepertoirePage.value.featuredSongs);
 
@@ -52,7 +51,7 @@ export default defineComponent({
 
     const onUpdateSortable = genre => {
       sortBy.value = genre;
-      sortSongs(genre);
+      // sortSongs(genre);
     };
 
     const sortedSongs = computed(() =>

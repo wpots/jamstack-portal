@@ -53,12 +53,8 @@ export function useContent(id, ctx) {
 
   const fetchSongs = async () => {
     enableQuery.songs = true;
-    console.log(enableQuery);
     await refetchSongs();
   };
-
-  const sortSongs = () => genre =>
-    getSongs.value.filter(song => song.genre.find(i => i.genre === genre));
 
   const layoutComponents = computed(() => toDomain.mapLayout(layout.value));
   const getHomepage = computed(() => toDomain.mapHomepage(homepage.value));
@@ -66,6 +62,7 @@ export function useContent(id, ctx) {
   const getTimeTable = computed(() => toDomain.mapTimeTable(timetable.value));
   const getRepertoirePage = computed(() => toDomain.mapRepertoire(repertoire.value));
   const getSongs = computed(() => toDomain.mapSongs(songs.value));
+  const sortSongs = genre => getSongs.value.filter(song => song.genre.find(i => i.genre === genre));
 
   watch(layoutComponents, () => {
     if (layoutComponents.value?.footer) {

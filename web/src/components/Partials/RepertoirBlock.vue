@@ -15,18 +15,12 @@
         </div>
       </article>
     </div>
-    <div v-if="error">
-      {{ error.value }}
-    </div>
   </div>
 </template>
 
 <script>
-import { ref, defineComponent, onErrorCaptured, computed } from "vue";
-import { useQuery } from "@vue/apollo-composable";
-import { getRepertoirBlock } from "./repertoirBlock.graphql";
-import { getRepertoirSongs } from "./repertoirSongs.graphql";
-import { toDomain } from "../../composables/useContent/content.mapper";
+import { ref, defineComponent, computed } from "vue";
+import { useContent } from "../../composables/useContent";
 import RepertoirList from "../RepertoirList.vue";
 import AppSortable from "../AppSortable.vue";
 import ContentfulRichText from "../ContentfulRichText.vue";
@@ -46,42 +40,26 @@ export default defineComponent({
 
   setup() {
     const sortBy = ref(false);
-    const queryOptions = ref({
-      enabled: false,
-    });
 
-    const { result: block } = useQuery(getRepertoirBlock, { anchor: "ons-repertoire" });
-    const { result: sort, refetch, error } = useQuery(getRepertoirSongs, {}, queryOptions);
-
-    const featuredSongs = computed(() => toDomain.mapRepertoire(block?.value).featuredSongs);
-    const filterGenres = computed(() => toDomain.mapRepertoire(block?.value).genreFilterItems);
+    const { getRepertoirePage, sortSongs, fetchSongs } = useContent("repertoire");
+    console.log(getRepertoirePage);
+    const filterGenres = computed(() => getRepertoirePage.value.genreFilterItems);
+    const featuredSongs = computed(() => getRepertoirePage.value.featuredSongs);
 
     const onComponentInView = () => {
-      //lazily get all songs when component is actually in viewport
-      queryOptions.value.enabled = true;
-      refetch();
+      fetchSongs();
     };
 
     const onUpdateSortable = genre => {
       sortBy.value = genre;
+      sortSongs(genre);
     };
 
-    const allSongs = computed(() => sort?.value?.scoreCollection.items);
+    const sortedSongs = computed(() =>
+      sortBy.value ? sortSongs(sortBy.value) : featuredSongs.value,
+    );
 
-    const sortedSongs = computed(() => {
-      if (sortBy.value && allSongs.value) {
-        return allSongs?.value.filter(song => {
-          return song.genreCollection.items.find(i => i.genre === sortBy.value);
-        });
-      }
-      return featuredSongs.value;
-    });
-
-    onErrorCaptured(e => {
-      error.value = e;
-      return true;
-    });
-    return { filterGenres, featuredSongs, sortedSongs, onComponentInView, onUpdateSortable, error };
+    return { filterGenres, sortedSongs, onComponentInView, onUpdateSortable };
   },
 });
 </script>

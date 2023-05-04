@@ -7,13 +7,18 @@ import { getHomePageQuery } from "./queries/home.graphql";
 import { getLayoutComponentsQuery } from "./queries/layout.graphql";
 import { getTimeTableQuery } from "./queries/timeTableBlock.graphql";
 import { getConcertPageQuery } from "./queries/concert.graphql";
+import { getRepertoirBlock } from "./queries/repertoirBlock.graphql";
+import { getRepertoirSongs } from "./queries/repertoirSongs.graphql";
 
 export function useContent(id, ctx) {
+  console.log(id);
   const enableQuery = reactive({
     layout: false,
     home: false,
     concert: false,
     timetable: false,
+    repertoire: false,
+    songs: false,
   });
 
   const store = useStore();
@@ -38,12 +43,29 @@ export function useContent(id, ctx) {
   const { result: timetable } = useQuery(getTimeTableQuery, { date }, () => ({
     enabled: enableQuery.timetable,
   }));
+  const { result: repertoire } = useQuery(getRepertoirBlock, { anchor: "ons-repertoire" }, () => ({
+    enabled: enableQuery.repertoire,
+  }));
+
+  const { result: songs, refetch: refetchSongs } = useQuery(getRepertoirSongs, {}, () => ({
+    enabled: enableQuery.songs,
+  }));
+
+  const fetchSongs = async () => {
+    enableQuery.songs = true;
+    console.log(enableQuery);
+    await refetchSongs();
+  };
+
+  const sortSongs = () => genre =>
+    getSongs.value.filter(song => song.genre.find(i => i.genre === genre));
 
   const layoutComponents = computed(() => toDomain.mapLayout(layout.value));
   const getHomepage = computed(() => toDomain.mapHomepage(homepage.value));
   const getConcertpage = computed(() => toDomain.mapConcertpage(concert.value));
   const getTimeTable = computed(() => toDomain.mapTimeTable(timetable.value));
-  const getRepertoire = computed(() => toDomain.mapRepertoire(timetable.value));
+  const getRepertoirePage = computed(() => toDomain.mapRepertoire(repertoire.value));
+  const getSongs = computed(() => toDomain.mapSongs(songs.value));
 
   watch(layoutComponents, () => {
     if (layoutComponents.value?.footer) {
@@ -66,5 +88,14 @@ export function useContent(id, ctx) {
     fetchLayout();
   });
 
-  return { getHomepage, getConcertpage, getTimeTable, getHeader, getFooter };
+  return {
+    getHomepage,
+    getConcertpage,
+    getTimeTable,
+    getRepertoirePage,
+    fetchSongs,
+    sortSongs,
+    getHeader,
+    getFooter,
+  };
 }

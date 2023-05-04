@@ -6,7 +6,7 @@
       </KeepAlive>
     </div>
     <div v-if="formSelection" class="row selection">
-      <p>Selecteerd een voorstelling:</p>
+      <p>Selecteer een voorstelling:</p>
       <div v-for="(form, index) in formSelection" class="col selection__item" :key="index">
         <input
           type="radio"

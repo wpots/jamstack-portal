@@ -8,6 +8,17 @@ const toDomain = {
   mapRepertoire: result => ({
     featuredSongs: result?.repertoirBlockCollection?.items[0].songsCollection?.items,
     genreFilterItems: result?.muziekGenresCollection?.items
+      .filter(genre => genre.linkedFrom?.scoreCollection?.total > 0)
+      .map(item => ({ genre: item.genre, total: item.linkedFrom.scoreCollection.total })),
+  }),
+  mapSongs: result => ({
+    allSongs: result?.scoreCollection.items.map(song => ({
+      title: song.title,
+      artist: song.artist,
+      albumart: song.albumart,
+      genre: song.genreCollection.items,
+    })),
+    sortedSongs: result?.muziekGenresCollection?.items
       .filter(genre => genre.linkedFrom?.scoreCollections?.total > 0)
       .map(item => ({ genre: item.genre, total: item.linkedFrom.scoreCollection.total })),
   }),

@@ -18,7 +18,7 @@ export default defineComponent({
     const { getTimeTable } = useContent("timetable", { route });
 
     const introduction = computed(() => getTimeTable.value.introduction);
-    const firstSetlist = computed(() => getTimeTable.value.firstSetList);
+    const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
     const lastSetlist = computed(() => getTimeTable.value.lastSetList);
     return { introduction, firstSetlist, lastSetlist };
   },

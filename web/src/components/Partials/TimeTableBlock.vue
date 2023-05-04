@@ -1,8 +1,5 @@
 <template>
   <section class="section timetableblock">
-    <div v-if="error">
-      {{ error.value }}
-    </div>
     <div class="container-fluid">
       <div class="row">
         <div class="col-12">

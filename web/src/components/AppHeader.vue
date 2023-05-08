@@ -4,7 +4,7 @@
       <div class="row">
         <AppNavigation class="col-xs-12" :cms="nav" />
         <div class="col-auto ml-auto">
-          <CallToAction :cms="cta" />
+          <CallToAction v-if="$route.name !== 'programma'" :cms="cta" />
         </div>
       </div>
     </div>

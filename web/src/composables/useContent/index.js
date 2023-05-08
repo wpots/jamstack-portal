@@ -11,7 +11,6 @@ import { getRepertoirBlock } from "./queries/repertoirBlock.graphql";
 import { getRepertoirSongs } from "./queries/repertoirSongs.graphql";
 
 export function useContent(id, ctx) {
-  console.log(id);
   const enableQuery = reactive({
     layout: false,
     home: false,

@@ -1,6 +1,9 @@
 <template>
   <div class="setlist">
     <TimeTableBlock :cms="{ introduction, firstSetlist, lastSetlist }" />
+    <div class="container">
+      <FeedBackForm></FeedBackForm>
+    </div>
   </div>
 </template>
 
@@ -9,14 +12,16 @@ import { defineComponent, computed } from "vue";
 import { useRoute } from "vue-router";
 import TimeTableBlock from "../../components/Partials/TimeTableBlock.vue";
 import { useContent } from "../../composables/useContent";
+import FeedBackForm from "../../components/FeedBackForm.vue";
 
 export default defineComponent({
-  components: { TimeTableBlock },
+  components: { TimeTableBlock, FeedBackForm },
   name: "TimeTablePage",
   setup() {
     const route = useRoute();
     const { getTimeTable } = useContent("timetable", { route });
-
+    // AKfycbz3a8NpeBbycJpjLNsldGsGwhVz8wB8oPZjBJVobKmh_iXsN3yj0jSxctVlqcEdcEQ3uA
+    // https://script.google.com/macros/s/AKfycbz3a8NpeBbycJpjLNsldGsGwhVz8wB8oPZjBJVobKmh_iXsN3yj0jSxctVlqcEdcEQ3uA/exec
     const introduction = computed(() => getTimeTable.value.introduction);
     const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
     const lastSetlist = computed(() => getTimeTable.value.lastSetList);

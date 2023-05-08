@@ -22,7 +22,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: "/concerts/:id/programma",
-
+    name: "programma",
     component: TimeTablePage,
   },
 ];

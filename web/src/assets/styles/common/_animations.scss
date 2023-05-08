@@ -19,19 +19,23 @@
   animation-duration: 2s;
 }
 
-
 .animated.bounceIn {
-  animation-duration: .75s;
+  animation-duration: 0.75s;
 }
 
 @keyframes bounceIn {
-  from, 20%, 40%, 60%, 80%, to {
-    animation-timing-function: cubic-bezier(0.215, 0.610, 0.355, 1.000);
+  from,
+  20%,
+  40%,
+  60%,
+  80%,
+  to {
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
   }
 
   0% {
     opacity: 0;
-    transform: scale3d(.3, .3, .3);
+    transform: scale3d(0.3, 0.3, 0.3);
   }
 
   20% {
@@ -39,7 +43,7 @@
   }
 
   40% {
-    transform: scale3d(.9, .9, .9);
+    transform: scale3d(0.9, 0.9, 0.9);
   }
 
   60% {
@@ -48,7 +52,7 @@
   }
 
   80% {
-    transform: scale3d(.97, .97, .97);
+    transform: scale3d(0.97, 0.97, 0.97);
   }
 
   to {
@@ -58,10 +62,8 @@
 }
 
 .bounceIn {
-
   animation-name: bounceIn;
 }
-
 
 @keyframes fadeIn {
   from {
@@ -76,7 +78,6 @@
 .fadeIn {
   animation-name: fadeIn;
 }
-
 
 @keyframes rotateIn {
   from {
@@ -126,4 +127,151 @@
 
 .fadeOutUp {
   animation-name: fadeOutUp;
+}
+
+@keyframes colorWave {
+  0% {
+    transform: scaleY(100%);
+    color: $theme-color-primary;
+  }
+  15% {
+    transform: scaleY(90%);
+    color: $red;
+  }
+  30% {
+    transform: scaleY(105%);
+    color: $theme-color-secondary;
+  }
+  45% {
+    transform: scaleY(80%);
+    color: $yellow;
+  }
+  60% {
+    transform: scaleY(90%);
+    color: $green;
+  }
+  70% {
+    transform: scaleY(80%);
+    color: #07acda;
+  }
+  85% {
+    transform: scaleY(100%);
+    color: #1456de;
+  }
+  95% {
+    transform: scaleY(85%);
+    color: #7f10df;
+  }
+  100% {
+    transform: scaleY(100%);
+    color: $theme-color-primary;
+  }
+}
+.colorWave {
+  animation-name: colorWave;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  @for $i from 1 through 13 {
+    &:nth-child(#{$i}) {
+      animation-delay: calc(#{$i} * 50ms);
+    }
+  }
+}
+
+@keyframes hint {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(60%);
+  }
+}
+// @keyframes gesture-right {
+//   0% {
+//     transform: translateX(0px);
+//   }
+//   10% {
+//     transform: translateX(-1rem) rotateZ(-10deg);
+//   }
+//   25% {
+//     transform: translateX(2rem) rotateZ(10deg);
+//   }
+//   50% {
+//     transform: translateX(0px);
+//   }
+// }
+@keyframes gestureRight {
+  0% {
+    transform: translateX(0px);
+    color: transparent;
+  }
+  10% {
+    transform: translateX(1rem) rotateZ(10deg) rotateX(30deg);
+    color: black;
+  }
+  25% {
+    transform: translateX(-2rem) rotateZ(-10deg) rotateX(13deg);
+    color: black;
+  }
+  50% {
+    transform: translateX(0px);
+    color: transparent;
+  }
+}
+@keyframes gestureTap {
+  0% {
+    transform: rotateX(0deg);
+    color: transparent;
+  }
+  10% {
+    transform: rotateX(13deg);
+    color: black;
+  }
+  25% {
+    transform: rotateX(30deg);
+    color: black;
+  }
+  50% {
+    transform: rotateX(0deg);
+    color: transparent;
+  }
+}
+
+.gesture {
+  display: inline-block;
+  color: transparent;
+  animation-duration: 1500ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: ease-in-out;
+  -webkit-backface-visibility: hidden; /* Safari */
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  perspective: 800px;
+}
+
+.gesture-swipe-right {
+  @extend .gesture;
+  animation-name: gestureRight;
+}
+
+.gesture-tap {
+  @extend .gesture;
+  animation-name: gestureTap;
+}
+
+.icon-gesture {
+  width: 2rem;
+  height: 2rem;
+}
+
+#icon-gesture {
+  #gesture-tap {
+    fill: currentColor;
+  }
+
+  #gesture-arrow {
+    transform: translateX(4rem) rotateZ(-10deg);
+    // fill: currentColor;
+    opacity: 0.6;
+  }
 }

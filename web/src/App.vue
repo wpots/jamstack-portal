@@ -9,7 +9,7 @@
       </router-view>
     </main>
     <AppFooter />
-    <StickyWidget />
+    <StickyWidget v-if="$route.name !== 'programma'" />
   </div>
 </template>
 <script>

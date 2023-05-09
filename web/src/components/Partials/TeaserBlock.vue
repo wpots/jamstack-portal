@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <article class="row">
         <div
-          class="col-xs-12 col-sm"
+          class="col-xs-12 col-sm-6"
           v-for="(item, index) in cms.columnContentCollection.items"
           :key="index"
         >

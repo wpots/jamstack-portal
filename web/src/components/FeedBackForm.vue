@@ -2,7 +2,7 @@
   <div class="feedback-form row">
     <div class="col-12">
       <h2>Jouw mening telt!</h2>
-      <p>Laat jouw leukste reactie hier achter.</p>
+      <p>Laat jouw reactie hier achter. De leukste berichten plaatsen wij graag op onze site</p>
     </div>
     <form
       name="feedback-form"
@@ -22,7 +22,7 @@
           class="form-control"
           :class="{ filled: form.naam }"
         /><br />
-        <label :for="naam">Naam</label>
+        <label for="naam">Naam</label>
       </div>
 
       <div class="form-group">
@@ -37,7 +37,7 @@
           required
         ></textarea
         ><br />
-        <label :for="tiptop">Bericht</label>
+        <label for="tiptop">Bericht</label>
       </div>
       <div data-netlify-recaptcha="true"></div>
       <div class="form-group">

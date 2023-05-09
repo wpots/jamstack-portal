@@ -18,8 +18,8 @@
               Dit is een interactief programma boekje:<br />
               <ul>
                 <li>Scroll naar rechts/links voor het concert programma.</li>
-                <li>Laat je rating achter per liedje.</li>
-                <li>Scroll naar beneden om een bericht achter te laten.</li>
+                <li>Stem op je favoriete liedje</li>
+                
               </ul>
               <i>Veel luisterplezier!</i>
             </p>

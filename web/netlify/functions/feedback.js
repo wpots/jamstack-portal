@@ -1,17 +1,26 @@
 import fetch from "node-fetch";
 
 export async function handler(event, context, callback) {
-  let payload;
-  const url = `https://script.google.com/macros/s/AKfycbz3a8NpeBbycJpjLNsldGsGwhVz8wB8oPZjBJVobKmh_iXsN3yj0jSxctVlqcEdcEQ3uA/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbwikG7nA5WBZBc1HobypblNnFBoEQy_q70c7iGdVCIULf85IRTFtb2HdwnSqzNvF8-QZg/exec`;
+
+  const payload = JSON.parse(event.body);
+  const queryString = new URLSearchParams(payload);
+
   try {
     return await fetch(url, {
       method: "POST",
-      body: event.body,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      body: queryString,
+    }).then(data => {
+      return {
+        statusCode: data.status,
+        body: data.statusText,
+      };
     });
   } catch (error) {
     console.error(error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify(event.body),
+    };
   }
 }

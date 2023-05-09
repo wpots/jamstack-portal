@@ -30,6 +30,7 @@
 
 .img__frame {
   position: relative;
+  padding: 3rem;
   @include media-breakpoint-between(sm, md) {
     max-width: 340px;
     max-height: 340px;
@@ -38,11 +39,14 @@
   @include media-breakpoint-down(sm) {
     margin: 90px 0 60px 0;
   }
+  @include media-breakpoint-up(md) {
+    padding: 4rem;
+  }
 
   figure {
     @include aspect-ratio(1, 1);
-    top: 50%;
-    transform: translateY(-50%);
+    // top: 50%;
+    // transform: translateY(-50%);
     z-index: 1;
   }
 
@@ -58,15 +62,16 @@
       mix-blend-mode: multiply;
     }
   }
-}
 
-.img--framed {
-  margin: 0 auto;
-  overflow: hidden;
-  border-radius: 50%;
-  border: 6px solid #f3f0ea;
-  box-shadow: -2px 2px 8px rgba($black, 0.2);
-  z-index: 1;
+  img {
+    margin: 0 auto;
+    overflow: hidden;
+    object-position: center !important;
+    border-radius: 50%;
+    border: 6px solid #f3f0ea;
+    box-shadow: -2px 2px 8px rgba($black, 0.2);
+    z-index: 1;
+  }
 }
 
 .spacer {

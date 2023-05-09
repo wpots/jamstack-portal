@@ -51,4 +51,10 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss">
+.teaserblock {
+  .row {
+    align-items: end;
+  }
+}
+</style>

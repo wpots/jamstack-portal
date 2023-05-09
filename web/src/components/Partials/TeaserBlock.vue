@@ -4,7 +4,8 @@
     <div class="container-fluid">
       <article class="row">
         <div
-          class="col-xs-12 col-sm-6"
+          class="col-xs-12"
+          :class="isFullWidth"
           v-for="(item, index) in cms.columnContentCollection.items"
           :key="index"
         >
@@ -36,6 +37,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const isFullWidth = computed(() => (props.cms.fullWidth ? "col-sm" : "col-sm-6"));
     const getMedia = computed(() => {
       if (props.cms.backgroundImage) {
         const landscape = {
@@ -47,7 +49,7 @@ export default defineComponent({
       return false;
     });
 
-    return { getMedia };
+    return { getMedia, isFullWidth };
   },
 });
 </script>

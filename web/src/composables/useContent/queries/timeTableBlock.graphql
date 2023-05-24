@@ -2,9 +2,16 @@ query getTimeTableQuery($date: DateTime!) {
   pageBlockTimeTableCollection(where: { date: $date }, limit: 1) {
     items {
       date
-      title
+      pageTitle
       introduction {
-        json
+        content {
+          json
+        }
+      }
+      intermezzo {
+        content {
+          json
+        }
       }
       setlistCollection(limit: 5) {
         items {

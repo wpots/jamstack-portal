@@ -2,12 +2,12 @@
   <transition-group class="block-list" name="flow-in" tag="ul">
     <li v-for="(item, index) in setItems" class="blockie" :key="index">
       <div class="content">
-        <p v-if="item.description">{{ item.description }}</p>
         <ul v-if="item.songlist?.length > 0" class="songlist">
           <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :id="song.sys.id">
             <h4>{{ song.title }}</h4>
           </AppRatingItem>
         </ul>
+        <p v-else-if="item.description">{{ item.description }}</p>
       </div>
 
       <AppSoundWave :size="item.waveSize" class="soundwave-element" />
@@ -16,12 +16,12 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from "vue";
-import AppRatingItem from "./AppRatingItem.vue";
-import AppSoundWave from "./AppSoundWave.vue";
+import { defineComponent, computed, ref } from 'vue';
+import AppRatingItem from './AppRatingItem.vue';
+import AppSoundWave from './AppSoundWave.vue';
 
 export default defineComponent({
-  name: "SetList",
+  name: 'SetList',
   components: { AppSoundWave, AppRatingItem },
   props: {
     set: {
@@ -39,7 +39,7 @@ export default defineComponent({
         return {
           description: s.description,
           songlist: s.setlistCollection.items,
-          waveSize: s.description ? "s" : false,
+          waveSize: s.description ? 's' : false,
         };
       });
       return simplifiedSet;

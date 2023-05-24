@@ -1,9 +1,9 @@
 const toDomain = {
   textAsSlug: (title: string) => {
-    return title.replace(" ", "-").toLowerCase();
+    return title.replace(' ', '-').toLowerCase();
   },
   dateAsId: (date: string) => {
-    return date.split("T", 1)[0];
+    return date.split('T', 1)[0];
   },
   mapRepertoire: result => ({
     featuredSongs: result?.repertoirBlockCollection?.items[0].songsCollection?.items,
@@ -19,7 +19,9 @@ const toDomain = {
       genre: song.genreCollection.items,
     })),
   mapTimeTable: result => ({
-    introduction: result?.pageBlockTimeTableCollection?.items[0].introduction,
+    pageTitle: result?.pageBlockTimeTableCollection?.items[0].pageTitle,
+    introduction: result?.pageBlockTimeTableCollection?.items[0].introduction.content,
+    intermezzo: result?.pageBlockTimeTableCollection?.items[0].intermezzo.content,
     firstSetlist: result?.pageBlockTimeTableCollection?.items[0].setlistCollection?.items,
     lastSetList: result?.pageBlockTimeTableCollection?.items[0].setlist2Collection?.items,
   }),

@@ -1,6 +1,6 @@
 <template>
   <div class="setlist">
-    <TimeTableBlock :cms="{ introduction, firstSetlist, lastSetlist }" />
+    <TimeTableBlock :cms="{ pageTitle, introduction, firstSetlist, intermezzo, lastSetlist }" />
     <div class="container">
       <FeedBackForm></FeedBackForm>
     </div>
@@ -22,15 +22,16 @@ export default defineComponent({
     const route = useRoute();
     const { getTimeTable } = useContent('timetable', { route });
     const { fetchSongRatings, getSongRatings } = useFeedback();
-
+    const pageTitle = computed(() => getTimeTable.value.pageTitle);
     const introduction = computed(() => getTimeTable.value.introduction);
+    const intermezzo = computed(() => getTimeTable.value.intermezzo);
     const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
     const lastSetlist = computed(() => getTimeTable.value.lastSetList);
     onMounted(async () => {
       if (!getSongRatings.value) await fetchSongRatings();
     });
 
-    return { introduction, firstSetlist, lastSetlist, getSongRatings };
+    return { pageTitle, introduction, firstSetlist, intermezzo, lastSetlist, getSongRatings };
   },
 });
 </script>

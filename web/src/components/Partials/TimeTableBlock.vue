@@ -3,51 +3,36 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 program">
-          <ContentfulRichText :document="cms.introduction" />
-          <div class="legenda" @click="handleLegend"><svg class="icon-help"><use href="#icon-help"></use></svg></div>
+          <h2>{{ cms.pageTitle }}</h2>
+          <div class="legenda" @click="handleLegend">
+            <svg class="icon-help"><use href="#icon-help"></use></svg>
+          </div>
         </div>
         <div class="col-12 soundwave scroll-snapping" ref="soundwave">
-
           <p v-show="showHints" ref="hints" class="hint">
-              <svg class="icon-gesture gesture-swipe-right"><use href="#icon-gesture"></use></svg>
+            <svg class="icon-gesture gesture-swipe-right"><use href="#icon-gesture"></use></svg>
           </p>
 
-          <div class="intermezzo">
-            <h4>Back on Track</h4>
-            <p>
-              Dit is een interactief programma boekje:<br />
-              <ul>
-                <li>Scroll naar rechts/links voor het concert programma.</li>
-                <li>Stem op je favoriete liedje</li>
-                
-              </ul>
-              <i>Veel luisterplezier!</i>
-            </p>
-          </div>
+          <ContentfulRichText :document="cms.introduction" class="intermezzo" />
+
           <SetList v-if="cms.firstSetlist?.length > 0" :set="cms.firstSetlist" />
-          <div class="intermezzo">
-            <h4>Intermezzo</h4>
-            <p>
-              Heb jij al gestemd op je favoriete nummer?<br />
-              Of geef jouw feedback hieronder!
-            </p>
-          </div>
+          <ContentfulRichText :document="cms.intermezzo" class="intermezzo" />
+
           <SetList v-if="cms.lastSetlist?.length > 0" :set="cms.lastSetlist" class="lower" />
         </div>
-
       </div>
     </div>
   </section>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onUpdated, onMounted } from "vue";
-import SetList from "../SetList.vue";
-import ContentfulRichText from "../ContentfulRichText.vue";
+import { defineComponent, ref, onUpdated, onMounted } from 'vue';
+import SetList from '../SetList.vue';
+import ContentfulRichText from '../ContentfulRichText.vue';
 
 // https://next--vue-dataset-demo.netlify.app/components/#props
 export default defineComponent({
-  name: "TimeTableBlock",
+  name: 'TimeTableBlock',
   components: { SetList, ContentfulRichText },
   props: {
     cms: {
@@ -64,23 +49,23 @@ export default defineComponent({
     const hintDelay = ref(0);
     onUpdated(() => {
       if (soundwave.value) {
-        const soundwaveElements = soundwave.value.getElementsByClassName("wave");
+        const soundwaveElements = soundwave.value.getElementsByClassName('wave');
         const arrayFromElems = Array.from(soundwaveElements);
         arrayFromElems.forEach((el, idx) => {
           if (idx === 0) {
-            el.classList.add("colorWave");
+            el.classList.add('colorWave');
           }
 
-          el.addEventListener("animationiteration", () => {
+          el.addEventListener('animationiteration', () => {
             const nextEl = arrayFromElems[idx + 1];
-            nextEl.classList.add("colorWave");
+            nextEl.classList.add('colorWave');
           });
         });
       }
     });
     onMounted(() => {
       if (hints.value) {
-        hints.value.addEventListener("animationiteration", () => {
+        hints.value.addEventListener('animationiteration', () => {
           hintDelay.value++;
           if (hintDelay.value >= 5) showHints.value = false;
         });
@@ -94,7 +79,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .section {
   margin-top: -70px;
 }
@@ -126,7 +111,7 @@ export default defineComponent({
   background-color: $smoke;
 
   h4 {
-    font-family: "Satisfy";
+    font-family: 'Satisfy';
     font-size: 2rem;
   }
   ul {
@@ -152,14 +137,14 @@ export default defineComponent({
   height: 2rem;
   border-radius: 50%;
   top: 0;
-  right:1rem;
+  right: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
   svg {
     width: 1rem;
     height: 1rem;
-    fill:white;
+    fill: white;
   }
 }
 </style>

@@ -4,34 +4,12 @@
       <div class="content">
         <p v-if="item.description">{{ item.description }}</p>
         <ul v-if="item.songlist?.length > 0" class="songlist">
-          <li
-            v-for="(song, idx) in item.songlist"
-            class="song--rated"
-            :key="idx"
-            @click="e => handleSongModalClick(e)"
-          >
-            <span> {{ song.title }}</span>
-            <span class="rating">
-              <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-              <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-              <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-              <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-              <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-            </span>
-          </li>
+          <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :id="song.sys.id">
+            <h4>{{ song.title }}</h4>
+          </AppRatingItem>
         </ul>
       </div>
-      <dialog ref="modal">
-        <h4>{{ selectedSong }}</h4>
-        <span class="rating">
-          <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-          <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-          <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-          <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-          <svg class="icon-heart"><use href="#icon-heart"></use></svg>
-        </span>
-        <button type="dismiss">annuleer</button><button type="submit">verstuur</button>
-      </dialog>
+
       <AppSoundWave :size="item.waveSize" class="soundwave-element" />
     </li>
   </transition-group>
@@ -39,11 +17,12 @@
 
 <script>
 import { defineComponent, computed, ref } from "vue";
+import AppRatingItem from "./AppRatingItem.vue";
 import AppSoundWave from "./AppSoundWave.vue";
 
 export default defineComponent({
   name: "SetList",
-  components: { AppSoundWave },
+  components: { AppSoundWave, AppRatingItem },
   props: {
     set: {
       type: Array,
@@ -66,14 +45,7 @@ export default defineComponent({
       return simplifiedSet;
     });
 
-    const handleSongRatingClick = () => {
-      console.log("clicked");
-    };
-    const handleSongModalClick = e => {
-      console.log("clicked", e);
-    };
-
-    return { setItems, selectedSong, handleSongRatingClick, handleSongModalClick, modal };
+    return { setItems, selectedSong };
   },
 });
 </script>
@@ -100,12 +72,18 @@ ul {
   & > li {
     flex: 1;
 
-    &:not(&:first-child) {
-      margin-left: -10%;
-      .content {
-        transform: translateY(5%);
+    @for $i from 2 through 4 {
+      &:nth-child(#{$i}) {
+        margin-left: calc((-5% * (#{$i} * 2)));
       }
     }
+
+    // &:not(&:first-child) {
+    //   margin-left: -10%;
+    //   .content {
+    //     transform: translateY(5%);
+    //   }
+    // }
   }
 }
 .content {
@@ -129,6 +107,9 @@ ul {
   &:nth-child(odd) {
     align-items: var(--align-alternate, start);
   }
+  h4 {
+    font-size: 1em;
+  }
   & > .content {
     width: 100%;
     grid-row: var(--grid-row-start, 1) / span 2;
@@ -136,25 +117,5 @@ ul {
 }
 .songlist {
   list-style-type: initial;
-}
-.song--rated {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
-  &:not(&:last-child) {
-    border-bottom: 1px solid $smoke;
-  }
-}
-.rating {
-  margin-left: 1rem;
-}
-.icon-heart {
-  fill: $smoke;
-  width: 1rem;
-  height: 1rem;
-
-  &.love {
-    fill: $magenta;
-  }
 }
 </style>

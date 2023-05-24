@@ -1,14 +1,14 @@
-import { reactive, computed, onMounted, watch } from "vue";
-import { useStore } from "vuex";
-import { useRoute } from "vue-router";
-import { useQuery } from "@vue/apollo-composable";
-import { toDomain, fromDomain } from "./content.mapper";
-import { getHomePageQuery } from "./queries/home.graphql";
-import { getLayoutComponentsQuery } from "./queries/layout.graphql";
-import { getTimeTableQuery } from "./queries/timeTableBlock.graphql";
-import { getConcertPageQuery } from "./queries/concert.graphql";
-import { getRepertoirBlock } from "./queries/repertoirBlock.graphql";
-import { getRepertoirSongs } from "./queries/repertoirSongs.graphql";
+import { reactive, computed, onMounted, watch } from 'vue';
+import { useStore } from '../../store';
+import { useRoute } from 'vue-router';
+import { useQuery } from '@vue/apollo-composable';
+import { toDomain, fromDomain } from './content.mapper';
+import { getHomePageQuery } from './queries/home.graphql';
+import { getLayoutComponentsQuery } from './queries/layout.graphql';
+import { getTimeTableQuery } from './queries/timeTableBlock.graphql';
+import { getConcertPageQuery } from './queries/concert.graphql';
+import { getRepertoirBlock } from './queries/repertoirBlock.graphql';
+import { getRepertoirSongs } from './queries/repertoirSongs.graphql';
 
 export function useContent(id, ctx) {
   const enableQuery = reactive({
@@ -25,9 +25,9 @@ export function useContent(id, ctx) {
 
   const concertId = route.params.id;
   const date = fromDomain.idAsDate(concertId);
-  const layoutName = ctx?.layout || "default";
+  const layoutName = ctx?.layout || 'default';
 
-  const { result: homepage } = useQuery(getHomePageQuery, { title: "Home" }, () => ({
+  const { result: homepage } = useQuery(getHomePageQuery, { title: 'Home' }, () => ({
     enabled: enableQuery.home,
   }));
 
@@ -42,7 +42,7 @@ export function useContent(id, ctx) {
   const { result: timetable } = useQuery(getTimeTableQuery, { date }, () => ({
     enabled: enableQuery.timetable,
   }));
-  const { result: repertoire } = useQuery(getRepertoirBlock, { anchor: "ons-repertoire" }, () => ({
+  const { result: repertoire } = useQuery(getRepertoirBlock, { anchor: 'ons-repertoire' }, () => ({
     enabled: enableQuery.repertoire,
   }));
 
@@ -65,17 +65,19 @@ export function useContent(id, ctx) {
 
   watch(layoutComponents, () => {
     if (layoutComponents.value?.footer) {
-      store.dispatch("setLayout", { home: layoutComponents.value });
+      store.dispatch('content/setLayout', { home: layoutComponents.value });
     }
   });
   const fetchLayout = () => {
-    if (!store.state.layout?.footer) {
+    console.log(store.state.content.layout);
+    if (!store.state.content.layout) {
+      console.log('go');
       enableQuery.layout = true;
     }
   };
 
-  const getHeader = computed(() => store.state.layout?.home?.header);
-  const getFooter = computed(() => store.state.layout?.home?.footer);
+  const getHeader = computed(() => store.getters['content/getHeader']);
+  const getFooter = computed(() => store.getters['content/getFooter']);
 
   onMounted(() => {
     if (id) {
@@ -85,6 +87,7 @@ export function useContent(id, ctx) {
   });
 
   return {
+    fetchLayout,
     getHomepage,
     getConcertpage,
     getTimeTable,

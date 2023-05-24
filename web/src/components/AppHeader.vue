@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
-import AppNavigation from "@/components/AppNavigation.vue";
-import CallToAction from "@/components/CallToAction.vue";
-import { useContent } from "../composables/useContent";
+import { defineComponent, computed } from 'vue';
+import AppNavigation from '@/components/AppNavigation.vue';
+import CallToAction from '@/components/CallToAction.vue';
+import { useContent } from '../composables/useContent';
 // import { useRoute } from "vue-router";
 
 export default defineComponent({
-  name: "AppHeader",
+  name: 'AppHeader',
   components: {
     AppNavigation,
     CallToAction,
@@ -44,7 +44,7 @@ export default defineComponent({
 .menu-item:not(:first-child) {
   @include media-breakpoint-up(sm) {
     ::before {
-      content: "/";
+      content: '/';
       margin-right: 0.5rem;
     }
   }

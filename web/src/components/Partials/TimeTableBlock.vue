@@ -137,6 +137,7 @@ export default defineComponent({
 
 .hint {
   position: absolute;
+  z-index: 100;
   bottom: 2rem;
   right: 1rem;
   font-style: italic;

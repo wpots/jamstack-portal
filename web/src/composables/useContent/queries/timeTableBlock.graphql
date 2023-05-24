@@ -11,6 +11,9 @@ query getTimeTableQuery($date: DateTime!) {
           setlistCollection {
             items {
               title
+              sys {
+                id
+              }
             }
           }
           description
@@ -21,6 +24,9 @@ query getTimeTableQuery($date: DateTime!) {
           setlistCollection {
             items {
               title
+              sys {
+                id
+              }
             }
           }
           description

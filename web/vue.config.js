@@ -1,18 +1,18 @@
 module.exports = {
   pluginOptions: {
-    'style-resources-loader': {
-      preProcessor: 'scss',
-      patterns: ['./src/assets/styles/global.scss'],
+    "style-resources-loader": {
+      preProcessor: "scss",
+      patterns: ["./src/assets/styles/global.scss"],
     },
   },
-  chainWebpack: (config) => {
+  chainWebpack: config => {
     config.module
-      .rule('graphql')
+      .rule("graphql")
       .test(/\.(graphql|gql)$/)
-      .use('graphql-tag/loader')
-      .loader('graphql-tag/loader');
+      .use("graphql-tag/loader")
+      .loader("graphql-tag/loader");
   },
   pwa: {
-    themeColor: '#eb008b',
+    themeColor: "#eb008b",
   },
 };

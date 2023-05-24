@@ -1,26 +1,37 @@
 import fetch from "node-fetch";
 
 export async function handler(event, context, callback) {
-  const url = `https://script.google.com/macros/s/AKfycbwikG7nA5WBZBc1HobypblNnFBoEQy_q70c7iGdVCIULf85IRTFtb2HdwnSqzNvF8-QZg/exec`;
+  const url = `https://script.google.com/macros/s/AKfycbxdQ6kyEb-Zf2eeYC8RT7cmLRol8FMGx1IKzCCbJQ35ZFRkUfoKctYk-Zj59zjQg3Ei3A/exec`;
 
-  const payload = JSON.parse(event.body);
-  const queryString = new URLSearchParams(payload);
+  const payload = event.body;
+  let options;
 
-  try {
-    return await fetch(url, {
+  if (payload) {
+    const queryString = new URLSearchParams(JSON.parse(payload));
+    options = {
       method: "POST",
       body: queryString,
-    }).then(data => {
-      return {
-        statusCode: data.status,
-        body: data.statusText,
-      };
-    });
-  } catch (error) {
-    console.error(error);
-    return {
-      statusCode: 500,
-      body: JSON.stringify(event.body),
     };
+  } else {
+    options = {
+      headers: { "Cache-Control": "public, s-maxage=240" },
+    };
+  }
+
+  try {
+    return await fetch(url, { ...options })
+      .then(async res => await res.json())
+      .then(async data => {
+        const body = JSON.stringify(data.ratings);
+        return {
+          statusCode: 200,
+          body,
+        };
+      });
+  } catch (error) {
+    callback(null, {
+      statusCode: 500,
+      body: error,
+    });
   }
 }

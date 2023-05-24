@@ -13,12 +13,12 @@
   </div>
 </template>
 <script>
-import { defineComponent, provide } from "vue";
-import { DefaultApolloClient } from "@vue/apollo-composable";
-import apolloClient from "./apollo/contentful.config";
-import AppHeader from "./components/AppHeader.vue";
-import AppFooter from "./components/AppFooter.vue";
-import StickyWidget from "./components/StickyWidget.vue";
+import { defineComponent, provide } from 'vue';
+import { DefaultApolloClient } from '@vue/apollo-composable';
+import apolloClient from './apollo/contentful.config';
+import AppHeader from './components/AppHeader.vue';
+import AppFooter from './components/AppFooter.vue';
+import StickyWidget from './components/StickyWidget.vue';
 
 export default defineComponent({
   components: {
@@ -33,5 +33,5 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css?family=Julius+Sans+One|Montserrat:400,700|Muli|Satisfy");
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One|Montserrat:400,700|Muli|Satisfy');
 </style>

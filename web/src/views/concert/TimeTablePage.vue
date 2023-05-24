@@ -8,24 +8,29 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from "vue";
-import { useRoute } from "vue-router";
-import TimeTableBlock from "../../components/Partials/TimeTableBlock.vue";
-import { useContent } from "../../composables/useContent";
-import FeedBackForm from "../../components/FeedBackForm.vue";
+import { defineComponent, computed, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
+import { useContent } from '../../composables/useContent';
+import { useFeedback } from '../../composables/useFeedback';
+import FeedBackForm from '../../components/FeedBackForm.vue';
 
 export default defineComponent({
   components: { TimeTableBlock, FeedBackForm },
-  name: "TimeTablePage",
+  name: 'TimeTablePage',
   setup() {
     const route = useRoute();
-    const { getTimeTable } = useContent("timetable", { route });
-    // AKfycbz3a8NpeBbycJpjLNsldGsGwhVz8wB8oPZjBJVobKmh_iXsN3yj0jSxctVlqcEdcEQ3uA
-    // https://script.google.com/macros/s/AKfycbz3a8NpeBbycJpjLNsldGsGwhVz8wB8oPZjBJVobKmh_iXsN3yj0jSxctVlqcEdcEQ3uA/exec
+    const { getTimeTable } = useContent('timetable', { route });
+    const { fetchSongRatings, getSongRatings } = useFeedback();
+
     const introduction = computed(() => getTimeTable.value.introduction);
     const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
     const lastSetlist = computed(() => getTimeTable.value.lastSetList);
-    return { introduction, firstSetlist, lastSetlist };
+    onMounted(() => {
+      if (!getSongRatings.value) fetchSongRatings();
+    });
+
+    return { introduction, firstSetlist, lastSetlist, getSongRatings };
   },
 });
 </script>
@@ -53,7 +58,7 @@ export default defineComponent({
 .line {
   &::before,
   &::after {
-    content: "";
+    content: '';
     display: block;
     width: 4px;
     height: var(--wave-height, 3px);

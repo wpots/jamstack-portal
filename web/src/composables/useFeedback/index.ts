@@ -31,7 +31,14 @@ export function useFeedback() {
     }
   };
 
+  let fetchRatingsTimer;
+  const stopRatingsTimer = () => {
+    clearInterval(fetchRatingsTimer);
+    fetchRatingsTimer = null;
+  };
+
   const setUserRating = async songRating => {
+    stopRatingsTimer();
     const isRated = store.getters['feedback/lookupSongRating'](songRating.id);
     try {
       if (!isRated) {
@@ -44,6 +51,7 @@ export function useFeedback() {
     } catch (error) {
       console.error('{SENDING SONG}', error);
     }
+    fetchSongRatings();
   };
 
   const fetchSongRatings = async (c = 0) => {
@@ -57,9 +65,12 @@ export function useFeedback() {
       store.dispatch('feedback/setAllRatings', result);
     } catch (error) {
       console.error('TimeOut ERROR', count);
-      if (count < 2) {
-        fetchSongRatings(count);
-      }
+    }
+
+    if (!fetchRatingsTimer) {
+      fetchRatingsTimer = setInterval(async () => {
+        await fetchSongRatings();
+      }, 360 * 1000);
     }
   };
 

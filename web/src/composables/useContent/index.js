@@ -69,9 +69,7 @@ export function useContent(id, ctx) {
     }
   });
   const fetchLayout = () => {
-    console.log(store.state.content.layout);
     if (!store.state.content.layout) {
-      console.log('go');
       enableQuery.layout = true;
     }
   };

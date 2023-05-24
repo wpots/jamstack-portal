@@ -26,8 +26,8 @@ export default defineComponent({
     const introduction = computed(() => getTimeTable.value.introduction);
     const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
     const lastSetlist = computed(() => getTimeTable.value.lastSetList);
-    onMounted(() => {
-      if (!getSongRatings.value) fetchSongRatings();
+    onMounted(async () => {
+      if (!getSongRatings.value) await fetchSongRatings();
     });
 
     return { introduction, firstSetlist, lastSetlist, getSongRatings };

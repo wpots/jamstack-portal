@@ -37,11 +37,12 @@ export function useFeedback() {
     fetchRatingsTimer = null;
   };
 
+  const isRatedSong = id => store.getters['feedback/lookupSongRating'](id);
+
   const setUserRating = async songRating => {
     stopRatingsTimer();
-    const isRated = store.getters['feedback/lookupSongRating'](songRating.id);
     try {
-      if (!isRated) {
+      if (!isRatedSong(songRating.id)) {
         await fetch('/api/v1/feedback', {
           method: 'POST',
           body: JSON.stringify({ [songRating.id]: songRating.rating }),
@@ -74,5 +75,12 @@ export function useFeedback() {
     }
   };
 
-  return { songRatings, fetchSongRatings, getSongRatings, resolveSongRating, setUserRating };
+  return {
+    songRatings,
+    fetchSongRatings,
+    getSongRatings,
+    resolveSongRating,
+    setUserRating,
+    isRatedSong,
+  };
 }

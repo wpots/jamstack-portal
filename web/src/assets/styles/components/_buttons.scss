@@ -44,8 +44,13 @@
 }
 
 .btn--primary {
-  --btn-color: #{$theme-color-secondary};
   @extend .btn--default;
+  &:not(&:disabled) {
+    --btn-color: #{$theme-color-secondary};
+  }
+  &:disabled {
+    --btn-color: #{$smoke};
+  }
 }
 
 .btn--square {
@@ -162,7 +167,7 @@
     width: 100%;
     height: $bar-thickness;
     background-color: currentColor;
-    content: "";
+    content: '';
     transition-duration: $button-transition-duration, $button-transition-duration;
     transition-delay: $button-transition-duration, 0s;
   }

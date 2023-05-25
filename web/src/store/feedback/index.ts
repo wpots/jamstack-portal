@@ -21,7 +21,7 @@ const feedbackModule: Module<FeedbackState, RootState> = {
   },
   getters: {
     lookupSongRating: state => (songId: string) => {
-      return state.userRatings?.some(song => song.id === songId);
+      return state.userRatings?.find(song => song.id === songId);
     },
   },
   mutations: {

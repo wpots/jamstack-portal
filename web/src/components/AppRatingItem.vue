@@ -27,7 +27,10 @@
     </div>
     <div class="modal-actions">
       <button type="dismiss" class="btn--default" @click="handleModalClose">annuleer</button
-      ><button type="submit" class="btn--primary" @click="handleSubmit">verstuur</button>
+      ><button type="submit" class="btn--primary" @click="handleSubmit" :disabled="isRated">
+        verstuur
+      </button>
+      <small>je kunt <span v-if="isRated">maar</span> 1 keer stemmen</small>
     </div>
   </dialog>
 </template>
@@ -51,7 +54,7 @@ export default defineComponent({
       selected: null,
     });
     const modal = ref<HTMLDialogElement | null>(null);
-    const { getSongRatings, resolveSongRating, setUserRating } = useFeedback();
+    const { getSongRatings, resolveSongRating, setUserRating, isRatedSong } = useFeedback();
     const getPercentage = ref('50%');
     const currentRating = computed(() => {
       return resolveSongRating(props.id);
@@ -75,7 +78,7 @@ export default defineComponent({
         modal.value.showModal();
       }
     };
-
+    const isRated = computed(() => isRatedSong(props.id));
     const resetRating = () => {
       if (rateSelect.value) {
         rateSelect.value.forEach(el => {
@@ -84,7 +87,8 @@ export default defineComponent({
       }
     };
     const handleRatingSelect = i => {
-      resetRating();
+      if (isRated.value) rating.selected = isRated.value.rating;
+      // resetRating();
       rateSelect.value?.forEach((el, index) => {
         if (index < i) {
           el.classList.add('love');
@@ -95,7 +99,7 @@ export default defineComponent({
 
     const handleSubmit = async e => {
       loading.value = true;
-      if (rating.selected) {
+      if (rating.selected && !isRated.value) {
         setUserRating({ id: props.id, rating: rating.selected });
       }
       modal.value?.close();
@@ -103,9 +107,9 @@ export default defineComponent({
 
     const handleModalClose = () => {
       if (modal.value?.open) {
-        resetRating();
         modal.value.close();
       }
+      if (!isRated.value) resetRating();
     };
 
     return {
@@ -116,6 +120,7 @@ export default defineComponent({
       ratedMask,
       modal,
       rateSelect,
+      isRated,
       handleClick,
       handleRatingSelect,
       handleSubmit,
@@ -132,13 +137,13 @@ export default defineComponent({
   justify-content: space-between;
   padding: 0.5rem 0;
   cursor: pointer;
-  transition: 0.15s ease-in-out;
 
   &:not(&:last-of-type) {
     border-bottom: 1px solid $smoke;
   }
   &:hover {
     transform: scale(1.1);
+    transition: 0.15s ease-in-out;
   }
 }
 .rating {
@@ -178,9 +183,16 @@ export default defineComponent({
   .modal-actions {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
 
     button {
       margin: 0 1rem;
+    }
+    small {
+      margin: 1rem;
+      flex: 1;
+      text-align: right;
+      font-style: italic;
     }
   }
 }

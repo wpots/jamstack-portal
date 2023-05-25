@@ -189,8 +189,8 @@ export default defineComponent({
       margin: 0 1rem;
     }
     small {
-      margin: 1rem;
-      flex: 1;
+      flex: 1 0 100%;
+      padding: 1rem;
       text-align: right;
       font-style: italic;
     }

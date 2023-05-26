@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 
 export async function handler(event, context) {
-  const url = `https://graphql.contentful.com/content/v1/spaces/${process.env.CONTENTFUL_SPACE_ID}`;
+  const url = `https://graphql.contentful.com/content/v1/spaces/${process.env.VUE_APP_CONTENTFUL_SPACE_ID}`;
 
   try {
     return await fetch(url, {
@@ -9,11 +9,11 @@ export async function handler(event, context) {
       body: event.body,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${process.env.CONTENTFUL_ACCESS_TOKEN}`,
+        Authorization: `Bearer ${process.env.VUE_APP_CONTENTFUL_ACCESS_TOKEN}`,
       },
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
         return {
           statusCode: 200,
           body: JSON.stringify(data),

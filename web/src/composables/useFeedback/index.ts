@@ -61,12 +61,12 @@ export function useFeedback() {
     }
   };
 
-  let fetchRatingsTimer;
+  // let fetchRatingsTimer;
 
-  const stopRatingsTimer = () => {
-    clearInterval(fetchRatingsTimer);
-    fetchRatingsTimer = null;
-  };
+  // const stopRatingsTimer = () => {
+  //   clearInterval(fetchRatingsTimer);
+  //   fetchRatingsTimer = null;
+  // };
 
   const isRatedSong = id => store.getters['feedback/lookupSongRating'](id);
 

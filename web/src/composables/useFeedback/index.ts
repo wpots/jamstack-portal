@@ -1,9 +1,39 @@
 import { computed, ref } from 'vue';
 import { useStore } from '../../store';
+import fireBase from './firebase.js';
+import { getDatabase, ref as dbRef, child, push, update, get } from 'firebase/database';
+
+const db = getDatabase(fireBase);
+
+const ratingMapper = result => {
+  const ratings: SongRating[] = [];
+  for (const songId in result) {
+    // @ts-ignore unknown
+    const votes = Object.values(result[songId]).map(vote => vote.rating);
+    const averageVote = () => {
+      const sum = votes.reduce((total, value) => total + value, 0);
+      return sum / votes.length;
+    };
+    console.log('votes', votes);
+    const rating = {
+      id: songId,
+      votes: {
+        count: votes.length,
+        average: averageVote(),
+      },
+    };
+    ratings.push(rating);
+  }
+  return ratings;
+};
 
 export type SongRating = {
   id: string;
-  average: number | string | null | undefined;
+  average?: number | string | null | undefined;
+  votes?: {
+    count: number;
+    average?: number;
+  };
 };
 export function useFeedback() {
   const store = useStore();
@@ -14,7 +44,7 @@ export function useFeedback() {
     // @ts-ignore for later
     if (getSongRatings?.value?.length > 0) {
       // @ts-ignore for later
-      const avg = getSongRatings.value.find(s => s.id === id).average;
+      const avg = getSongRatings.value.find(s => s.id === id)?.votes?.average;
       if (avg) {
         // @ts-ignore for later
         const modulus = parseFloat(avg % 1);
@@ -32,6 +62,7 @@ export function useFeedback() {
   };
 
   let fetchRatingsTimer;
+
   const stopRatingsTimer = () => {
     clearInterval(fetchRatingsTimer);
     fetchRatingsTimer = null;
@@ -40,14 +71,21 @@ export function useFeedback() {
   const isRatedSong = id => store.getters['feedback/lookupSongRating'](id);
 
   const setUserRating = async songRating => {
-    stopRatingsTimer();
+    const postData = {
+      id: Date.now(),
+      rating: songRating.rating,
+    };
+
+    // stopRatingsTimer();
     try {
       if (!isRatedSong(songRating.id)) {
-        await fetch('/api/v1/feedback', {
-          method: 'POST',
-          body: JSON.stringify({ [songRating.id]: songRating.rating }),
-        });
-        store.dispatch('feedback/setUserRating', songRating);
+        const updates = {};
+
+        const postKeyAsId = push(child(dbRef(db), `songRatings`)).key;
+        updates[`songRatings/${songRating.id}/${postKeyAsId}`] = postData;
+        update(dbRef(db), updates);
+        songRating.userId = postKeyAsId; // maybe later people may change their vote
+        store.dispatch('feedback/setUserRating', { songRating });
       }
     } catch (error) {
       console.error('{SENDING SONG}', error);
@@ -56,23 +94,23 @@ export function useFeedback() {
   };
 
   const fetchSongRatings = async (c = 0) => {
-    let count = c;
     try {
-      count++;
-      const result = await fetch('/api/v1/feedback')
-        .then(async res => await res.json())
-        .then(data => data);
-
+      const result = await get(child(dbRef(db), `songRatings`)).then(snapshot => {
+        if (snapshot.exists()) {
+          console.log(snapshot.val());
+          return ratingMapper(snapshot.val());
+        }
+      });
       store.dispatch('feedback/setAllRatings', result);
     } catch (error) {
-      console.error('TimeOut ERROR', count);
+      console.error('Feedback', error);
     }
 
-    if (!fetchRatingsTimer) {
-      fetchRatingsTimer = setInterval(async () => {
-        await fetchSongRatings();
-      }, 360 * 1000);
-    }
+    // if (!fetchRatingsTimer) {
+    //   fetchRatingsTimer = setInterval(async () => {
+    //     await fetchSongRatings();
+    //   }, 360 * 1000);
+    // }
   };
 
   return {

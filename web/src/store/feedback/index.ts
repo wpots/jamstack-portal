@@ -9,6 +9,7 @@ type SongRating = {
 export type FeedbackState = {
   message: string | null;
   userRatings: SongRating[];
+  userId: string | null;
   allRatings: Record<any, any> | null;
 };
 
@@ -16,6 +17,7 @@ const feedbackModule: Module<FeedbackState, RootState> = {
   namespaced: true,
   state: {
     message: null,
+    userId: null,
     userRatings: [],
     allRatings: null,
   },
@@ -23,8 +25,12 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     lookupSongRating: state => (songId: string) => {
       return state.userRatings?.find(song => song.id === songId);
     },
+    getUserId: state => state.userId,
   },
   mutations: {
+    setUserId(state, id) {
+      state.userId = id;
+    },
     setUserRating(state, songRating: SongRating) {
       state.userRatings?.push(songRating);
     },
@@ -33,6 +39,9 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     },
   },
   actions: {
+    setUserId({ commit }, id) {
+      commit('setUserId', id);
+    },
     setUserRating({ commit }, songRating: SongRating) {
       commit('setUserRating', songRating);
     },

@@ -10,7 +10,7 @@ export type FeedbackState = {
   message: string | null;
   userRatings: SongRating[];
   userId: string | null;
-  allRatings: Record<any, any> | null;
+  allRatings: SongRating[] | null;
 };
 
 const feedbackModule: Module<FeedbackState, RootState> = {

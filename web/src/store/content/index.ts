@@ -1,7 +1,12 @@
 import { Module } from 'vuex';
 import { State as RootState } from '../';
+export type Layout = {
+  // @ts-ignore fuck any
+  [key: string]: Record<string, any>;
+};
+
 export type ContentState = {
-  layout: Record<any, any> | null;
+  layout: Layout | null;
 };
 
 const contentModule: Module<ContentState, RootState> = {

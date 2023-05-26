@@ -32,7 +32,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const modal = ref(null);
     const selectedSong = ref(null);
     const setItems = computed(() => {
       const simplifiedSet = props.set?.map(s => {

@@ -1,34 +1,34 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
-import HomePage from "../views/HomePage.vue";
-import PortalPage from "@/views/PortalPage.vue";
-import ConcertPage from "@/views/concert/index.vue";
-import TimeTablePage from "@/views/concert/TimeTablePage.vue";
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import HomePage from '../views/HomePage.vue';
+import PortalPage from '@/views/PortalPage.vue';
+import ConcertPage from '@/views/concert/index.vue';
+import TimeTablePage from '@/views/concert/TimeTablePage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: "/",
+    path: '/',
 
     component: HomePage,
   },
   {
-    path: "/portal",
+    path: '/portal',
 
     component: PortalPage,
   },
   {
-    path: "/concerts/:id",
+    path: '/concerts/:id',
 
     component: ConcertPage,
   },
   {
-    path: "/concerts/:id/programma",
-    name: "programma",
+    path: '/concerts/:id/programma',
+    name: 'programma',
     component: TimeTablePage,
   },
 ];
 
 const router = createRouter({
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to) {
     if (to.hash) {
       return {
         el: to.hash,

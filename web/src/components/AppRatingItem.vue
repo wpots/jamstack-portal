@@ -88,7 +88,7 @@ export default defineComponent({
     };
     const handleRatingSelect = i => {
       if (isRated.value) rating.selected = isRated.value.rating;
-      // resetRating();
+      resetRating();
       rateSelect.value?.forEach((el, index) => {
         if (index < i) {
           el.classList.add('love');
@@ -97,7 +97,7 @@ export default defineComponent({
       rating.selected = i;
     };
 
-    const handleSubmit = async e => {
+    const handleSubmit = async () => {
       loading.value = true;
       if (rating.selected && !isRated.value) {
         setUserRating({ id: props.id, rating: rating.selected });

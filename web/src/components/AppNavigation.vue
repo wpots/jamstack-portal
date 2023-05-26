@@ -26,11 +26,11 @@
 </template>
 
 <script>
-import { computed, defineComponent, ref } from "vue";
-import AppLogo from "@/components/AppLogo.vue";
+import { defineComponent, ref } from 'vue';
+import AppLogo from '@/components/AppLogo.vue';
 
 export default defineComponent({
-  name: "AppNavigation",
+  name: 'AppNavigation',
   components: {
     AppLogo,
   },
@@ -46,7 +46,7 @@ export default defineComponent({
     const showMenu = ref(false);
     const routerLocation = item => {
       return {
-        path: item.link || "/",
+        path: item.link || '/',
         hash: item.anchor ? `#${item.anchor}` : false,
       };
     };
@@ -58,7 +58,7 @@ export default defineComponent({
 .menu-item:not(:first-child) {
   @include media-breakpoint-up(sm) {
     ::before {
-      content: "/";
+      content: '/';
       margin-right: 0.5rem;
     }
   }

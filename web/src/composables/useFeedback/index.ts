@@ -93,7 +93,7 @@ export function useFeedback() {
     fetchSongRatings();
   };
 
-  const fetchSongRatings = async (c = 0) => {
+  const fetchSongRatings = async () => {
     try {
       const result = await get(child(dbRef(db), `songRatings`)).then(snapshot => {
         if (snapshot.exists()) {

@@ -85,7 +85,7 @@ export function useFeedback() {
         updates[`songRatings/${songRating.id}/${postKeyAsId}`] = postData;
         update(dbRef(db), updates);
         songRating.userId = postKeyAsId; // maybe later people may change their vote
-        store.dispatch('feedback/setUserRating', { songRating });
+        store.dispatch('feedback/setUserRating', songRating);
       }
     } catch (error) {
       console.error('{SENDING SONG}', error);

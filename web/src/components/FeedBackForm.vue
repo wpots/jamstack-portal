@@ -50,10 +50,11 @@
   </div>
 </template>
 <script>
-import { defineComponent, reactive, ref } from "vue";
+import { useFeedback } from '@/composables/useFeedback';
+import { defineComponent, reactive, ref } from 'vue';
 
 export default defineComponent({
-  name: "FeedbackForm",
+  name: 'FeedbackForm',
 
   setup() {
     const pending = ref(false);
@@ -68,26 +69,22 @@ export default defineComponent({
       status: null,
       message: null,
     });
-
+    const { sendFeedbackForm } = useFeedback();
     const onSuccessFulSubmit = () => {
       pending.value = true;
-      response.message = "Jouw feedback is verstuurd";
+      response.message = 'Jouw feedback is verstuurd';
       setTimeout(() => {
         Object.assign(form, cleanForm);
         pending.value = false;
         response.message = null;
       }, 4000);
     };
-    const onSubmit = () => {
-      fetch("/api/v1/feedback", {
-        method: "POST",
-        body: JSON.stringify(form),
-      })
-        .then(() => {
-          onSuccessFulSubmit();
-        })
-        .catch(error => alert(error));
+
+    const onSubmit = async () => {
+      await sendFeedbackForm(form);
+      onSuccessFulSubmit();
     };
+
     return { form, onSubmit, response, pending };
   },
 });

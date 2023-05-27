@@ -6,9 +6,9 @@ module.exports = {
       patterns: ['./src/assets/styles/global.scss'],
     },
   },
-  // configureWebpack: {
-  //   plugins: [...( process.env.NODE_ENV !== 'production' ? new BundleAnalyzerPlugin()): undefined],
-  // },
+  configureWebpack: {
+    plugins: [new BundleAnalyzerPlugin()],
+  },
   chainWebpack: config => {
     config.module
       .rule('graphql')

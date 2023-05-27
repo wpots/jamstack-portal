@@ -105,12 +105,18 @@ export function useFeedback() {
     } catch (error) {
       console.error('Feedback', error);
     }
+  };
 
-    // if (!fetchRatingsTimer) {
-    //   fetchRatingsTimer = setInterval(async () => {
-    //     await fetchSongRatings();
-    //   }, 360 * 1000);
-    // }
+  const sendFeedbackForm = async form => {
+    form.date = Date.now();
+    try {
+      const key = push(child(dbRef(db), 'feedback')).key;
+      const updates = {};
+      updates[`feedback/${key}`] = form;
+      await update(dbRef(db), updates);
+    } catch (error) {
+      console.error('Feedback', error);
+    }
   };
 
   return {
@@ -119,6 +125,7 @@ export function useFeedback() {
     getSongRatings,
     resolveSongRating,
     setUserRating,
+    sendFeedbackForm,
     isRatedSong,
   };
 }

@@ -14,7 +14,6 @@ const ratingMapper = result => {
       const sum = votes.reduce((total, value) => total + value, 0);
       return sum / votes.length;
     };
-    console.log('votes', votes);
     const rating = {
       id: songId,
       votes: {
@@ -61,30 +60,22 @@ export function useFeedback() {
     }
   };
 
-  // let fetchRatingsTimer;
-
-  // const stopRatingsTimer = () => {
-  //   clearInterval(fetchRatingsTimer);
-  //   fetchRatingsTimer = null;
-  // };
-
   const isRatedSong = id => store.getters['feedback/lookupSongRating'](id);
 
   const setUserRating = async songRating => {
+    const currentRating = isRatedSong(songRating.id);
+    const updates = {};
     const postData = {
       id: Date.now(),
       rating: songRating.rating,
     };
+    const postKey = currentRating?.key || push(child(dbRef(db), `songRatings`)).key;
 
-    // stopRatingsTimer();
     try {
-      if (!isRatedSong(songRating.id)) {
-        const updates = {};
-
-        const postKeyAsId = push(child(dbRef(db), `songRatings`)).key;
-        updates[`songRatings/${songRating.id}/${postKeyAsId}`] = postData;
+      if (!currentRating || currentRating.rating !== songRating.rating) {
+        updates[`songRatings/${songRating.id}/${postKey}`] = postData;
         update(dbRef(db), updates);
-        songRating.userId = postKeyAsId; // maybe later people may change their vote
+        songRating.key = songRating.key ?? postKey;
         store.dispatch('feedback/setUserRating', songRating);
       }
     } catch (error) {

@@ -26,11 +26,13 @@
       </div>
     </div>
     <div class="modal-actions">
-      <button type="dismiss" class="btn--default" @click="handleModalClose">annuleer</button
-      ><button type="submit" class="btn--primary" @click="handleSubmit" :disabled="isRated">
-        verstuur
+      <button type="button" class="btn--default" @click="handleModalClose">annuleer</button
+      ><button type="submit" class="btn--primary" @click="handleSubmit">
+        {{ submitText }}
       </button>
-      <small>je kunt <span v-if="isRated">maar</span> 1 keer stemmen</small>
+      <small
+        ><span></span><span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span></small
+      >
     </div>
   </dialog>
 </template>
@@ -86,12 +88,15 @@ export default defineComponent({
         });
       }
     };
+    const submitText = computed(() => (isRated.value ? 'aanpassen' : 'verstuur'));
     const handleRatingSelect = i => {
-      if (isRated.value) rating.selected = isRated.value.rating;
       resetRating();
       rateSelect.value?.forEach((el, index) => {
         if (index < i) {
           el.classList.add('love');
+        }
+        if (index === i - 1) {
+          el.classList.add('pulse');
         }
       });
       rating.selected = i;
@@ -99,9 +104,10 @@ export default defineComponent({
 
     const handleSubmit = async () => {
       loading.value = true;
-      if (rating.selected && !isRated.value) {
+      if (rating.selected) {
         setUserRating({ id: props.id, rating: rating.selected });
       }
+      loading.value = false;
       modal.value?.close();
     };
 
@@ -113,6 +119,7 @@ export default defineComponent({
     };
 
     return {
+      loading,
       rating,
       currentRating,
       getPercentage,
@@ -121,6 +128,7 @@ export default defineComponent({
       modal,
       rateSelect,
       isRated,
+      submitText,
       handleClick,
       handleRatingSelect,
       handleSubmit,
@@ -156,6 +164,20 @@ export default defineComponent({
     justify-content: space-around;
   }
 }
+
+@keyframes pulse-animation {
+  0% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse-animation 1s 2;
+}
+
 .icon-heart {
   fill: #fbcce7;
   width: var(--icon-size, 1rem);

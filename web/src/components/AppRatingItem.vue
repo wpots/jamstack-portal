@@ -1,11 +1,17 @@
 <template>
   <li class="rating-item" @click="handleClick">
     <slot></slot>
-    <span class="rating">
-      <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
-        <use href="#icon-heart" :mask="ratedMask(i)"></use>
-      </svg>
-    </span>
+    <div class="rating">
+      <span class="rating-hearts">
+        <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
+          <use href="#icon-heart" :mask="ratedMask(i)"></use>
+        </svg>
+      </span>
+      <small class="meta"> {{ currentRating.avg }}</small>
+    </div>
+    <div>
+      <small class="muted">{{ currentRating.count }} beoordelingen</small>
+    </div>
   </li>
   <dialog class="modal" ref="modal">
     <div class="modal-header">
@@ -13,7 +19,7 @@
       <p>jouw beoordeling...</p>
     </div>
     <div class="modal-content">
-      <div class="rating">
+      <div class="rating-hearts">
         <svg
           class="icon-heart"
           v-for="i in rating.range"
@@ -142,29 +148,33 @@ export default defineComponent({
 <style lang="scss" scoped>
 .rating-item {
   display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0;
+  flex-flow: column wrap;
+  margin-top: 0.5rem;
+  max-width: 228px;
   cursor: pointer;
-
-  &:not(&:last-of-type) {
-    border-bottom: 1px solid $smoke;
-  }
-  &:hover {
-    transform: scale(1.1);
-    transition: 0.15s ease-in-out;
-  }
 }
-.rating {
-  margin-left: 1rem;
 
+.rating {
+  margin-top: 1rem;
+}
+.rating-hearts {
   .modal-content & {
     --icon-size: 3rem;
-    margin-left: 0;
     display: flex;
     justify-content: space-around;
   }
 }
-
+.meta {
+  font-weight: bold;
+  margin-left: 0.5rem;
+  align-self: flex-end;
+}
+.muted {
+  color: $gray;
+  font-size: 0.7em;
+  font-style: italic;
+  align-self: flex-end;
+}
 @keyframes pulse-animation {
   0% {
     transform: scale(1.1);
@@ -196,6 +206,7 @@ export default defineComponent({
     font-size: 1.5rem;
     p {
       font-size: 1rem;
+      padding-top: 1rem;
     }
   }
   .modal-content {

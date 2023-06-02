@@ -43,14 +43,16 @@ export function useFeedback() {
     // @ts-ignore for later
     if (getSongRatings?.value?.length > 0) {
       // @ts-ignore for later
-      const avg = getSongRatings.value.find(s => s.id === id)?.votes?.average;
-      if (avg) {
+      const votes = getSongRatings.value.find(s => s.id === id).votes;
+      if (votes?.average) {
+        const avg = Math.round(votes?.average * 10) / 10;
         // @ts-ignore for later
         const modulus = parseFloat(avg % 1);
         const decimals = modulus !== 0 ? Math.round(modulus * 10) / 10 : false;
         const percentage = decimals ? `${decimals * 100}%` : false;
 
         return {
+          count: votes.count,
           avg,
           trunc: Math.trunc(avg),
           decimals,

@@ -26,8 +26,6 @@
   <div v-else ref="element" class="timeline">
     <div class="sound-wave">
       <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
     </div>
     <div class="sound-wave large">
       <div class="wave"></div>
@@ -57,18 +55,15 @@
     <div class="sound-wave">
       <div class="line"></div>
       <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
-      <div class="line"></div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: "AppSoundWave",
+  name: 'AppSoundWave',
   props: {
     size: {
       type: [String, Boolean],
@@ -76,7 +71,7 @@ export default defineComponent({
     },
     state: {
       type: String,
-      default: "paused",
+      default: 'paused',
     },
   },
   setup() {
@@ -84,22 +79,11 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .timeline {
-  position: relative;
   margin: 0.5rem;
   display: flex;
   align-self: center;
-  &::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    right: 0;
-    transform: translateY(-50%);
-    display: block;
-    width: 100%;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  }
 }
 .sound-wave {
   display: flex;
@@ -122,7 +106,7 @@ export default defineComponent({
   color: rgba(0, 0, 0, 0.2);
   &::before,
   &::after {
-    content: "";
+    content: '';
     display: block;
     width: 6px;
     height: var(--wave-height, 3px);

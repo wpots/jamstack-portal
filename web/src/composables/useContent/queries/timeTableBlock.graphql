@@ -18,6 +18,10 @@ query getTimeTableQuery($date: DateTime!) {
           setlistCollection {
             items {
               title
+              artist
+              albumart {
+                url
+              }
               sys {
                 id
               }
@@ -31,6 +35,10 @@ query getTimeTableQuery($date: DateTime!) {
           setlistCollection {
             items {
               title
+              artist
+              albumart {
+                url
+              }
               sys {
                 id
               }

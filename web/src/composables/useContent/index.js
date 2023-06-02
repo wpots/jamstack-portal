@@ -92,6 +92,7 @@ export function useContent(id, ctx) {
     getRepertoirePage,
     fetchSongs,
     sortSongs,
+    getSongs,
     getHeader,
     getFooter,
   };

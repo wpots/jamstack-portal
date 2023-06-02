@@ -3,7 +3,7 @@ import HomePage from '../views/HomePage.vue';
 import PortalPage from '@/views/PortalPage.vue';
 import ConcertPage from '@/views/concert/index.vue';
 import TimeTablePage from '@/views/concert/TimeTablePage.vue';
-
+import RepertoirePage from '@/views/RepertoirPage.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
@@ -14,6 +14,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/portal',
 
     component: PortalPage,
+  },
+  {
+    path: '/repertoire',
+
+    component: RepertoirePage,
   },
   {
     path: '/concerts/:id',

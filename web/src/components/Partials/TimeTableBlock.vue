@@ -18,7 +18,7 @@
           <SetList v-if="cms.firstSetlist?.length > 0" :set="cms.firstSetlist" />
           <ContentfulRichText :document="cms.intermezzo" class="intermezzo" />
 
-          <SetList v-if="cms.lastSetlist?.length > 0" :set="cms.lastSetlist" class="lower" />
+          <SetList v-if="cms.lastSetlist?.length > 0" :set="cms.lastSetlist" />
         </div>
       </div>
     </div>

@@ -1,16 +1,27 @@
 <template>
   <transition-group class="block-list" name="flow-in" tag="ul">
-    <li v-for="(item, index) in setItems" class="blockie" :key="index">
-      <div class="content">
-        <ul v-if="item.songlist?.length > 0" class="songlist">
-          <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :id="song.sys.id">
-            <h4>{{ song.title }}</h4>
-          </AppRatingItem>
-        </ul>
-        <p v-else-if="item.description">{{ item.description }}</p>
+    <li v-for="(item, index) in setItems" class="songset" :key="index">
+      <ul v-if="item.songlist?.length > 0" class="songlist">
+        <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :id="song.sys.id">
+          <div class="song-meta">
+            <img :src="`${song.albumart.url}?w=150`" :alt="song.title" />
+            <div>
+              <h4>{{ song.title }}</h4>
+              <small> {{ song.artist }}</small>
+            </div>
+          </div>
+        </AppRatingItem>
+      </ul>
+      <p v-else-if="item.description" class="content">{{ item.description }}</p>
+      <AppSoundWave v-if="item.description" :size="item.waveSize" class="soundwave-element" />
+      <div v-else class="soundwave-set">
+        <AppSoundWave
+          v-for="(song, idx) in item.songlist"
+          :key="idx"
+          :size="item.waveSize"
+          class="soundwave-element"
+        />
       </div>
-
-      <AppSoundWave :size="item.waveSize" class="soundwave-element" />
     </li>
   </transition-group>
 </template>
@@ -48,73 +59,97 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 p {
   margin-bottom: 0;
 }
-ul {
+
+.block-list {
   margin: 0px !important;
   padding-left: 0px !important;
   list-style-type: none;
-  li {
-    padding: 0;
-  }
-}
-.block-list {
   display: flex;
-  &.lower {
-    // --grid-row-start: 2;
-    // --align-default: start;
-    // --align-alternate: end;
-    // transform: translateY(calc(100% - 107px));
-  }
+
   & > li {
     flex: 1;
-
-    @for $i from 2 through 4 {
-      &:nth-child(#{$i}) {
-        margin-left: calc((-5% * (#{$i} * 2)));
-      }
-    }
-
-    // &:not(&:first-child) {
-    //   margin-left: -10%;
-    //   .content {
-    //     transform: translateY(5%);
-    //   }
-    // }
-  }
-}
-.content {
-  background: white;
-  padding: 1rem 2rem;
-  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
-  &:active,
-  &:focus {
-    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   }
 }
 
-.blockie {
+.songset {
   --wave-count: 0;
   display: grid;
   grid-template-columns: max-content;
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
   align-items: var(--align-default, end);
   padding: 0 2rem;
 
   &:nth-child(odd) {
     align-items: var(--align-alternate, start);
   }
+
   h4 {
     font-size: 1em;
+    margin-bottom: 0;
   }
   & > .content {
     width: 100%;
-    grid-row: var(--grid-row-start, 1) / span 2;
   }
 }
+
 .songlist {
+  display: inline-flex;
+  align-items: center;
   list-style-type: initial;
+
+  & > li {
+    margin-left: -1.5rem;
+    padding: 1rem;
+    background: white;
+    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
+
+    &:active,
+    &:focus {
+      box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
+    }
+
+    &:nth-of-type(even) {
+      margin-top: 5rem;
+    }
+  }
+}
+.song-meta {
+  display: flex;
+  gap: 1rem;
+
+  small {
+    color: $gray;
+  }
+
+  img {
+    flex: 0 0 20%;
+    max-width: 20%;
+    border: 2px solid $smoke;
+    border-radius: 4px;
+  }
+}
+
+.soundwave-element {
+  height: 107px; // same as set
+  align-self: start !important;
+}
+.soundwave-set {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
 }
 </style>

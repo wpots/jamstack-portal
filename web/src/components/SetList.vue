@@ -122,6 +122,7 @@ p {
   gap: 1rem;
 
   small {
+    font-family: 'Julius Sans One', serif;
     color: $gray;
   }
 

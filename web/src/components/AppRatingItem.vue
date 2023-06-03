@@ -13,12 +13,17 @@
     <div v-if="currentRating?.count">
       <small class="muted">{{ currentRating.count }} beoordelingen </small>
     </div>
-    <svg v-if="!isRated" class="icon-add">
-      <use href="#icon-plus"></use>
-    </svg>
-    <svg v-else class="icon-change">
-      <use href="#icon-chevron-down"></use>
-    </svg>
+    <template v-if="!isRated">
+      <svg class="icon-add">
+        <use href="#icon-plus"></use>
+      </svg>
+      <p class="fancy">stem ook!</p>
+    </template>
+    <template v-else>
+      <svg class="icon-change">
+        <use href="#icon-chevron-down"></use>
+      </svg>
+    </template>
   </li>
   <dialog class="modal" ref="modal">
     <div class="modal-header">
@@ -154,6 +159,7 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .rating-item {
+  position: relative;
   display: flex;
   flex-flow: row wrap;
   align-items: flex-end;
@@ -173,6 +179,16 @@ export default defineComponent({
 }
 
 .icon-add {
+}
+.fancy {
+  position: absolute;
+  bottom: 1.5rem;
+  right: 2rem;
+  font-size: 0.9em;
+  font-family: 'Satisfy';
+  font-weight: bold;
+  color: $tundora;
+  transform: rotate3d(1, 1, 1, -25deg);
 }
 
 .rating {

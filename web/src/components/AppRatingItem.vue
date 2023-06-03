@@ -7,9 +7,9 @@
           <use href="#icon-heart" :mask="ratedMask(i)"></use>
         </svg>
       </span>
-      <small class="meta"> {{ currentRating.avg }}</small>
+      <small v-if="currentRating?.avg" class="meta"> {{ currentRating.avg }}</small>
     </div>
-    <div>
+    <div v-if="currentRating?.count">
       <small class="muted">{{ currentRating.count }} beoordelingen</small>
     </div>
   </li>

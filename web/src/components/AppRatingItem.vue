@@ -1,6 +1,7 @@
 <template>
   <li class="rating-item" @click="handleClick">
     <slot></slot>
+
     <div class="rating">
       <span class="rating-hearts">
         <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
@@ -10,8 +11,14 @@
       <small v-if="currentRating?.avg" class="meta"> {{ currentRating.avg }}</small>
     </div>
     <div v-if="currentRating?.count">
-      <small class="muted">{{ currentRating.count }} beoordelingen</small>
+      <small class="muted">{{ currentRating.count }} beoordelingen </small>
     </div>
+    <svg v-if="!isRated" class="icon-add">
+      <use href="#icon-plus"></use>
+    </svg>
+    <svg v-else class="icon-change">
+      <use href="#icon-chevron-down"></use>
+    </svg>
   </li>
   <dialog class="modal" ref="modal">
     <div class="modal-header">
@@ -148,10 +155,24 @@ export default defineComponent({
 <style lang="scss" scoped>
 .rating-item {
   display: flex;
-  flex-flow: column wrap;
+  flex-flow: row wrap;
+  align-items: flex-end;
+  justify-content: space-between;
   margin-top: 0.5rem;
   max-width: 228px;
   cursor: pointer;
+}
+.icon-change,
+.icon-add {
+  margin-right: 1rem;
+  padding: 0.3rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 1px solid currentColor;
+  fill: currentColor;
+}
+
+.icon-add {
 }
 
 .rating {
@@ -164,6 +185,7 @@ export default defineComponent({
     justify-content: space-around;
   }
 }
+
 .meta {
   font-weight: bold;
   margin-left: 0.5rem;
@@ -219,7 +241,7 @@ export default defineComponent({
     flex-wrap: wrap;
 
     button {
-      margin: 0 1rem;
+      margin: 0 0.5rem;
     }
     small {
       flex: 1 0 100%;

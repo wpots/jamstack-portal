@@ -5,7 +5,7 @@
         <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :id="song.sys.id">
           <div class="song-meta">
             <img :src="`${song.albumart.url}?w=150`" :alt="song.title" />
-            <div>
+            <div class="song-title">
               <h4>{{ song.title }}</h4>
               <small> {{ song.artist }}</small>
             </div>
@@ -117,6 +117,7 @@ p {
     }
   }
 }
+
 .song-meta {
   display: flex;
   gap: 1rem;
@@ -124,6 +125,7 @@ p {
   small {
     font-family: 'Julius Sans One', serif;
     color: $gray;
+    font-size: 0.7em;
   }
 
   img {
@@ -138,6 +140,7 @@ p {
   height: 107px; // same as set
   align-self: start !important;
 }
+
 .soundwave-set {
   position: relative;
   display: flex;

@@ -167,6 +167,10 @@ export default defineComponent({
   margin-top: 0.5rem;
   max-width: 228px;
   cursor: pointer;
+
+  & > * {
+    flex: 1 0 100%;
+  }
 }
 .icon-change,
 .icon-add {
@@ -176,6 +180,8 @@ export default defineComponent({
   height: 1.5rem;
   border: 1px solid currentColor;
   fill: currentColor;
+  flex: 0 0 auto;
+  margin-left: auto;
 }
 
 .icon-add {
@@ -213,6 +219,7 @@ export default defineComponent({
   font-style: italic;
   align-self: flex-end;
 }
+
 @keyframes pulse-animation {
   0% {
     transform: scale(1.1);

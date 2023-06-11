@@ -1,7 +1,7 @@
 <template>
   <li class="rating-item" @click="handleClick">
     <slot></slot>
-    <!-- 
+
     <div class="rating">
       <span class="rating-hearts">
         <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
@@ -23,7 +23,7 @@
       <svg class="icon-change">
         <use href="#icon-chevron-down"></use>
       </svg>
-    </template> -->
+    </template>
   </li>
   <dialog class="modal" ref="modal">
     <div class="modal-header">

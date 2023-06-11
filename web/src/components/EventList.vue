@@ -12,11 +12,11 @@
 </template>
 
 <script>
-import { defineComponent, computed } from "vue";
-import EventItem from "./EventItem.vue";
+import { defineComponent, computed } from 'vue';
+import EventItem from './EventItem.vue';
 
 export default defineComponent({
-  name: "EventList",
+  name: 'EventList',
   components: { EventItem },
   props: {
     cms: {
@@ -30,9 +30,13 @@ export default defineComponent({
     const events = computed(() => props.cms.eventlistCollection.items);
     const upcomingEvents = computed(() =>
       events.value.filter(event => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        tomorrow.setHours(0, 0, 0, 0);
         const now = new Date().setHours(0, 0, 0, 0);
         const eventDate = new Date(event.date).setHours(0, 0, 0, 0);
-        return eventDate > now;
+        return eventDate;
       }),
     );
     return { upcomingEvents };

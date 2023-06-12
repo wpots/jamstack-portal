@@ -3,20 +3,21 @@
     <div class="row">
       <div class="col-12">
         <h1>Concert Feedback</h1>
-      </div>
-      <div class="col-12">
         <h2>Stemmen op het Repertoire</h2>
-      </div>
-      <div class="col-12">
         <RepertoirList :songs="songs" :showRatings="true" />
       </div>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <h2>Inzendingen op het gehele Concert</h2>
+        <ul>
+          <li v-for="(entry, idx) in feedback" :key="idx" class="cite">
+            {{ entry.tiptop }} <span v-if="entry.naam">({{ entry.naam }})</span>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-
-  <h2>Inzendingen op het gehele Concert</h2>
-  <ul>
-    <li v-for="(entry, idx) in feedback" :key="idx">{{ entry.tiptop }}</li>
-  </ul>
 </template>
 
 <script lang="ts">
@@ -40,3 +41,11 @@ export default defineComponent({
   },
 });
 </script>
+<style lang="scss">
+cite {
+  margin-bottom: 0.5rem;
+  span {
+    font-style: italic;
+  }
+}
+</style>

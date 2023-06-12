@@ -6,6 +6,9 @@ query getRepertoirSongs {
       albumart {
         url
       }
+      sys {
+        id
+      }
       genreCollection {
         items {
           genre

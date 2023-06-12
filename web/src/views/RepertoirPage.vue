@@ -1,10 +1,11 @@
 <template>
-  <RepertoirList :songs="songs" />
+  <RepertoirList :songs="songs" :showRatings="true" />
 </template>
 
 <script lang="ts">
 import { defineComponent, computed, onMounted } from 'vue';
 import { useContent } from '../composables/useContent';
+
 import RepertoirList from '@/components/RepertoirList.vue';
 
 export default defineComponent({

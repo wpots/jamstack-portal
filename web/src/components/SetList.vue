@@ -2,15 +2,7 @@
   <transition-group class="block-list" name="flow-in" tag="ul">
     <li v-for="(item, index) in setItems" class="songset" :key="index">
       <ul v-if="item.songlist?.length > 0" class="songlist">
-        <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :id="song.sys.id">
-          <div class="song-meta">
-            <img :src="`${song.albumart.url}?w=150`" :alt="song.title" />
-            <div class="song-title">
-              <h4>{{ song.title }}</h4>
-              <small> {{ song.artist }}</small>
-            </div>
-          </div>
-        </AppRatingItem>
+        <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :song="song" />
       </ul>
       <p v-else-if="item.description" class="content">{{ item.description }}</p>
       <AppSoundWave v-if="item.description" :size="item.waveSize" class="soundwave-element" />
@@ -103,9 +95,6 @@ p {
 
   & > li {
     margin-left: -1.5rem;
-    padding: 1rem;
-    background: white;
-    box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
 
     &:active,
     &:focus {
@@ -115,24 +104,6 @@ p {
     &:nth-of-type(even) {
       margin-top: 5rem;
     }
-  }
-}
-
-.song-meta {
-  display: flex;
-  gap: 1rem;
-
-  small {
-    font-family: 'Julius Sans One', serif;
-    color: $gray;
-    font-size: 0.7em;
-  }
-
-  img {
-    flex: 0 0 20%;
-    max-width: 20%;
-    border: 2px solid $smoke;
-    border-radius: 4px;
   }
 }
 

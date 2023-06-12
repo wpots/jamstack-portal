@@ -1,6 +1,12 @@
 <template>
   <li class="rating-item" @click="handleClick">
-    <slot></slot>
+    <div class="song-meta">
+      <img :src="`${song.albumart.url}?w=150`" :alt="song.title" />
+      <div class="song-title">
+        <h4>{{ song.title }}</h4>
+        <small> {{ song.artist }}</small>
+      </div>
+    </div>
 
     <div class="rating">
       <span class="rating-hearts">
@@ -13,46 +19,49 @@
     <div v-if="currentRating?.count">
       <small class="muted">{{ currentRating.count }} beoordelingen </small>
     </div>
-    <template v-if="!isRated">
-      <svg class="icon-add">
-        <use href="#icon-plus"></use>
-      </svg>
-      <p class="fancy">stem ook!</p>
-    </template>
-    <template v-else>
-      <svg class="icon-change">
-        <use href="#icon-chevron-down"></use>
-      </svg>
-    </template>
-  </li>
-  <dialog class="modal" ref="modal">
-    <div class="modal-header">
-      <slot></slot>
-      <p>jouw beoordeling...</p>
-    </div>
-    <div class="modal-content">
-      <div class="rating-hearts">
-        <svg
-          class="icon-heart"
-          v-for="i in rating.range"
-          :key="i"
-          @click="handleRatingSelect(i)"
-          ref="rateSelect"
-        >
-          <use href="#icon-heart"></use>
+    <template v-if="interactive">
+      <template v-if="!isRated">
+        <svg class="icon-add">
+          <use href="#icon-plus"></use>
         </svg>
+        <p class="fancy">stem ook!</p>
+      </template>
+      <template v-else>
+        <svg class="icon-change">
+          <use href="#icon-chevron-down"></use>
+        </svg>
+      </template>
+    </template>
+    <dialog v-if="interactive" class="modal" ref="modal">
+      <div class="modal-header">
+        <slot></slot>
+        <p>jouw beoordeling...</p>
       </div>
-    </div>
-    <div class="modal-actions">
-      <button type="button" class="btn--default" @click="handleModalClose">annuleer</button
-      ><button type="submit" class="btn--primary" @click="handleSubmit">
-        {{ submitText }}
-      </button>
-      <small
-        ><span></span><span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span></small
-      >
-    </div>
-  </dialog>
+      <div class="modal-content">
+        <div class="rating-hearts">
+          <svg
+            class="icon-heart"
+            v-for="i in rating.range"
+            :key="i"
+            @click="handleRatingSelect(i)"
+            ref="rateSelect"
+          >
+            <use href="#icon-heart"></use>
+          </svg>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="btn--default" @click="handleModalClose">annuleer</button
+        ><button type="submit" class="btn--primary" @click="handleSubmit">
+          {{ submitText }}
+        </button>
+        <small
+          ><span></span
+          ><span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span></small
+        >
+      </div>
+    </dialog>
+  </li>
 </template>
 <script lang="ts">
 import { defineComponent, computed, ref, reactive } from 'vue';
@@ -60,13 +69,22 @@ import { useFeedback } from '../composables/useFeedback';
 export default defineComponent({
   name: 'AppRatingItem',
   props: {
-    id: {
-      type: String,
-      default: '',
+    song: {
+      type: Object,
+      default: () => ({}),
+    },
+    rated: {
+      type: [Object, Boolean],
+      default: false,
+    },
+    interactive: {
+      type: Boolean,
+      default: true,
     },
   },
   setup(props) {
     const loading = ref(false);
+    const songId = computed(() => props.song.sys.id);
     const rateSelect = ref<HTMLElement[] | null>(null);
     const rating = reactive({
       icon: 'heart',
@@ -75,9 +93,9 @@ export default defineComponent({
     });
     const modal = ref<HTMLDialogElement | null>(null);
     const { getSongRatings, resolveSongRating, setUserRating, isRatedSong } = useFeedback();
-    const getPercentage = ref('50%');
+
     const currentRating = computed(() => {
-      return resolveSongRating(props.id);
+      return resolveSongRating(songId.value);
     });
     const ratedClass = computed(() => i => {
       const rate = currentRating?.value?.trunc;
@@ -94,11 +112,11 @@ export default defineComponent({
     });
 
     const handleClick = () => {
-      if (modal.value) {
+      if (props.interactive && modal.value) {
         modal.value.showModal();
       }
     };
-    const isRated = computed(() => isRatedSong(props.id));
+    const isRated = computed(() => isRatedSong(songId.value));
     const resetRating = () => {
       if (rateSelect.value) {
         rateSelect.value.forEach(el => {
@@ -123,7 +141,7 @@ export default defineComponent({
     const handleSubmit = async () => {
       loading.value = true;
       if (rating.selected) {
-        setUserRating({ id: props.id, rating: rating.selected });
+        setUserRating({ id: songId.value, rating: rating.selected });
       }
       loading.value = false;
       modal.value?.close();
@@ -140,7 +158,6 @@ export default defineComponent({
       loading,
       rating,
       currentRating,
-      getPercentage,
       ratedClass,
       ratedMask,
       modal,
@@ -151,7 +168,6 @@ export default defineComponent({
       handleRatingSelect,
       handleSubmit,
       handleModalClose,
-
       getSongRatings,
     };
   },
@@ -164,8 +180,11 @@ export default defineComponent({
   flex-flow: row wrap;
   align-items: flex-end;
   justify-content: space-between;
+  padding: 1rem;
   margin-top: 0.5rem;
   max-width: 228px;
+  background: white;
+  box-shadow: 1px 2px 5px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 
   & > * {
@@ -184,8 +203,6 @@ export default defineComponent({
   margin-left: auto;
 }
 
-.icon-add {
-}
 .fancy {
   position: absolute;
   bottom: 1.5rem;
@@ -205,6 +222,23 @@ export default defineComponent({
     --icon-size: 3rem;
     display: flex;
     justify-content: space-around;
+  }
+}
+.song-meta {
+  display: flex;
+  gap: 1rem;
+
+  small {
+    font-family: 'Julius Sans One', serif;
+    color: $gray;
+    font-size: 0.7em;
+  }
+
+  img {
+    flex: 0 0 20%;
+    max-width: 20%;
+    border: 2px solid $smoke;
+    border-radius: 4px;
   }
 }
 

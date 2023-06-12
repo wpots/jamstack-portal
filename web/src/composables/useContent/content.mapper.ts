@@ -13,6 +13,7 @@ const toDomain = {
   }),
   mapSongs: result =>
     result?.scoreCollection.items.map(song => ({
+      sys: { id: song.sys.id },
       title: song.title,
       artist: song.artist,
       albumart: song.albumart,

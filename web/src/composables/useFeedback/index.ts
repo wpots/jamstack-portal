@@ -3,6 +3,20 @@ import { useStore } from '../../store';
 import fireBase from './firebase.js';
 import { getDatabase, ref as dbRef, child, push, update, get } from 'firebase/database';
 
+export type FeedbackEntry = {
+  id: string;
+  tiptop: string;
+  naam?: string;
+};
+
+export type SongRating = {
+  id: string;
+  average?: number | string | null | undefined;
+  votes?: {
+    count: number;
+    average?: number;
+  };
+};
 const db = getDatabase(fireBase);
 
 const ratingMapper = result => {
@@ -26,14 +40,14 @@ const ratingMapper = result => {
   return ratings;
 };
 
-export type SongRating = {
-  id: string;
-  average?: number | string | null | undefined;
-  votes?: {
-    count: number;
-    average?: number;
-  };
+const feedbackMapper = result => {
+  const feedback: FeedbackEntry[] = [];
+  for (const feedbackId in result) {
+    feedback.push(result[feedbackId]);
+  }
+  return feedback;
 };
+
 export function useFeedback() {
   const store = useStore();
 
@@ -43,7 +57,7 @@ export function useFeedback() {
     // @ts-ignore for later
     if (getSongRatings?.value?.length > 0) {
       // @ts-ignore for later
-      const votes = getSongRatings.value.find(s => s.id === id).votes;
+      const votes = getSongRatings.value.find(s => s.id === id)?.votes;
       if (votes?.average) {
         const avg = Math.round(votes?.average * 10) / 10;
         // @ts-ignore for later
@@ -90,15 +104,29 @@ export function useFeedback() {
     try {
       const result = await get(child(dbRef(db), `songRatings`)).then(snapshot => {
         if (snapshot.exists()) {
-          console.log(snapshot.val());
           return ratingMapper(snapshot.val());
         }
       });
       store.dispatch('feedback/setAllRatings', result);
     } catch (error) {
+      console.error('SongRatings', error);
+    }
+  };
+
+  const fetchFeedback = async () => {
+    try {
+      const result = await get(child(dbRef(db), `feedback`)).then(snapshot => {
+        if (snapshot.exists()) {
+          return feedbackMapper(snapshot.val());
+        }
+      });
+      store.dispatch('feedback/setAllFeedback', result);
+    } catch (error) {
       console.error('Feedback', error);
     }
   };
+
+  const getFeedback = computed(() => store.state.feedback.allFeedback);
 
   const sendFeedbackForm = async form => {
     form.date = Date.now();
@@ -116,6 +144,8 @@ export function useFeedback() {
     songRatings,
     fetchSongRatings,
     getSongRatings,
+    fetchFeedback,
+    getFeedback,
     resolveSongRating,
     setUserRating,
     sendFeedbackForm,

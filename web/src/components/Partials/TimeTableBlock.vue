@@ -99,6 +99,9 @@ export default defineComponent({
   & > div {
     scroll-snap-align: start;
   }
+  & > ul:last-child {
+    padding-right: 50vw;
+  }
 }
 .intermezzo {
   display: flex;

@@ -1,8 +1,10 @@
 <template>
   <div class="list__items" v-if="songs?.length > 0">
     <transition-group class="list list--figure row shuffle" name="shuffle" tag="ul">
-      <RepertoirItem
-        v-for="song in songs"
+      <component
+        :is="componentType"
+        :interactive="false"
+        v-for="song in filteredSongs"
         class="list__item shuffle-item col-6 col-md-4"
         :key="song.title"
         :song="song"
@@ -11,11 +13,19 @@
   </div>
 </template>
 <script>
-import RepertoirItem from "./RepertoirItem.vue";
-export default {
-  components: { RepertoirItem },
-  name: "RepertoirList",
+import { defineComponent, computed } from 'vue';
+import AppRatingItem from './AppRatingItem.vue';
+import RepertoirItem from './RepertoirItem.vue';
+import { useFeedback } from '@/composables/useFeedback';
+
+export default defineComponent({
+  components: { RepertoirItem, AppRatingItem },
+  name: 'RepertoirList',
   props: {
+    showRatings: {
+      type: Boolean,
+      default: false,
+    },
     songs: {
       type: Array,
       default: () => {
@@ -23,7 +33,18 @@ export default {
       },
     },
   },
-};
+  setup(props) {
+    const componentType = props.showRatings ? AppRatingItem : RepertoirItem;
+    const { resolveSongRating } = useFeedback();
+    const filteredSongs = computed(() =>
+      props.showRatings ? props.songs.filter(song => resolveSongRating(song.sys.id)) : props.songs,
+    );
+    const currentRating = computed(() => id => {
+      return resolveSongRating(id);
+    });
+    return { componentType, currentRating, filteredSongs };
+  },
+});
 </script>
 <style lang="scss" scoped>
 h3 {

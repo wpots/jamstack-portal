@@ -3,6 +3,7 @@ import HomePage from '../views/HomePage.vue';
 import PortalPage from '@/views/PortalPage.vue';
 import ConcertPage from '@/views/concert/index.vue';
 import TimeTablePage from '@/views/concert/TimeTablePage.vue';
+import FeedbackPage from '@/views/concert/FeedbackPage.vue';
 import RepertoirePage from '@/views/RepertoirPage.vue';
 const routes: Array<RouteRecordRaw> = [
   {
@@ -29,6 +30,11 @@ const routes: Array<RouteRecordRaw> = [
     path: '/concerts/:id/programma',
     name: 'programma',
     component: TimeTablePage,
+  },
+  {
+    path: '/concerts/:id/feedback',
+    name: 'feedback',
+    component: FeedbackPage,
   },
 ];
 

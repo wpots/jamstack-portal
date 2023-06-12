@@ -1,5 +1,6 @@
 import { Module } from 'vuex';
 import { State as RootState } from '../';
+import { FeedbackEntry } from '@/composables/useFeedback';
 
 type SongRating = {
   id: string;
@@ -11,6 +12,7 @@ export type FeedbackState = {
   userRatings: SongRating[];
   userId: string | null;
   allRatings: SongRating[] | null;
+  allFeedback: FeedbackEntry[] | null;
 };
 
 const feedbackModule: Module<FeedbackState, RootState> = {
@@ -20,6 +22,7 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     userId: null,
     userRatings: [],
     allRatings: null,
+    allFeedback: null,
   },
   getters: {
     lookupSongRating: state => (songId: string) => {
@@ -37,6 +40,9 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     setAllRatings(state, ratings) {
       state.allRatings = ratings;
     },
+    setAllFeedback(state, feedback) {
+      state.allFeedback = feedback;
+    },
   },
   actions: {
     setUserId({ commit }, id) {
@@ -47,6 +53,9 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     },
     setAllRatings({ commit }, ratings) {
       commit('setAllRatings', ratings);
+    },
+    setAllFeedback({ commit }, feedback) {
+      commit('setAllFeedback', feedback);
     },
   },
 };

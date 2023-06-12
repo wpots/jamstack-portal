@@ -30,14 +30,15 @@ export default defineComponent({
   components: { RepertoirList },
   setup() {
     const { getSongs, fetchSongs } = useContent();
-    const { getFeedback, fetchFeedback } = useFeedback();
-    const songs = computed(() => getSongs.value);
+    const { getFeedback, fetchFeedback, fetchSongRatings, resolveSongRating } = useFeedback();
+    const songs = computed(() => getSongs.value?.filter(song => resolveSongRating(song.sys.id)));
     const feedback = computed(() => getFeedback.value);
     onMounted(async () => {
       await fetchSongs();
+      await fetchSongRatings();
       await fetchFeedback();
     });
-    return { songs, feedback };
+    return { songs, feedback, getSongs };
   },
 });
 </script>

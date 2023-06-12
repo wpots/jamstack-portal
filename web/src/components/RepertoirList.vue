@@ -4,7 +4,7 @@
       <component
         :is="componentType"
         :interactive="false"
-        v-for="song in filteredSongs"
+        v-for="song in songs"
         class="list__item shuffle-item col-6 col-md-4"
         :key="song.title"
         :song="song"
@@ -13,10 +13,9 @@
   </div>
 </template>
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import AppRatingItem from './AppRatingItem.vue';
 import RepertoirItem from './RepertoirItem.vue';
-import { useFeedback } from '@/composables/useFeedback';
 
 export default defineComponent({
   components: { RepertoirItem, AppRatingItem },
@@ -35,14 +34,8 @@ export default defineComponent({
   },
   setup(props) {
     const componentType = props.showRatings ? AppRatingItem : RepertoirItem;
-    const { resolveSongRating } = useFeedback();
-    const filteredSongs = computed(() =>
-      props.showRatings ? props.songs.filter(song => resolveSongRating(song.sys.id)) : props.songs,
-    );
-    const currentRating = computed(() => id => {
-      return resolveSongRating(id);
-    });
-    return { componentType, currentRating, filteredSongs };
+
+    return { componentType };
   },
 });
 </script>

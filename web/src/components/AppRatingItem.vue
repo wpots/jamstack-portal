@@ -73,10 +73,6 @@ export default defineComponent({
       type: Object,
       default: () => ({}),
     },
-    rated: {
-      type: [Object, Boolean],
-      default: false,
-    },
     interactive: {
       type: Boolean,
       default: true,

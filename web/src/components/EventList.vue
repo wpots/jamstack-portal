@@ -31,12 +31,9 @@ export default defineComponent({
     const upcomingEvents = computed(() =>
       events.value.filter(event => {
         const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-        tomorrow.setHours(0, 0, 0, 0);
-        const now = new Date().setHours(0, 0, 0, 0);
+        today.setHours(0, 0, 0, 0);
         const eventDate = new Date(event.date).setHours(0, 0, 0, 0);
-        return eventDate;
+        return eventDate >= today;
       }),
     );
     return { upcomingEvents };

@@ -4,7 +4,7 @@
       <div class="row">
         <AppNavigation class="col-xs-12" :cms="nav" />
         <div class="col-auto ml-auto">
-          <CallToAction v-if="$route.name !== 'programma'" :cms="cta" />
+          <CallToAction v-if="showCta" :cms="cta" />
         </div>
       </div>
     </div>
@@ -16,7 +16,7 @@ import { defineComponent, computed } from 'vue';
 import AppNavigation from '@/components/AppNavigation.vue';
 import CallToAction from '@/components/CallToAction.vue';
 import { useContent } from '../composables/useContent';
-// import { useRoute } from "vue-router";
+import { useRoute } from 'vue-router';
 
 export default defineComponent({
   name: 'AppHeader',
@@ -34,9 +34,14 @@ export default defineComponent({
   },
   setup() {
     const { getHeader } = useContent();
+    const route = useRoute();
     const nav = computed(() => getHeader.value?.nav);
     const cta = computed(() => getHeader.value?.cta);
-    return { nav, cta };
+    const excludePages = ['programma', 'feedback'];
+    const showCta = computed(() => {
+      return !excludePages.includes(route.name);
+    });
+    return { nav, cta, showCta };
   },
 });
 </script>

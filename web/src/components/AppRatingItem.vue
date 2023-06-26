@@ -32,36 +32,43 @@
         </svg>
       </template>
     </template>
-    <dialog v-if="interactive" class="modal" ref="modal">
-      <div class="modal-header">
-        <slot></slot>
-        <p>jouw beoordeling...</p>
-      </div>
-      <div class="modal-content">
-        <div class="rating-hearts">
-          <svg
-            class="icon-heart"
-            v-for="i in rating.range"
-            :key="i"
-            @click="handleRatingSelect(i)"
-            ref="rateSelect"
-          >
-            <use href="#icon-heart"></use>
-          </svg>
-        </div>
-      </div>
-      <div class="modal-actions">
-        <button type="button" class="btn--default" @click="handleModalClose">annuleer</button
-        ><button type="submit" class="btn--primary" @click="handleSubmit">
-          {{ submitText }}
-        </button>
-        <small
-          ><span></span
-          ><span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span></small
-        >
-      </div>
-    </dialog>
   </li>
+  <dialog v-if="interactive" class="modal" ref="modal">
+    <div class="modal-header">
+      <slot>
+        <div class="song-meta">
+          <img :src="`${song.albumart.url}?w=150`" :alt="song.title" />
+          <div class="song-title">
+            <h4>{{ song.title }}</h4>
+            <small> {{ song.artist }}</small>
+          </div>
+        </div></slot
+      >
+      <p>jouw beoordeling...</p>
+    </div>
+    <div class="modal-content">
+      <div class="rating-hearts">
+        <svg
+          class="icon-heart"
+          v-for="i in rating.range"
+          :key="i"
+          @click="handleRatingSelect(i)"
+          ref="rateSelect"
+        >
+          <use href="#icon-heart"></use>
+        </svg>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button type="button" class="btn--default" @click="handleModalClose">annuleer</button
+      ><button type="submit" class="btn--primary" @click="handleSubmit">
+        {{ submitText }}
+      </button>
+      <small
+        ><span></span><span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span></small
+      >
+    </div>
+  </dialog>
 </template>
 <script lang="ts">
 import { defineComponent, computed, ref, reactive } from 'vue';

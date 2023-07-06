@@ -85,8 +85,9 @@ fragment EventFragment on EventList {
       }
       description
       externalLink {
-        linkText
         url
+        linkText
+        iconName
       }
       eventDetailPage {
         date

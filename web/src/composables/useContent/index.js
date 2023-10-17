@@ -23,8 +23,7 @@ export function useContent(id, ctx) {
   const store = useStore();
   const route = useRoute();
 
-  const concertId = route.params.id;
-  const date = fromDomain.idAsDate(concertId);
+  const slug = route.params.id;
   const layoutName = ctx?.layout || 'default';
 
   const { result: homepage } = useQuery(getHomePageQuery, { title: 'Home' }, () => ({
@@ -35,11 +34,11 @@ export function useContent(id, ctx) {
     enabled: enableQuery.layout,
   }));
 
-  const { result: concert } = useQuery(getConcertPageQuery, { date }, () => ({
+  const { result: concert } = useQuery(getConcertPageQuery, { slug }, () => ({
     enabled: enableQuery.concert,
   }));
 
-  const { result: timetable } = useQuery(getTimeTableQuery, { date }, () => ({
+  const { result: timetable } = useQuery(getTimeTableQuery, { concertId:slug }, () => ({
     enabled: enableQuery.timetable,
   }));
   const { result: repertoire } = useQuery(getRepertoirBlock, { anchor: 'ons-repertoire' }, () => ({

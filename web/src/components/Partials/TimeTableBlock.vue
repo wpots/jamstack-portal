@@ -13,10 +13,10 @@
             <svg class="icon-gesture gesture-swipe-right"><use href="#icon-gesture"></use></svg>
           </p>
 
-          <ContentfulRichText :document="cms.introduction" class="intermezzo" />
+          <ContentfulRichText :document="cms.intro" class="intermezzo" />
 
           <SetList v-if="cms.firstSetlist?.length > 0" :set="cms.firstSetlist" />
-          <ContentfulRichText :document="cms.intermezzo" class="intermezzo" />
+          <ContentfulRichText :document="cms.intermezzoRte" class="intermezzo" />
 
           <SetList v-if="cms.lastSetlist?.length > 0" :set="cms.lastSetlist" />
         </div>

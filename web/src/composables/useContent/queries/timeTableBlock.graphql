@@ -1,17 +1,13 @@
-query getTimeTableQuery($date: DateTime!) {
-  pageBlockTimeTableCollection(where: { date: $date }, limit: 1) {
+query getTimeTableQuery($concertId: String!) {
+  pageBlockTimeTableCollection(where: { concertId: $concertId }, limit: 1) {
     items {
-      date
       pageTitle
-      introduction {
-        content {
-          json
-        }
+      concertId
+      intro {
+        json
       }
-      intermezzo {
-        content {
-          json
-        }
+      intermezzoRte {
+        json
       }
       setlistCollection(limit: 5) {
         items {

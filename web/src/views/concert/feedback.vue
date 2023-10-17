@@ -28,6 +28,7 @@ import RepertoirList from '@/components/RepertoirList.vue';
 
 export default defineComponent({
   components: { RepertoirList },
+  name:'FeedbackPage',
   setup() {
     const { getSongs, fetchSongs } = useContent();
     const { getFeedback, fetchFeedback, fetchSongRatings, resolveSongRating } = useFeedback();

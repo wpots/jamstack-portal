@@ -22,13 +22,14 @@ const toDomain = {
     })),
   mapTimeTable: result => ({
     pageTitle: result?.pageBlockTimeTableCollection?.items[0].pageTitle,
-    introduction: result?.pageBlockTimeTableCollection?.items[0].introduction.content,
-    intermezzo: result?.pageBlockTimeTableCollection?.items[0].intermezzo.content,
+    introduction: result?.pageBlockTimeTableCollection?.items[0].intro,
+    intermezzo: result?.pageBlockTimeTableCollection?.items[0].intermezzoRte,
     firstSetlist: result?.pageBlockTimeTableCollection?.items[0].setlistCollection?.items,
     lastSetList: result?.pageBlockTimeTableCollection?.items[0].setlist2Collection?.items,
   }),
   mapConcertpage: result => {
-    return result?.concertpageCollection?.items[0].pageBlocksCollection?.items;
+    console.log(result);
+    return result?.pageCollection?.items[0].pageBlocksCollection?.items;
   },
   mapHomepage: result => result?.homePageCollection?.items[0].pageBlocksCollection.items,
   mapLayout: result => ({

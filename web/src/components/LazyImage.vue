@@ -3,7 +3,7 @@
     role="presentation"
     ref="root"
     v-lazyload="{ ...lazySettings, callback: setSrcset }"
-    :style="{ position: sticky ? 'sticky' : null }"
+    :style="{ position: sticky ? 'sticky' : undefined }"
     :class="loaded ? 'loaded' : false"
   >
     <picture>
@@ -28,13 +28,14 @@
         :sizes="media.landscape.sizes"
         :src="getImgBySize(20)"
         :alt="media.landscape.alt"
+        :id="id"
       />
     </picture>
   </figure>
 </template>
 <script lang="ts">
 // eslint-disable-next-line
-import { ref, defineComponent, PropType, computed, nextTick, watchEffect } from "vue";
+import { ref, defineComponent, PropType, computed, nextTick, watchEffect } from 'vue';
 
 interface ImageInterface {
   src: string;
@@ -50,22 +51,26 @@ interface MediaInterface {
 
 const defaultmedia: MediaInterface = {
   portrait: {
-    src: "http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg",
+    src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg',
   },
   landscape: {
-    src: "http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1.jpg ",
-    sizes: "(max-width: 3108px) 100vw, 3108px",
-    alt: "placeholder default",
+    src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1.jpg ',
+    sizes: '(max-width: 3108px) 100vw, 3108px',
+    alt: 'placeholder default',
   },
-  classes: "default-classes",
+  classes: 'default-classes',
 };
 
 export default defineComponent({
-  name: "LazyImage",
+  name: 'LazyImage',
   props: {
     sticky: {
       type: Boolean,
       default: false,
+    },
+    id: {
+      type: String,
+      default: 'image',
     },
     lazySettings: {
       type: Object || Boolean,
@@ -101,7 +106,7 @@ export default defineComponent({
         srcsetSizes = props.srcset.map(
           width => `${props.media.landscape.src}?w=${width} ${width}w`,
         );
-        srcsetSizes.join(",");
+        srcsetSizes.join(',');
       }
       return srcsetSizes;
     });

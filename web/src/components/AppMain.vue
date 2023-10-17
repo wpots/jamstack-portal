@@ -17,9 +17,7 @@ const QuoteBlock = defineAsyncComponent(() => import("@/components/Partials/Quot
 const RepertoirBlock = defineAsyncComponent(() =>
   import("@/components/Partials/RepertoirBlock.vue"),
 );
-const EmbeddedTicketForm = defineAsyncComponent(() =>
-  import("@/components/Partials/EmbeddedTicketForm.vue"),
-);
+
 
 export default defineComponent({
   name: "AppMain",
@@ -36,7 +34,6 @@ export default defineComponent({
     TeaserBlock,
     RepertoirBlock,
     QuoteBlock,
-    EmbeddedTicketForm,
   },
 });
 </script>

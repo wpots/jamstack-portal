@@ -20,13 +20,12 @@ import { computed, defineComponent, defineAsyncComponent } from "vue";
 import LazyImage from "../LazyImage.vue";
 const ContentTypeRichText = defineAsyncComponent(() => import("@/components/RichText.vue"));
 const Image = defineAsyncComponent(() => import("@/components/AppImage.vue"));
-const YouTubeVideo = defineAsyncComponent(() => import("@/components/YouTubeVideo.vue"));
 const Form = defineAsyncComponent(() => import("@/components/AppForm.vue"));
 const EventList = defineAsyncComponent(() => import("@/components/EventList.vue"));
 
 export default defineComponent({
   // eslint-disable-next-line vue/no-reserved-component-names
-  components: { LazyImage, ContentTypeRichText, Image, YouTubeVideo, Form, EventList },
+  components: { LazyImage, ContentTypeRichText, Image, Form, EventList },
   name: "TeaserBlock",
   props: {
     cms: {

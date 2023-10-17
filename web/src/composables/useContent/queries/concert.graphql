@@ -1,15 +1,11 @@
-query getConcertPageQuery($date: DateTime!) {
+query getConcertPageQuery($slug: String!) {
   __typename
-  concertpageCollection(where: { date: $date }, limit: 1) {
+  pageCollection(where: { siteSlug: $slug }, limit: 1) {
     items {
-      concertTitle
+      websiteTitle
+      siteSlug
       pageBlocksCollection(limit: 10) {
         items {
-          ... on EmbeddedTicketForm {
-            __typename
-            formTitle
-            formId
-          }
           ... on TeaserBlock {
             __typename
             title
@@ -22,10 +18,12 @@ query getConcertPageQuery($date: DateTime!) {
               items {
                 ... on ContentTypeRichText {
                   title
-                  classes
                   body {
                     json
                   }
+                  embeddedContent
+                  embeddedTicketForm
+                  embeddedYouTubeId
                 }
               }
             }

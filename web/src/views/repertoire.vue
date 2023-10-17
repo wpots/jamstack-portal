@@ -9,6 +9,7 @@ import { useContent } from '../composables/useContent';
 import RepertoirList from '@/components/RepertoirList.vue';
 
 export default defineComponent({
+  name: 'RepertoirPage',
   components: { RepertoirList },
   setup() {
     const { getSongs, fetchSongs } = useContent();

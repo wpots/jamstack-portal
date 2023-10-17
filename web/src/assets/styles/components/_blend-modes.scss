@@ -1,5 +1,4 @@
 %blend {
-
   img {
     mix-blend-mode: darken;
   }
@@ -20,13 +19,13 @@
 
 .blend-pink {
   @extend %blend;
-  background: $magenta;
+  background: #dc4379;
 
   &::after {
     background: #282581;
+    filter: contrast(1) brightness(1.3) saturate(1);
   }
 }
-
 
 .blend-red {
   @extend %blend;
@@ -34,27 +33,29 @@
 
   &::after {
     mix-blend-mode: lighten !important;
-    filter: contrast(1.02) saturate(60%) !important;
+    filter: contrast(1.02) saturate(0.6) !important;
     background: #282581;
   }
 }
 
 .blend-yellow {
   @extend %blend;
-  background: $yellow;
-  
+  background: #dfb233;
+
   &::after {
-    background: $red;
-    filter: contrast(1.1) saturate(0%) brightness(1.3)
-    
+    background: #2f0781;
+    filter: contrast(1.1) brightness(1.3);
+    mix-blend-mode: difference !important;
   }
 }
 
 .blend-green {
   @extend %blend;
-  background: $green;
+  background: #01ab6d;
 
   &::after {
-    background: #2D3181;
+    background: #241a5f;
+    filter: contrast(0.7) brightness(3.4) saturate(0.6);
+    mix-blend-mode: color-burn !important;
   }
 }

@@ -62,9 +62,6 @@ fragment TeaserParts on TeaserBlock {
         }
         classes
       }
-      ... on YouTubeVideo {
-        videoId
-      }
       ...EventFragment
     }
   }
@@ -90,7 +87,7 @@ fragment EventFragment on EventList {
         iconName
       }
       eventDetailPage {
-        date
+        siteSlug
       }
     }
   }

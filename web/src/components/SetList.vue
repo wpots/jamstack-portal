@@ -29,9 +29,7 @@ export default defineComponent({
   props: {
     set: {
       type: Array,
-      default: () => {
-        return [];
-      },
+      default: () => ([]),
     },
   },
   setup(props) {
@@ -39,9 +37,9 @@ export default defineComponent({
     const setItems = computed(() => {
       const simplifiedSet = props.set?.map(s => {
         return {
-          description: s.description,
-          songlist: s.setlistCollection.items,
-          waveSize: s.description ? 's' : false,
+          description: s.short,
+          songlist: s.scoresListCollection.items,
+          waveSize: s.short ? 's' : false,
         };
       });
       return simplifiedSet;

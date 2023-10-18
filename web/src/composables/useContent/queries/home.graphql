@@ -67,7 +67,7 @@ fragment TeaserParts on TeaserBlock {
   }
 }
 
-fragment EventFragment on EventList {
+fragment EventFragment on AppList {
   __typename
   title
   eventlistCollection(where: { isConcert: true }, limit: 5) {

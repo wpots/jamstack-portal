@@ -21,11 +21,11 @@ import LazyImage from "../LazyImage.vue";
 const ContentTypeRichText = defineAsyncComponent(() => import("@/components/RichText.vue"));
 const Image = defineAsyncComponent(() => import("@/components/AppImage.vue"));
 const Form = defineAsyncComponent(() => import("@/components/AppForm.vue"));
-const EventList = defineAsyncComponent(() => import("@/components/EventList.vue"));
+const AppList = defineAsyncComponent(() => import("@/components/AppList.vue"));
 
 export default defineComponent({
   // eslint-disable-next-line vue/no-reserved-component-names
-  components: { LazyImage, ContentTypeRichText, Image, Form, EventList },
+  components: { LazyImage, ContentTypeRichText, Image, Form, AppList },
   name: "TeaserBlock",
   props: {
     cms: {

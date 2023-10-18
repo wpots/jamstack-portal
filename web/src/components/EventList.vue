@@ -27,8 +27,8 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const events = computed(() => props.cms.eventlistCollection.items);
-    const upcomingEvents = computed(() =>
+    const events = computed(() => props.cms);
+    const upcomingEvents = computed(() => 
       events.value.filter(event => {
         const today = new Date();
         today.setHours(0, 0, 0, 0);

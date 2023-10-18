@@ -11,7 +11,7 @@ query getTimeTableQuery($concertId: String!) {
       }
       setlistCollection(limit: 5) {
         items {
-          setlistCollection {
+          scoresListCollection {
             items {
               title
               artist
@@ -23,12 +23,12 @@ query getTimeTableQuery($concertId: String!) {
               }
             }
           }
-          description
+          short
         }
       }
       setlist2Collection(limit: 5) {
         items {
-          setlistCollection {
+          scoresListCollection {
             items {
               title
               artist
@@ -40,7 +40,7 @@ query getTimeTableQuery($concertId: String!) {
               }
             }
           }
-          description
+          short
         }
       }
     }

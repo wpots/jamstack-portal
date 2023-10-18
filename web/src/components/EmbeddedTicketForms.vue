@@ -31,8 +31,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed,ref,watch } from "vue";
+import { defineComponent, computed,ref,watch, PropType } from "vue";
 import AppIFrame from "./AppIFrame.vue";
+
+type ContentfulJsonObject = {
+  id:string;
+  key:string;
+  value:string;
+}
 
 export default defineComponent({
   name: "EmbeddedTicketForms",
@@ -40,8 +46,8 @@ export default defineComponent({
     AppIFrame,
   },
   props: {
-    ids: {
-      type: Array,
+    cms: {
+      type: Array as PropType<ContentfulJsonObject[]>,
       default: () =>([ ]),
     },
   },
@@ -49,7 +55,7 @@ export default defineComponent({
     const baseUrl = `https://www.ticketkantoor.nl/shop`;
 
     const isSelected = ref('');
-    const forms = computed(() => props.ids.map(id => ({id, src:`${baseUrl}/${id}&embed=1`})));
+    const forms = computed(() => props.cms.map((form) => ({id:form.id,title:form.key ,src:`${baseUrl}/${form.value}&embed=1`})));
     const formSelection = computed(() => 
        forms.value?.length >= 2 ? forms.value : false
     );

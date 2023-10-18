@@ -2,9 +2,8 @@
   <div class="rich-text">
     <h1 v-if="cms.title">{{ cms.title }}</h1>
     <ContentfulRichText :document="cms.body" />
-
+    <EmbeddedTicketForms v-if="embeddedForms" :cms="embeddedForms" />
     <YouTubeVideo v-if="embeddedVideo" :videoId="embeddedVideo"/>
-    <EmbeddedTicketForms v-if="embeddedForms" :ids="embeddedForms" />
   </div>
 </template>
 <script>
@@ -27,15 +26,9 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const embeddedVideo = computed(() => props.cms.embeddedContent === 'YouTube' && props.cms.embeddedYouTubeId ? props.cms.embeddedYouTubeId : false);
-    const embeddedForms = computed(() => { 
-      const hasforms = props.cms.embeddedContent === 'Ticket Form' && props.cms.embeddedTicketForm;
-      if(hasforms) {
-        return props.cms.embeddedTicketForm.split(';');
-      }
-      return false
-     });
-return {embeddedForms, embeddedVideo}
+    const embeddedVideo = computed(() => props.cms.embeddedYouTubeId ? props.cms.embeddedYouTubeId : false);
+    const embeddedForms = computed(() => props.cms.ticketForm?.length > 0 ? props.cms.ticketForm :false);
+    return {embeddedForms, embeddedVideo}
   }
 });
 </script>

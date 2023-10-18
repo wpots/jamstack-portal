@@ -21,8 +21,7 @@ query getConcertPageQuery($slug: String!) {
                   body {
                     json
                   }
-                  embeddedContent
-                  embeddedTicketForm
+                  ticketForm
                   embeddedYouTubeId
                 }
               }

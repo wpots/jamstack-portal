@@ -6,16 +6,24 @@ import { InMemoryCache, IntrospectionFragmentMatcher } from 'apollo-cache-inmemo
 const fragmentMatcher = new IntrospectionFragmentMatcher({
   introspectionQueryResultData: { __schema: { types: [] } },
 });
+
+const contentfulSpaceId =
+  import.meta.env.VUE_APP_CONTENTFUL_SPACE_ID ||
+  import.meta.env.VITE_CONTENTFUL_SPACE_ID;
+const contentfulAccessToken =
+  import.meta.env.VUE_APP_CONTENTFUL_ACCESS_TOKEN ||
+  import.meta.env.VITE_CONTENTFUL_ACCESS_TOKEN;
+
 // HTTP connection to the API
 const httpLink = new HttpLink({
-  uri: `https://graphql.contentful.com/content/v1/spaces/o4cfwi1cgj8a`,
+  uri: `https://graphql.contentful.com/content/v1/spaces/${contentfulSpaceId}`,
 });
 
 const authMiddleware = new ApolloLink((operation, forward) => {
   // add the authorization to the headers
   operation.setContext({
     headers: {
-      authorization: `Bearer nX8vnHHV2ByZwnWDcnaXzccLIBx5X9BzQEZAH6Zyaqw`,
+      authorization: `Bearer ${contentfulAccessToken}`,
     },
   });
   return forward(operation);

@@ -53,6 +53,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 .splashblock {
   width: 100%;
   height: 100vh;

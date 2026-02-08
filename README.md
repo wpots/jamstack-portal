@@ -8,7 +8,7 @@ Database.
 
 ## Stack
 
-- Frontend: Vue (single-page app) with single-file components (`.vue`)
+- Frontend: Vue 3 + Vite (single-page app) with single-file components (`.vue`)
 - Content: Contentful GraphQL via Apollo Client
 - Forms: Netlify Forms + reCAPTCHA
 - Feedback: Firebase Realtime Database (ratings + messages)

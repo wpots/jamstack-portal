@@ -80,6 +80,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 .timeline {
   margin: 0.5rem;
   display: flex;

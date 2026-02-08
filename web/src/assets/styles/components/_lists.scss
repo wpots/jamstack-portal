@@ -1,3 +1,4 @@
+@use "sass:color";
 .list--figure {
   @include media-breakpoint-up(sm) {
     width: 100%;
@@ -94,7 +95,7 @@
   }
   .list-item__meta {
     margin: 0 0 0.5em;
-    color: lighten($black, 50%);
+    color: color.adjust($black, $lightness: 50%);
     font-family: $font-fam-body;
     font-size: 0.9em;
     line-height: 1;

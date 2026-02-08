@@ -14,5 +14,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 
 </style>

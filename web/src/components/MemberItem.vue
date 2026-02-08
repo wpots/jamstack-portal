@@ -38,6 +38,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 .member-card {
   height: 22vh;
   position: relative;

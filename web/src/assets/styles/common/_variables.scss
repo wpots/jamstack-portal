@@ -1,3 +1,4 @@
+@use "sass:color";
 // Glyphicons font path
 // $icon-font-path          : "../fonts/";
 
@@ -19,7 +20,7 @@ $chocolaterie: #200d10;
 $black: #000;
 $tundora: #4a4244;
 
-$magenta-tint60: mix($white, $magenta, 60%);
+$magenta-tint60: color.mix($white, $magenta, 60%);
 
 // $brand-primary           : $black;
 //font families
@@ -68,6 +69,4 @@ $theme-color-accent: #3beca8;
 $theme-color-disabled: $gray;
 
 // bootstrap overrides
-$link-color: currentColor;
-$link-hover-color: currentColor;
 $link-hover-decoration: none;

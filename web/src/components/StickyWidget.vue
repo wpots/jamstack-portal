@@ -9,7 +9,7 @@
       <svg><use href="#icon-instagram"></use></svg>
       <span class="sr-only">volg ons via instagram</span></a
     >
-    <a
+    <!-- <a
       href="https://www.youtube.com/@goedgebektvocalgroup7479"
       class="link--icon icon-youtube"
       target="_blank"
@@ -17,7 +17,7 @@
     >
       <svg><use href="#icon-youtube"></use></svg>
       <span class="sr-only">subscribe op onze youtube channel</span></a
-    >
+    > -->
     <a
       href="https://www.facebook.com/GoedGebekt/"
       class="link--icon icon-facebook"
@@ -37,6 +37,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 .meta-info {
   position: fixed;
   right: 20px;

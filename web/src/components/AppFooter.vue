@@ -30,6 +30,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 .site-info {
   margin: 0 !important;
   padding: 1rem;

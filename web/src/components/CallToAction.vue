@@ -40,6 +40,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 svg {
   width: 1rem;
   height: 1rem;

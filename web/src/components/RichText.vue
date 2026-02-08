@@ -33,6 +33,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 .rich-text {
   &.drop div:only-child {
     margin-top: 256px;

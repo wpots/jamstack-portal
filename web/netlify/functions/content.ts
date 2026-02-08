@@ -1,5 +1,3 @@
-import fetch from 'node-fetch';
-
 export async function handler(event) {
   const url = `https://graphql.contentful.com/content/v1/spaces/${process.env.VUE_APP_CONTENTFUL_SPACE_ID}`;
 

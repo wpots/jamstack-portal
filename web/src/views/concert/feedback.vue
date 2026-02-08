@@ -44,6 +44,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 cite {
   margin-bottom: 0.5rem;
   span {

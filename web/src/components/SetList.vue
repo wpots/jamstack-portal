@@ -50,6 +50,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss">
+@use "@/assets/styles/common/variables" as *;
+@use "@/assets/styles/common/mixins" as *;
 p {
   margin-bottom: 0;
 }

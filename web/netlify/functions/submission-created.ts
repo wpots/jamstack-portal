@@ -1,20 +1,15 @@
-import fetch, { Headers, Request, Response } from "node-fetch";
-import { Resend } from "resend";
+type NetlifyEvent = {
+  body?: string | null;
+};
 
-if (!globalThis.fetch) {
-  globalThis.fetch = fetch;
-}
-if (!globalThis.Headers) {
-  globalThis.Headers = Headers;
-}
-if (!globalThis.Request) {
-  globalThis.Request = Request;
-}
-if (!globalThis.Response) {
-  globalThis.Response = Response;
-}
+type NetlifyResponse = {
+  statusCode: number;
+  body: string;
+};
 
-const getEmailToFromCms = async (formId) => {
+type SubmissionData = Record<string, string>;
+
+const getEmailToFromCms = async (formId?: string): Promise<string | null> => {
   if (!formId) {
     return null;
   }
@@ -36,18 +31,24 @@ const getEmailToFromCms = async (formId) => {
     }),
   })
     .then((response) => response?.json())
-    .then(({ data }) => {
-      return data?.form?.forwardEmail;
+    .then((payload: unknown) => {
+      const typedPayload = payload as { data?: { form?: { forwardEmail?: string } } };
+      return typedPayload?.data?.form?.forwardEmail ?? null;
     });
 };
 
-const getSubmissionData = (event) => {
+const getSubmissionData = (event: NetlifyEvent): SubmissionData => {
   if (!event?.body) {
     return {};
   }
 
   try {
-    const parsedBody = JSON.parse(event.body);
+    const parsedBody = JSON.parse(event.body) as {
+      payload?: { data?: SubmissionData; form_data?: SubmissionData; fields?: SubmissionData };
+      data?: SubmissionData;
+      form_data?: SubmissionData;
+      fields?: SubmissionData;
+    };
     const payload = parsedBody?.payload ?? parsedBody ?? {};
     return payload?.data ?? payload?.form_data ?? payload?.fields ?? {};
   } catch (error) {
@@ -56,7 +57,7 @@ const getSubmissionData = (event) => {
   }
 };
 
-export async function handler(event) {
+export async function handler(event: NetlifyEvent): Promise<NetlifyResponse> {
   if (!process.env.RESEND_API_KEY) {
     return {
       statusCode: 500,
@@ -64,6 +65,7 @@ export async function handler(event) {
     };
   }
 
+  const { Resend } = await import("resend");
   const submission = getSubmissionData(event);
   const sendToEmail = await getEmailToFromCms(submission["form-id"]);
   const resend = new Resend(process.env.RESEND_API_KEY);

@@ -1,3 +1,5 @@
 # Local Netlify folder
+
 /web/.netlify
+.DS_Store
 

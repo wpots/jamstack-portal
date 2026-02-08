@@ -50,16 +50,14 @@ interface MediaInterface {
 }
 
 const defaultmedia: MediaInterface = {
-  portrait: {
-    src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/11/gg_portrait.jpg',
-  },
-  landscape: {
-    src: 'http://www.goedgebekt.com/core/wp-content/uploads/2016/12/GG_2016_1.jpg ',
-    sizes: '(max-width: 3108px) 100vw, 3108px',
-    alt: 'placeholder default',
-  },
-  classes: 'default-classes',
-};
+        landscape: {
+          src: "",
+          sizes: "",
+          alt: "",
+        },
+        portrait: undefined,
+        classes: "",
+      };
 
 export default defineComponent({
   name: 'LazyImage',

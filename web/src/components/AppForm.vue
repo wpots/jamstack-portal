@@ -1,6 +1,13 @@
 <template>
-  <form :name="cms.naam" class="form" :class="{ pending: pending }" v-on:submit.prevent="onSubmit">
+  <form
+    :name="cms.naam"
+    class="form"
+    :class="{ pending: pending }"
+    data-netlify="true"
+    v-on:submit.prevent="onSubmit"
+  >
     <input type="hidden" name="form-name" :value="cms.naam" />
+    <input type="hidden" name="form-id" :value="cms.sys.id" />
 
     <div class="form-group">
       <input
@@ -86,7 +93,7 @@ export default defineComponent({
     };
     const form = reactive({
       "form-name": props.cms.naam,
-      formId: props.cms.sys.id,
+      "form-id": props.cms.sys.id,
       ...cleanForm,
     });
     const response = reactive({
@@ -97,11 +104,13 @@ export default defineComponent({
     const uniqueId = computed(() => field => {
       return `${props.cms.naam}-${field}`;
     });
-    // const encode = (data) => {
-    //   return Object.keys(data)
-    //     .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-    //     .join('&');
-    // };
+    const encode = (data) => {
+      return Object.keys(data)
+        .map((key) => {
+          return `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`;
+        })
+        .join("&");
+    };
 
     const onSuccessFulSubmit = () => {
       pending.value = true;
@@ -113,14 +122,20 @@ export default defineComponent({
       }, 4000);
     };
     const onSubmit = () => {
-      fetch("/api/v1/mail", {
+      pending.value = true;
+      fetch("/", {
         method: "POST",
-        body: JSON.stringify(form),
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: encode({ ...form }),
       })
         .then(() => {
           onSuccessFulSubmit();
         })
-        .catch(error => alert(error));
+        .catch((error) => {
+          pending.value = false;
+          response.message = "Er ging iets mis bij het versturen van het formulier";
+          console.error(error);
+        });
     };
     return { form, uniqueId, onSubmit, response, pending };
   },

@@ -1,4 +1,7 @@
 # docs https://docs.netlify.com/configure-builds/file-based-configuration/#sample-file
+[build.environment]
+  NODE_VERSION = "24.13.0"
+
 [[redirects]]
   from = "/api/v1/*"
   to = "/.netlify/functions/:splat"

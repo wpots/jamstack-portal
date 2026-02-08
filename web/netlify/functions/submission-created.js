@@ -1,5 +1,18 @@
-import fetch from "node-fetch";
+import fetch, { Headers, Request, Response } from "node-fetch";
 import { Resend } from "resend";
+
+if (!globalThis.fetch) {
+  globalThis.fetch = fetch;
+}
+if (!globalThis.Headers) {
+  globalThis.Headers = Headers;
+}
+if (!globalThis.Request) {
+  globalThis.Request = Request;
+}
+if (!globalThis.Response) {
+  globalThis.Response = Response;
+}
 
 const getEmailToFromCms = async (formId) => {
   if (!formId) {

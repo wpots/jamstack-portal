@@ -128,7 +128,10 @@ export default defineComponent({
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: encode({ ...form }),
       })
-        .then(() => {
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Form submission failed: ${response.status}`);
+          }
           onSuccessFulSubmit();
         })
         .catch((error) => {

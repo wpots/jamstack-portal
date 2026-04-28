@@ -1,5 +1,15 @@
 <template>
-  <router-link v-if="route.path" class="btn--primary call-to-action" :to="route">
+  <a
+    v-if="externalUrl"
+    class="btn--primary call-to-action"
+    :href="externalUrl"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <svg v-if="getIconName"><use :href="getIconName"></use></svg>
+    <span class="">{{ cms.linkText }}</span>
+  </a>
+  <router-link v-else-if="route.path" class="btn--primary call-to-action" :to="route">
     <svg v-if="getIconName"><use :href="getIconName"></use></svg>
     <span class="">{{ cms.linkText }}</span>
   </router-link>
@@ -17,6 +27,10 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const externalUrl = computed(() => {
+      return props.cms.url ? props.cms.url : false;
+    });
+
     const getIconName = computed(() => {
       return props.cms.iconName ? `#icon-${props.cms.iconName}` : false;
     });
@@ -35,7 +49,7 @@ export default defineComponent({
         return false;
       }
     });
-    return { getIconName, getPageAnchor, route };
+    return { externalUrl, getIconName, getPageAnchor, route };
   },
 });
 </script>

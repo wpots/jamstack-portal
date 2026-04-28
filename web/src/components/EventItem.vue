@@ -28,7 +28,7 @@
 
       <div v-if="showDetails" class="event-body col-xs-12">
         <p>{{ event.description }}</p>
-        <CallToAction v-if="tickets" :cms="tickets" />
+        <CallToAction v-if="actionLink" :cms="actionLink" />
       </div>
     </div>
   </li>
@@ -53,13 +53,24 @@ export default defineComponent({
   },
   setup(props) {
     const date = computed(() => new Date(props.event.date));
-    const tickets = computed(() => {
-      if (props.event.eventDetailPage) {
+    const actionLink = computed(() => {
+      if (props.event?.externalLink?.url) {
+        return props.event.externalLink;
+      }
+
+      if (props.event?.eventDetailPage?.siteSlug) {
+        return {
+          linkText: "Koop Tickets",
+          path: `/concerts/${props.event.eventDetailPage.siteSlug}`,
+        };
+      }
+
+      if (props.event?.eventDetailPage?.date) {
         const id = toDomain.dateAsId(props.event.eventDetailPage.date);
         return { linkText: "Koop Tickets", path: `/concerts/${id}` };
-      } else {
-        return false;
       }
+
+      return false;
     });
     const formattedDate = computed(() => {
       const [month, day, year] = [
@@ -81,7 +92,7 @@ export default defineComponent({
 
     const showDetails = ref(false);
 
-    return { formattedDate, showDetails, tickets };
+    return { actionLink, formattedDate, showDetails };
   },
 });
 </script>

@@ -1,0 +1,269 @@
+{
+  "concertId": "double-impact",
+  "pageTitle": "Double Impact",
+  "eyebrow": "Firma Vocaal & Goed Gebekt",
+  "intro": "onder muzikale leiding van Rolinde Zieverink",
+  "programItems": [
+    {
+      "type": "set",
+      "title": "Gezamenlijk",
+      "songs": [
+        {
+          "title": "Fix you"
+        }
+      ]
+    },
+    {
+      "type": "richText",
+      "title": "Praatje/overgang",
+      "body": {
+        "json": {
+          "nodeType": "document",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "paragraph",
+              "data": {},
+              "content": [
+                {
+                  "nodeType": "text",
+                  "value": "Korte intro om het publiek mee te nemen in de opbouw van de avond.",
+                  "marks": [],
+                  "data": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "set",
+      "title": "Firma Vocaal",
+      "songs": [
+        {
+          "title": "Virtual insanity"
+        },
+        {
+          "title": "Skywalker"
+        },
+        {
+          "title": "Greatest showman"
+        }
+      ]
+    },
+    {
+      "type": "richText",
+      "title": "Overgang",
+      "body": {
+        "json": {
+          "nodeType": "document",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "paragraph",
+              "data": {},
+              "content": [
+                {
+                  "nodeType": "text",
+                  "value": "Licht, ritme en positionering wisselen. Goed moment voor een visuele overgang.",
+                  "marks": [],
+                  "data": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "set",
+      "title": "Goed Gebekt",
+      "songs": [
+        {
+          "title": "What happens"
+        },
+        {
+          "title": "Espresso"
+        },
+        {
+          "title": "My immortal"
+        },
+        {
+          "title": "Toxic"
+        }
+      ]
+    },
+    {
+      "type": "richText",
+      "title": "Overgang",
+      "body": {
+        "json": {
+          "nodeType": "document",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "paragraph",
+              "data": {},
+              "content": [
+                {
+                  "nodeType": "text",
+                  "value": "Licht, ritme en positionering wisselen. Goed moment voor een visuele overgang.",
+                  "marks": [],
+                  "data": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "set",
+      "title": "Firma Vocaal",
+      "songs": [
+        {
+          "title": "No time to die"
+        },
+        {
+          "title": "Flowers"
+        },
+        {
+          "title": "Human"
+        },
+        {
+          "title": "Multicolour"
+        }
+      ]
+    },
+    {
+      "type": "set",
+      "title": "Gezamenlijk",
+      "songs": [
+        {
+          "title": "Creep"
+        }
+      ]
+    },
+    {
+      "type": "richText",
+      "title": "Pauze",
+      "body": {
+        "json": {
+          "nodeType": "document",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "paragraph",
+              "data": {},
+              "content": [
+                {
+                  "nodeType": "text",
+                  "value": "Bar open, foyer aan en even ademhalen voor het tweede deel.",
+                  "marks": [],
+                  "data": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "set",
+      "title": "Goed Gebekt",
+      "songs": [
+        {
+          "title": "No roots"
+        },
+        {
+          "title": "What about us"
+        },
+        {
+          "title": "Zitten in de trein"
+        },
+        {
+          "title": "Wings"
+        }
+      ]
+    },
+    {
+      "type": "richText",
+      "title": "Overgang",
+      "body": {
+        "json": {
+          "nodeType": "document",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "paragraph",
+              "data": {},
+              "content": [
+                {
+                  "nodeType": "text",
+                  "value": "Licht, ritme en positionering wisselen. Goed moment voor een visuele overgang.",
+                  "marks": [],
+                  "data": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "set",
+      "title": "Firma Vocaal",
+      "songs": [
+        {
+          "title": "Where's my husband"
+        },
+        {
+          "title": "Back to black"
+        },
+        {
+          "title": "California dreaming"
+        },
+        {
+          "title": "Engel"
+        },
+        {
+          "title": "Butterflies and hurricanes"
+        }
+      ]
+    },
+    {
+      "type": "richText",
+      "title": "Praatje / bedankje",
+      "body": {
+        "json": {
+          "nodeType": "document",
+          "data": {},
+          "content": [
+            {
+              "nodeType": "paragraph",
+              "data": {},
+              "content": [
+                {
+                  "nodeType": "text",
+                  "value": "Afsluitend woord met ruimte voor bedankjes en een zachte landing.",
+                  "marks": [],
+                  "data": {}
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "set",
+      "title": "Gezamenlijk",
+      "songs": [
+        {
+          "title": "From now on"
+        }
+      ]
+    }
+  ]
+}

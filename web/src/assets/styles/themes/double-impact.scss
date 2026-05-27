@@ -1,171 +1,171 @@
 @import '../common/variables';
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
-.setlist--double-impact {
-  --program-font-display: 'Bebas Neue', #{$font-fam-heading};
-  --program-font-title: 'DM Serif Display', Georgia, serif;
-  --program-font-body: 'DM Sans', #{$font-fam-body};
-  --program-color-accent: #ff4d9d;
-  --program-color-contrast: #1c1320;
-  --program-color-surface: #fff8fc;
-}
+// .setlist--double-impact {
+//   --program-font-display: 'Bebas Neue', #{$font-fam-heading};
+//   --program-font-title: 'DM Serif Display', Georgia, serif;
+//   --program-font-body: 'DM Sans', #{$font-fam-body};
+//   --program-color-accent: #ff4d9d;
+//   --program-color-contrast: #1c1320;
+//   --program-color-surface: #fff8fc;
+// }
 
-.setlist--double-impact .container {
-  position: relative;
-  z-index: 1;
-}
+// .setlist--double-impact .container {
+//   position: relative;
+//   z-index: 1;
+// }
 
-.setlist--double-impact .feedbackform,
-.setlist--double-impact .feedback-form,
-.setlist--double-impact form {
-  font-family: var(--program-font-body);
-}
+// .setlist--double-impact .feedbackform,
+// .setlist--double-impact .feedback-form,
+// .setlist--double-impact form {
+//   font-family: var(--program-font-body);
+// }
 
-.timetableblock--double-impact .program-hero__waves,
-.timetableblock--double-impact .program-hero__confetti {
-  position: absolute;
-  display: block;
-  pointer-events: none;
-}
+// .timetableblock--double-impact .program-hero__waves,
+// .timetableblock--double-impact .program-hero__confetti {
+//   position: absolute;
+//   display: block;
+//   pointer-events: none;
+// }
 
-.timetableblock--double-impact .program-hero__confetti {
-  top: 1rem;
-  right: 1rem;
-  z-index: 1;
-  width: min(13rem, 28vw);
-  height: min(7rem, 14vw);
-  object-fit: contain;
-  object-position: right top;
-  opacity: 0.9;
-}
+// .timetableblock--double-impact .program-hero__confetti {
+//   top: 1rem;
+//   right: 1rem;
+//   z-index: 1;
+//   width: min(13rem, 28vw);
+//   height: min(7rem, 14vw);
+//   object-fit: contain;
+//   object-position: right top;
+//   opacity: 0.9;
+// }
 
-.timetableblock--double-impact .program-hero__waves {
-  left: 50%;
-  bottom: -2.5rem;
-  width: min(120rem, 150vw);
-  height: clamp(5rem, 10vw, 8.5rem);
-  max-width: none;
-  object-fit: fill;
-  object-position: center bottom;
-  transform: translateX(-50%);
-  transform-origin: center bottom;
-}
+// .timetableblock--double-impact .program-hero__waves {
+//   left: 50%;
+//   bottom: -2.5rem;
+//   width: min(120rem, 150vw);
+//   height: clamp(5rem, 10vw, 8.5rem);
+//   max-width: none;
+//   object-fit: fill;
+//   object-position: center bottom;
+//   transform: translateX(-50%);
+//   transform-origin: center bottom;
+// }
 
-.timetableblock--double-impact .program-hero__waves--back {
-  z-index: 0;
-  opacity: 0.85;
-}
+// .timetableblock--double-impact .program-hero__waves--back {
+//   z-index: 0;
+//   opacity: 0.85;
+// }
 
-.timetableblock--double-impact .program-hero__waves--front {
-  z-index: 1;
-  width: min(110rem, 138vw);
-  height: clamp(4.5rem, 8vw, 7rem);
-  opacity: 0.95;
-}
+// .timetableblock--double-impact .program-hero__waves--front {
+//   z-index: 1;
+//   width: min(110rem, 138vw);
+//   height: clamp(4.5rem, 8vw, 7rem);
+//   opacity: 0.95;
+// }
 
-.timetableblock--double-impact .container {
-  position: relative;
-  z-index: 1;
-}
+// .timetableblock--double-impact .container {
+//   position: relative;
+//   z-index: 1;
+// }
 
-.timetableblock--double-impact .program-hero {
-  background:
-    radial-gradient(circle at 12% 18%, rgba(255, 77, 157, 0.22), transparent 24%),
-    radial-gradient(circle at 88% 12%, rgba(59, 236, 168, 0.18), transparent 22%),
-    linear-gradient(160deg, #140812 0%, #2a1322 54%, #120e1d 100%);
-}
+// .timetableblock--double-impact .program-hero {
+//   background:
+//     radial-gradient(circle at 12% 18%, rgba(255, 77, 157, 0.22), transparent 24%),
+//     radial-gradient(circle at 88% 12%, rgba(59, 236, 168, 0.18), transparent 22%),
+//     linear-gradient(160deg, #140812 0%, #2a1322 54%, #120e1d 100%);
+// }
 
-.timetableblock--double-impact .program-hero h1 {
-  font-family: var(--program-font-title, Georgia, serif);
-  font-size: clamp(3.1rem, 9vw, 6.2rem);
-  font-weight: 400;
-  line-height: 0.88;
-  letter-spacing: -0.03em;
-  text-transform: none;
-}
+// .timetableblock--double-impact .program-hero h1 {
+//   font-family: var(--program-font-title, Georgia, serif);
+//   font-size: clamp(3.1rem, 9vw, 6.2rem);
+//   font-weight: 400;
+//   line-height: 0.88;
+//   letter-spacing: -0.03em;
+//   text-transform: none;
+// }
 
-.timetableblock--double-impact .intermezzo,
-.timetableblock--double-impact .program-item {
-  min-width: 100vw;
-}
+// .timetableblock--double-impact .intermezzo,
+// .timetableblock--double-impact .program-item {
+//   min-width: 100vw;
+// }
 
-.timetableblock--double-impact .intermezzo {
-  position: relative;
-  background: var(--program-color-surface);
-  font-family: var(--program-font-body);
-}
+// .timetableblock--double-impact .intermezzo {
+//   position: relative;
+//   background: var(--program-color-surface);
+//   font-family: var(--program-font-body);
+// }
 
-.timetableblock--double-impact .intermezzo::before {
-  content: '';
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  width: 4.5rem;
-  height: 3.5rem;
-  background-image: url('/img/concerts/2026DuoConcert%20confetti.svg');
-  background-position: right top;
-  background-repeat: no-repeat;
-  background-size: contain;
-  opacity: 0.45;
-}
+// .timetableblock--double-impact .intermezzo::before {
+//   content: '';
+//   position: absolute;
+//   top: 1rem;
+//   right: 1rem;
+//   width: 4.5rem;
+//   height: 3.5rem;
+//   background-image: url('/img/concerts/2026DuoConcert%20confetti.svg');
+//   background-position: right top;
+//   background-repeat: no-repeat;
+//   background-size: contain;
+//   opacity: 0.45;
+// }
 
-.program-set--double-impact {
-  padding: 1.25rem 1rem 1.75rem;
-}
+// .program-set--double-impact {
+//   padding: 1.25rem 1rem 1.75rem;
+// }
 
-.program-set--double-impact .program-set__header h3 {
-  color: var(--program-color-accent, #{$magenta});
-  font-family: var(--program-font-display, #{$font-fam-heading});
-  font-size: clamp(2rem, 7vw, 3rem);
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-}
+// .program-set--double-impact .program-set__header h3 {
+//   color: var(--program-color-accent, #{$magenta});
+//   font-family: var(--program-font-display, #{$font-fam-heading});
+//   font-size: clamp(2rem, 7vw, 3rem);
+//   letter-spacing: 0.06em;
+//   text-transform: uppercase;
+// }
 
-.program-set--double-impact .program-set__songs {
-  overflow-x: auto;
-  padding-bottom: 0.5rem;
-  scroll-snap-type: x proximity;
-}
+// .program-set--double-impact .program-set__songs {
+//   overflow-x: auto;
+//   padding-bottom: 0.5rem;
+//   scroll-snap-type: x proximity;
+// }
 
-.program-set--double-impact .program-set__song {
-  scroll-snap-align: start;
-}
+// .program-set--double-impact .program-set__song {
+//   scroll-snap-align: start;
+// }
 
-.program-set--double-impact .rating-item,
-.program-set--double-impact .program-set__custom-song {
-  width: 168px;
-  max-width: 168px;
-  min-height: 0;
-  padding: 0.75rem;
-  border-radius: 1rem;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
-}
+// .program-set--double-impact .rating-item,
+// .program-set--double-impact .program-set__custom-song {
+//   width: 168px;
+//   max-width: 168px;
+//   min-height: 0;
+//   padding: 0.75rem;
+//   border-radius: 1rem;
+//   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+// }
 
-.program-set--double-impact .rating-item .song-meta {
-  gap: 0.65rem;
-}
+// .program-set--double-impact .rating-item .song-meta {
+//   gap: 0.65rem;
+// }
 
-.program-set--double-impact .rating-item img,
-.program-set--double-impact .program-set__image {
-  width: 100%;
-  height: 92px;
-  margin-bottom: 0.65rem;
-  border-radius: 0.75rem;
-  object-fit: cover;
-}
+// .program-set--double-impact .rating-item img,
+// .program-set--double-impact .program-set__image {
+//   width: 100%;
+//   height: 92px;
+//   margin-bottom: 0.65rem;
+//   border-radius: 0.75rem;
+//   object-fit: cover;
+// }
 
-.program-set--double-impact .rating-item h4,
-.program-set--double-impact .program-set__meta h4 {
-  font-family: var(--program-font-body, #{$font-fam-body});
-  font-size: 0.95rem;
-  line-height: 1.15;
-}
+// .program-set--double-impact .rating-item h4,
+// .program-set--double-impact .program-set__meta h4 {
+//   font-family: var(--program-font-body, #{$font-fam-body});
+//   font-size: 0.95rem;
+//   line-height: 1.15;
+// }
 
-.program-set--double-impact .rating-item small,
-.program-set--double-impact .program-set__meta small {
-  font-family: var(--program-font-body, #{$font-fam-body});
-  font-size: 0.72rem;
-}
+// .program-set--double-impact .rating-item small,
+// .program-set--double-impact .program-set__meta small {
+//   font-family: var(--program-font-body, #{$font-fam-body});
+//   font-size: 0.72rem;
+// }
 
 ///from here
 .program-preview {
@@ -615,31 +615,31 @@
 
 //to here
 
-@media (max-width: 767px) {
-  .timetableblock--double-impact .program-hero__confetti {
-    top: 0.75rem;
-    right: 0.5rem;
-    width: 6.5rem;
-    height: 3.5rem;
-  }
+// @media (max-width: 767px) {
+//   .timetableblock--double-impact .program-hero__confetti {
+//     top: 0.75rem;
+//     right: 0.5rem;
+//     width: 6.5rem;
+//     height: 3.5rem;
+//   }
 
-  .timetableblock--double-impact .program-hero__waves--back {
-    width: 150vw;
-    height: 5rem;
-  }
+//   .timetableblock--double-impact .program-hero__waves--back {
+//     width: 150vw;
+//     height: 5rem;
+//   }
 
-  .timetableblock--double-impact .program-hero__waves--front {
-    width: 145vw;
-    height: 4rem;
-  }
+//   .timetableblock--double-impact .program-hero__waves--front {
+//     width: 145vw;
+//     height: 4rem;
+//   }
 
-  .program-set--double-impact {
-    padding: 1rem 0.75rem 1.5rem;
-  }
+//   .program-set--double-impact {
+//     padding: 1rem 0.75rem 1.5rem;
+//   }
 
-  .program-set--double-impact .rating-item,
-  .program-set--double-impact .program-set__custom-song {
-    width: 148px;
-    max-width: 148px;
-  }
-}
+//   .program-set--double-impact .rating-item,
+//   .program-set--double-impact .program-set__custom-song {
+//     width: 148px;
+//     max-width: 148px;
+//   }
+// }

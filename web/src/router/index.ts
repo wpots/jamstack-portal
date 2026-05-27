@@ -98,6 +98,17 @@ if (import.meta.env.DEV) {
         },
       ],
     },
+    {
+      path: '/__preview/impact',
+      component: BlankLayout,
+      children: [
+        {
+          path: '',
+          name: 'impact-preview',
+          component: () => import('@/views/dev/program-impact.vue'),
+        },
+      ],
+    },
   );
 }
 

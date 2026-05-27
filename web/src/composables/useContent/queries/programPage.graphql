@@ -1,0 +1,64 @@
+query getProgramPageQuery($concertId: String!) {
+  programPageCollection(where: { concertId: $concertId }, limit: 1) {
+    items {
+      pageTitle
+      eyebrow
+      intro
+      concertId
+      programItemsCollection(limit: 20) {
+        items {
+          __typename
+          ... on ContentTypeRichText {
+            title
+            body {
+              json
+            }
+            ticketForm
+            embeddedYouTubeId
+          }
+          ... on TeaserBlock {
+            title
+            fullWidth
+            backgroundImage {
+              url
+              title
+            }
+            columnContentCollection(limit: 2) {
+              items {
+                __typename
+                ... on ContentTypeRichText {
+                  title
+                  body {
+                    json
+                  }
+                  ticketForm
+                  embeddedYouTubeId
+                }
+              }
+            }
+          }
+          ... on ProgramSetBlock {
+            title
+            songsCollection(limit: 20) {
+              items {
+                title
+                artist
+                imageUrl
+                linkedScore {
+                  sys {
+                    id
+                  }
+                  title
+                  artist
+                  albumart {
+                    url
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

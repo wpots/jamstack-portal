@@ -2,10 +2,11 @@ import { reactive, computed, onMounted, watch } from 'vue';
 import { useStore } from '../../store';
 import { useRoute } from 'vue-router';
 import { useQuery } from '@vue/apollo-composable';
-import { toDomain, fromDomain } from './content.mapper';
+import { toDomain } from './content.mapper';
 import { getHomePageQuery } from './queries/home.graphql';
 import { getLayoutComponentsQuery } from './queries/layout.graphql';
 import { getTimeTableQuery } from './queries/timeTableBlock.graphql';
+import { getProgramPageQuery } from './queries/programPage.graphql';
 import { getConcertPageQuery } from './queries/concert.graphql';
 import { getRepertoirBlock } from './queries/repertoirBlock.graphql';
 import { getRepertoirSongs } from './queries/repertoirSongs.graphql';
@@ -41,6 +42,9 @@ export function useContent(id, ctx) {
   const { result: timetable } = useQuery(getTimeTableQuery, { concertId:slug }, () => ({
     enabled: enableQuery.timetable,
   }));
+  const { result: programPage } = useQuery(getProgramPageQuery, { concertId: slug }, () => ({
+    enabled: enableQuery.timetable,
+  }));
   const { result: repertoire } = useQuery(getRepertoirBlock, { anchor: 'ons-repertoire' }, () => ({
     enabled: enableQuery.repertoire,
   }));
@@ -57,7 +61,16 @@ export function useContent(id, ctx) {
   const layoutComponents = computed(() => toDomain.mapLayout(layout.value));
   const getHomepage = computed(() => toDomain.mapHomepage(homepage.value));
   const getConcertpage = computed(() => toDomain.mapConcertpage(concert.value));
-  const getTimeTable = computed(() => toDomain.mapTimeTable(timetable.value));
+  const getTimeTable = computed(() => {
+    const cmsProgramPage = toDomain.mapProgramPage(programPage.value);
+    const legacyTimeTable = toDomain.mapTimeTable(timetable.value);
+
+    if (cmsProgramPage?.programItems?.length) {
+      return cmsProgramPage;
+    }
+
+    return legacyTimeTable;
+  });
   const getRepertoirePage = computed(() => toDomain.mapRepertoire(repertoire.value));
   const getSongs = computed(() => toDomain.mapSongs(songs.value));
   const sortSongs = genre => getSongs.value.filter(song => song.genre.find(i => i.genre === genre));

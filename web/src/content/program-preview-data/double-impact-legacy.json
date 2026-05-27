@@ -1,0 +1,166 @@
+{
+  "pageBlockTimeTableCollection": {
+    "items": [
+      {
+        "pageTitle": "Double Impact",
+        "concertId": "double-impact",
+        "intro": {
+          "json": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Legacy fallback preview met de oude timetable-opbouw: intro, set 1, intermezzo en set 2.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "intermezzoRte": {
+          "json": {
+            "nodeType": "document",
+            "data": {},
+            "content": [
+              {
+                "nodeType": "paragraph",
+                "data": {},
+                "content": [
+                  {
+                    "nodeType": "text",
+                    "value": "Intermezzo voor de legacy variant. Gebruik deze route om kleuren, typografie en kaartstijlen te checken.",
+                    "marks": [],
+                    "data": {}
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        "setlistCollection": {
+          "items": [
+            {
+              "short": "Gezamenlijk",
+              "scoresListCollection": {
+                "items": [
+                  {
+                    "title": "Fix You",
+                    "artist": "Coldplay",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/fix-you.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-fix-you"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "short": "Firma Vocaal",
+              "scoresListCollection": {
+                "items": [
+                  {
+                    "title": "Virtual Insanity",
+                    "artist": "Jamiroquai",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/virtual-insanity.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-virtual-insanity"
+                    }
+                  },
+                  {
+                    "title": "Skywalker",
+                    "artist": "Miguel",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/skywalker.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-skywalker"
+                    }
+                  },
+                  {
+                    "title": "The Greatest Show",
+                    "artist": "The Greatest Showman",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/greatest-show.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-greatest-showman"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        },
+        "setlist2Collection": {
+          "items": [
+            {
+              "short": "Goed Gebekt",
+              "scoresListCollection": {
+                "items": [
+                  {
+                    "title": "Espresso",
+                    "artist": "Sabrina Carpenter",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/espresso.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-espresso"
+                    }
+                  },
+                  {
+                    "title": "Toxic",
+                    "artist": "Britney Spears",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/toxic.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-toxic"
+                    }
+                  },
+                  {
+                    "title": "No Roots",
+                    "artist": "Alice Merton",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/no-roots.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-no-roots"
+                    }
+                  }
+                ]
+              }
+            },
+            {
+              "short": "Gezamenlijk",
+              "scoresListCollection": {
+                "items": [
+                  {
+                    "title": "From Now On",
+                    "artist": "The Greatest Showman",
+                    "albumart": {
+                      "url": "//images.ctfassets.net/legacy/from-now-on.jpg"
+                    },
+                    "sys": {
+                      "id": "legacy-from-now-on"
+                    }
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

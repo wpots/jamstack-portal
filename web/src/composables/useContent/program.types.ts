@@ -1,10 +1,9 @@
-export type ProgramItem =
-  | ProgramRichTextItem
-  | ProgramTeaserItem
-  | ProgramSetItem;
+export type ProgramItem = ProgramRichTextItem | ProgramTeaserItem | ProgramSetItem;
 
 export interface ProgramPage {
   pageTitle?: string;
+  eyebrow?: string;
+  intro?: string;
   programItems: ProgramItem[];
 }
 
@@ -19,12 +18,12 @@ export interface ProgramRichTextItem {
 }
 
 export interface ProgramTeaserItem {
-  type: "teaser";
+  type: 'teaser';
   cms: Record<string, unknown>;
 }
 
 export interface ProgramSetItem {
-  type: "set";
+  type: 'set';
   title?: string;
   songs: ProgramSongEntry[];
 }

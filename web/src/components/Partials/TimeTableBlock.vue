@@ -1,24 +1,20 @@
 <template>
-  <section class="section timetableblock">
+  <section :class="['section timetableblock', themeClass]">
     <div class="container-fluid">
       <div class="row">
-        <div class="col-12 program">
-          <h2>{{ cms.pageTitle }}</h2>
-          <div class="legenda" @click="handleLegend">
-            <svg class="icon-help"><use href="#icon-help"></use></svg>
-          </div>
-        </div>
-        <div class="col-12 soundwave scroll-snapping" ref="soundwave">
-          <p v-show="showHints" ref="hints" class="hint">
-            <svg class="icon-gesture gesture-swipe-right"><use href="#icon-gesture"></use></svg>
-          </p>
-
-          <ContentfulRichText :document="cms.intro" class="intermezzo" />
-
-          <SetList v-if="cms.firstSetlist?.length > 0" :set="cms.firstSetlist" />
-          <ContentfulRichText :document="cms.intermezzoRte" class="intermezzo" />
-
-          <SetList v-if="cms.lastSetlist?.length > 0" :set="cms.lastSetlist" />
+        <div class="col-12 timetableblock__content">
+          <template v-for="(item, index) in cms.programItems" :key="index">
+            <RichText v-if="item.type === 'richText'" :cms="item" class="intermezzo" />
+            <TeaserBlock v-else-if="item.type === 'teaser'" :cms="item.cms" class="program-item" />
+            <ProgramSetBlock
+              v-else-if="item.type === 'set'"
+              :sectionId="getSetSectionId(index)"
+              :title="item.title"
+              :songs="item.songs"
+              :themeSlug="themeSlug"
+              class="program-item"
+            />
+          </template>
         </div>
       </div>
     </div>
@@ -26,84 +22,119 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onUpdated, onMounted } from 'vue';
-import SetList from '../SetList.vue';
-import ContentfulRichText from '../ContentfulRichText.vue';
+import { computed, defineComponent, PropType } from 'vue';
+import RichText from '../RichText.vue';
+import TeaserBlock from './TeaserBlock.vue';
+import ProgramSetBlock from '@/components/program/ProgramSetBlock.vue';
+import type {
+  ProgramItem,
+  ProgramPage,
+  ProgramSetItem,
+} from '@/composables/useContent/program.types';
+
+interface ProgramPageNavigationSection {
+  id: string;
+  title: string;
+}
+
+function isProgramSetItem(item: ProgramItem): item is ProgramSetItem {
+  return item.type === 'set';
+}
+
+function createSectionSlug(value: string, fallback: string): string {
+  const slug = value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replaceAll(/[\u0300-\u036f]/g, '')
+    .replaceAll(/[^a-z0-9]+/g, '-')
+    .replaceAll(/(^-|-$)/g, '');
+
+  return slug || fallback;
+}
 
 // https://next--vue-dataset-demo.netlify.app/components/#props
 export default defineComponent({
   name: 'TimeTableBlock',
-  components: { SetList, ContentfulRichText },
+  components: {
+    ProgramHero,
+    ProgramPageNavigation,
+    ProgramStatsCloud,
+    RichText,
+    TeaserBlock,
+    ProgramSetBlock,
+  },
   props: {
     cms: {
-      type: Object,
+      type: Object as PropType<ProgramPage>,
       default: () => {
-        return {};
+        return { pageTitle: '', programItems: [] };
       },
     },
+    themeSlug: {
+      type: String,
+      default: '',
+    },
   },
-  setup() {
-    const soundwave = ref<HTMLElement | null>(null);
-    const hints = ref<HTMLElement | null>(null);
-    const showHints = ref(true);
-    const hintDelay = ref(0);
-    onUpdated(() => {
-      if (soundwave.value) {
-        const soundwaveElements = soundwave.value.getElementsByClassName('wave');
-        const arrayFromElems = Array.from(soundwaveElements);
-        arrayFromElems.forEach((el, idx) => {
-          if (idx === 0) {
-            el.classList.add('colorWave');
-          }
+  setup(props) {
+    const isDoubleImpactTheme = computed(() => props.themeSlug === 'double-impact');
+    const themeClass = computed(() =>
+      isDoubleImpactTheme.value ? 'timetableblock--double-impact' : '',
+    );
 
-          el.addEventListener('animationiteration', () => {
-            const nextEl = arrayFromElems[idx + 1];
-            nextEl.classList.add('colorWave');
-          });
-        });
-      }
+    const setSectionMap = computed(() => {
+      const seenIds = new Map<string, number>();
+      const sections = new Map<number, ProgramPageNavigationSection>();
+      let setNumber = 0;
+
+      props.cms.programItems.forEach((item, index) => {
+        if (!isProgramSetItem(item)) {
+          return;
+        }
+
+        setNumber += 1;
+        const title = item.title || `Set ${setNumber}`;
+        const fallbackId = `set-${setNumber}`;
+        const baseId = createSectionSlug(title, fallbackId);
+        const occurrence = (seenIds.get(baseId) || 0) + 1;
+        const id = occurrence > 1 ? `${baseId}-${occurrence}` : baseId;
+
+        seenIds.set(baseId, occurrence);
+        sections.set(index, { id, title });
+      });
+
+      return sections;
     });
-    onMounted(() => {
-      if (hints.value) {
-        hints.value.addEventListener('animationiteration', () => {
-          hintDelay.value++;
-          if (hintDelay.value >= 5) showHints.value = false;
-        });
-      }
-    });
-    const handleLegend = () => {
-      hintDelay.value = 0;
-      showHints.value = true;
+
+    const setSections = computed<ProgramPageNavigationSection[]>(() =>
+      Array.from(setSectionMap.value.values()),
+    );
+
+    const getSetSectionId = (index: number): string => {
+      return setSectionMap.value.get(index)?.id || '';
     };
-    return { soundwave, hints, showHints, handleLegend };
+
+    return {
+      getSetSectionId,
+      isDoubleImpactTheme,
+      setSections,
+      themeClass,
+    };
   },
 });
 </script>
 <style lang="scss">
-@use "@/assets/styles/common/variables" as *;
-@use "@/assets/styles/common/mixins" as *;
+@use '@/assets/styles/common/variables' as *;
+@use '@/assets/styles/common/mixins' as *;
 .section {
   margin-top: -70px;
 }
 .program {
   position: relative;
 }
-.soundwave {
+.timetableblock__content {
   display: flex;
-  flex-flow: row nowrap;
-  padding-top: 2rem;
-  overflow-y: initial;
-  overflow-x: scroll;
-}
-.scroll-snapping {
-  scroll-snap-type: x mandatory;
-  & > ul,
-  & > div {
-    scroll-snap-align: start;
-  }
-  & > ul:last-child {
-    padding-right: 50vw;
-  }
+  flex-direction: column;
 }
 .intermezzo {
   display: flex;
@@ -116,7 +147,7 @@ export default defineComponent({
   background-color: $smoke;
 
   h4 {
-    font-family: 'Satisfy';
+    font-family: 'Satisfy', cursive;
     font-size: 2rem;
   }
   ul {
@@ -125,31 +156,7 @@ export default defineComponent({
   }
 }
 
-.hint {
-  position: absolute;
-  z-index: 100;
-  bottom: 2rem;
-  right: 1rem;
-  font-style: italic;
-  text-align: right;
-}
-.legenda {
-  position: absolute;
-  z-index: 100;
-  background: $magenta;
-  color: white;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  top: 0;
-  right: 1rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  svg {
-    width: 1rem;
-    height: 1rem;
-    fill: white;
-  }
+.program-item {
+  min-width: 100vw;
 }
 </style>

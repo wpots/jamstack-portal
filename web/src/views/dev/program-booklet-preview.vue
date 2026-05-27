@@ -1,14 +1,5 @@
 <template>
   <main class="program-booklet-preview">
-    <section class="program-booklet-preview__intro container">
-      <p class="program-booklet-preview__eyebrow">Concept</p>
-      <h1>Program booklet</h1>
-      <p>
-        Deze preview gebruikt nu dezelfde componenten als de echte programma-pagina,
-        met dummydata die eerst naar hetzelfde `programItems` model wordt omgezet.
-      </p>
-    </section>
-
     <div class="setlist setlist--double-impact">
       <TimeTableBlock :cms="programPage" themeSlug="double-impact" />
 

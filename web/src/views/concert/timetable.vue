@@ -1,6 +1,18 @@
 <template>
-  <div class="setlist">
-    <TimeTableBlock :cms="{ pageTitle, introduction, firstSetlist, intermezzo, lastSetlist }" />
+  <div :class="['setlist', `setlist--${slug}`]">
+    <ProgramHero
+      :title="getTimeTable.value.pageTitle"
+      :eyebrow="getTimeTable.value.eyebrow"
+      :lede="getTimeTable.value.intro"
+      :themeSlug="slug"
+    />
+    <ProgramPageNavigation
+      :sections="setSections"
+      :includeOverview="isDoubleImpactTheme"
+      :includeHighlights="isDoubleImpactTheme"
+    />
+    <ProgramStatsCloud :programItems="getTimeTable.value.programItems" />
+    <TimeTableBlock :cms="getTimeTable" :themeSlug="slug" />
     <div class="container">
       <FeedBackForm></FeedBackForm>
     </div>
@@ -14,30 +26,36 @@ import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
 import { useContent } from '../../composables/useContent';
 import { useFeedback } from '../../composables/useFeedback';
 import FeedBackForm from '../../components/FeedBackForm.vue';
+import ProgramHero from '@/components/program/ProgramHero.vue';
+import ProgramPageNavigation from '@/components/program/ProgramPageNavigation.vue';
+import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
 
 export default defineComponent({
-  components: { TimeTableBlock, FeedBackForm },
+  components: {
+    TimeTableBlock,
+    FeedBackForm,
+    ProgramHero,
+    ProgramPageNavigation,
+    ProgramStatsCloud,
+  },
   name: 'TimeTablePage',
   setup() {
     const route = useRoute();
     const { getTimeTable } = useContent('timetable', { route });
     const { fetchSongRatings, getSongRatings } = useFeedback();
-    const pageTitle = computed(() => getTimeTable.value.pageTitle);
-    const introduction = computed(() => getTimeTable.value.introduction);
-    const intermezzo = computed(() => getTimeTable.value.intermezzo);
-    const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
-    const lastSetlist = computed(() => getTimeTable.value.lastSetList);
+    const slug = computed(() => `${route.params.id || ''}`);
     onMounted(async () => {
       if (!getSongRatings.value) await fetchSongRatings();
     });
 
-    return { pageTitle, introduction, firstSetlist, intermezzo, lastSetlist, getSongRatings };
+    return { slug, getTimeTable, getSongRatings };
   },
 });
 </script>
 <style lang="scss" scoped>
-@use "@/assets/styles/common/variables" as *;
-@use "@/assets/styles/common/mixins" as *;
+@use '@/assets/styles/common/variables' as *;
+@use '@/assets/styles/common/mixins' as *;
+
 .timeline {
   margin: 2rem;
   display: flex;

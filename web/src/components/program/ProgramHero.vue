@@ -1,10 +1,5 @@
 <template>
-  <div
-    :class="[
-      'program-hero',
-      { 'program-preview__hero': isDoubleImpactTheme },
-    ]"
-  >
+  <div :class="['program-hero', { 'program-preview__hero': isDoubleImpactTheme }]">
     <div
       :class="[
         'program-hero__copy',
@@ -14,20 +9,14 @@
     >
       <p
         v-if="eyebrow"
-        :class="[
-          'program-hero__eyebrow',
-          { 'program-preview__eyebrow': isDoubleImpactTheme },
-        ]"
+        :class="['program-hero__eyebrow', { 'program-preview__eyebrow': isDoubleImpactTheme }]"
       >
         {{ eyebrow }}
       </p>
       <h1>{{ title }}</h1>
       <p
         v-if="lede"
-        :class="[
-          'program-hero__lede',
-          { 'program-preview__lede': isDoubleImpactTheme },
-        ]"
+        :class="['program-hero__lede', { 'program-preview__lede': isDoubleImpactTheme }]"
       >
         {{ lede }}
       </p>
@@ -35,10 +24,7 @@
 
     <img
       v-if="isDoubleImpactTheme"
-      :class="[
-        'program-hero__confetti',
-        { 'program-preview__confetti': isDoubleImpactTheme },
-      ]"
+      :class="['program-hero__confetti', { 'program-preview__confetti': isDoubleImpactTheme }]"
       src="/img/concerts/2026DuoConcert%20confetti.svg"
       alt=""
       aria-hidden="true"

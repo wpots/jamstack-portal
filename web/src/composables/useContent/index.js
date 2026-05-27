@@ -39,7 +39,7 @@ export function useContent(id, ctx) {
     enabled: enableQuery.concert,
   }));
 
-  const { result: timetable } = useQuery(getTimeTableQuery, { concertId:slug }, () => ({
+  const { result: timetable } = useQuery(getTimeTableQuery, { concertId: slug }, () => ({
     enabled: enableQuery.timetable,
   }));
   const { result: programPage } = useQuery(getProgramPageQuery, { concertId: slug }, () => ({
@@ -73,7 +73,8 @@ export function useContent(id, ctx) {
   });
   const getRepertoirePage = computed(() => toDomain.mapRepertoire(repertoire.value));
   const getSongs = computed(() => toDomain.mapSongs(songs.value));
-  const sortSongs = genre => getSongs.value.filter(song => song.genre.find(i => i.genre === genre));
+  const sortSongs = (genre) =>
+    getSongs.value.filter((song) => song.genre.find((i) => i.genre === genre));
 
   watch(layoutComponents, () => {
     if (layoutComponents.value?.footer) {

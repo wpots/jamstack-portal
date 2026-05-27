@@ -4,11 +4,7 @@
       <h3>{{ title }}</h3>
     </header>
     <ul class="program-set__songs">
-      <li
-        v-for="(song, index) in songs"
-        :key="`${song.title}-${index}`"
-        class="program-set__song"
-      >
+      <li v-for="(song, index) in songs" :key="`${song.title}-${index}`" class="program-set__song">
         <AppRatingItem
           v-if="song.linkedScore?.sys?.id"
           :interactive="false"
@@ -66,7 +62,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/common/variables" as *;
+@use '@/assets/styles/common/variables' as *;
 
 .program-set {
   display: flex;

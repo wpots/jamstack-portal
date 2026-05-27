@@ -5,11 +5,7 @@
     aria-label="Programma navigatie"
   >
     <div class="container-fluid program-preview__nav-inner">
-      <a
-        v-for="item in navigationItems"
-        :key="item.id"
-        :href="`#${item.id}`"
-      >
+      <a v-for="item in navigationItems" :key="item.id" :href="`#${item.id}`">
         {{ item.title }}
       </a>
     </div>

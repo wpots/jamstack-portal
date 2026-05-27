@@ -1,4 +1,4 @@
-import doubleImpact from "./double-impact.json";
+import doubleImpact from './double-impact.json';
 
 const programPreviewData = {
   [doubleImpact.concertId]: doubleImpact,

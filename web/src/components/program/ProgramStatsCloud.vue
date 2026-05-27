@@ -1,15 +1,7 @@
 <template>
-  <aside
-    v-if="stats.length"
-    class="program-stats-cloud"
-    aria-label="Programma statistieken"
-  >
+  <aside v-if="stats.length" class="program-stats-cloud" aria-label="Programma statistieken">
     <ul class="program-stats-cloud__list">
-      <li
-        v-for="stat in stats"
-        :key="stat.label"
-        class="program-stats-cloud__item"
-      >
+      <li v-for="stat in stats" :key="stat.label" class="program-stats-cloud__item">
         <span class="program-stats-cloud__label">{{ stat.label }}</span>
         <span class="program-stats-cloud__count">({{ stat.value }})</span>
       </li>

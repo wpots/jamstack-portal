@@ -1,16 +1,50 @@
 <template>
   <div class="program-preview__feedback-bar">
     <p>{{ message }}</p>
-    <button type="button" @click="$emit('click')">{{ buttonLabel }}</button>
+    <button ref="triggerButton" type="button" @click="handleOpen">
+      {{ buttonLabel }}
+    </button>
+
+    <dialog
+      ref="modal"
+      class="program-preview__feedback-modal"
+      aria-labelledby="program-feedback-title"
+      aria-modal="true"
+      @click="handleBackdropClick"
+      @close="handleDialogClose"
+    >
+      <article class="program-preview__feedback-modal-card">
+        <header class="program-preview__feedback-modal-header">
+          <div>
+            <p class="program-preview__feedback-modal-kicker">Feedback</p>
+            <h2 id="program-feedback-title">Laat je reactie achter</h2>
+          </div>
+          <button
+            type="button"
+            class="program-preview__feedback-modal-close"
+            aria-label="Sluit feedbackvenster"
+            @click="handleClose"
+          >
+            ×
+          </button>
+        </header>
+
+        <FeedBackForm />
+      </article>
+    </dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import FeedBackForm from '@/components/FeedBackForm.vue';
 
 export default defineComponent({
   name: 'ProgramFeedbackCTA',
   emits: ['click'],
+  components: {
+    FeedBackForm,
+  },
   props: {
     message: {
       type: String,
@@ -20,6 +54,43 @@ export default defineComponent({
       type: String,
       default: 'Geef je mening',
     },
+  },
+  setup(_, { emit }) {
+    const modal = ref<HTMLDialogElement | null>(null);
+    const triggerButton = ref<HTMLButtonElement | null>(null);
+
+    const handleOpen = () => {
+      emit('click');
+
+      if (!modal.value?.open) {
+        modal.value?.showModal();
+      }
+    };
+
+    const handleClose = () => {
+      if (modal.value?.open) {
+        modal.value.close();
+      }
+    };
+
+    const handleDialogClose = () => {
+      triggerButton.value?.focus();
+    };
+
+    const handleBackdropClick = (event: MouseEvent) => {
+      if (event.target === modal.value) {
+        handleClose();
+      }
+    };
+
+    return {
+      modal,
+      triggerButton,
+      handleOpen,
+      handleClose,
+      handleDialogClose,
+      handleBackdropClick,
+    };
   },
 });
 </script>
@@ -51,8 +122,82 @@ export default defineComponent({
     color: $white;
     font-family: var(--program-font-display);
     font-size: 0.75rem;
+    cursor: pointer;
     white-space: nowrap;
+
+    &:focus-visible {
+      outline: 2px solid var(--program-color-ink, #1b1b1b);
+      outline-offset: 3px;
+    }
   }
+}
+
+.program-preview__feedback-modal {
+  width: min(42rem, calc(100vw - 2rem));
+  max-width: 42rem;
+  padding: 0;
+  border: 0;
+  border-radius: 1.5rem;
+  background: transparent;
+
+  &::backdrop {
+    background: rgba($black, 0.6);
+  }
+}
+
+.program-preview__feedback-modal-card {
+  padding: 1.5rem;
+  border-radius: 1.5rem;
+  background: rgba($white, 0.98);
+  box-shadow: 0 20px 50px rgba($black, 0.18);
+}
+
+.program-preview__feedback-modal-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  h2 {
+    margin: 0;
+  }
+}
+
+.program-preview__feedback-modal-kicker {
+  margin-bottom: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.program-preview__feedback-modal-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 0;
+  border-radius: 999px;
+  background: rgba($black, 0.08);
+  color: $black;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--program-color-accent);
+    outline-offset: 2px;
+  }
+}
+
+:deep(.feedback-form) {
+  margin: 0;
+}
+
+:deep(.feedback-form h2) {
+  margin-top: 0;
 }
 
 @media (max-width: 900px) {
@@ -66,6 +211,14 @@ export default defineComponent({
     button {
       width: 100%;
     }
+  }
+
+  .program-preview__feedback-modal-card {
+    padding: 1rem;
+  }
+
+  .program-preview__feedback-modal-header {
+    align-items: center;
   }
 }
 </style>

@@ -16,10 +16,7 @@
             >
               <div class="program-preview__teaser-stack">
                 <ProgramTextBlock v-bind="createTeaserBlock(item, index + 1)" />
-                <div
-                  v-if="hasFeaturedContent(item)"
-                  class="program-preview__featured-grid"
-                >
+                <div v-if="hasFeaturedContent(item)" class="program-preview__featured-grid">
                   <ProgramPageFeaturedContent
                     v-for="(featuredItem, featuredIndex) in getFeaturedContentItems(item)"
                     :key="featuredItem.title || `${index}-${featuredIndex}`"
@@ -353,7 +350,7 @@ export default defineComponent({
 }
 .intermezzo {
   display: flex;
-  min-width: 100vw;
+  width: 100%;
   flex-flow: column;
   align-items: center;
   justify-content: center;
@@ -372,7 +369,8 @@ export default defineComponent({
 }
 
 .program-item {
-  min-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .program-item--text {

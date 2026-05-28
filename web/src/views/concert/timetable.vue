@@ -5,12 +5,12 @@
       :eyebrow="getTimeTable.eyebrow"
       :lede="getTimeTable.intro"
     />
+    <ProgramStatsCloud :programItems="getTimeTable.programItems" />
     <ProgramPageNavigation
       :sections="setSections"
       :includeOverview="isDoubleImpactTheme"
       :includeHighlights="isDoubleImpactTheme"
     />
-    <ProgramStatsCloud :programItems="getTimeTable.programItems" />
     <TimeTableBlock :cms="getTimeTable" />
     <div class="container">
       <FeedBackForm></FeedBackForm>

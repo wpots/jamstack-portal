@@ -1,6 +1,6 @@
 <template>
   <main class="program-booklet-preview">
-    <ProgramThemeProvider class="setlist setlist--double-impact" themeSlug="double-impact">
+    <ProgramThemeProvider class="setlist" themeSlug="double-impact">
       <TimeTableBlock :cms="programPage" />
 
       <div class="container">
@@ -254,13 +254,13 @@ export default defineComponent({
   margin-bottom: 0;
 }
 
-.setlist--double-impact :deep(.container) {
+.program-theme--double-impact :deep(.container) {
   position: relative;
   z-index: 1;
 }
 
-.setlist--double-impact :deep(.feedback-form),
-.setlist--double-impact :deep(form) {
+.program-theme--double-impact :deep(.feedback-form),
+.program-theme--double-impact :deep(form) {
   font-family: var(--program-font-body);
 }
 </style>

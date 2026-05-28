@@ -99,17 +99,6 @@ export default defineComponent({
   text-transform: uppercase;
 }
 
-.program-hero h1 {
-  max-width: 10ch;
-  margin-bottom: 1rem;
-  font-family: var(--program-font-title, #{$font-fam-program-title});
-  font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
-  text-shadow: 0 12px 30px rgba($black, 0.4);
-  font-size: clamp(3.1rem, 8vw, 6.3rem);
-  line-height: 0.88;
-  letter-spacing: -0.03em;
-}
-
 .program-hero__lede {
   max-width: 42rem;
   margin-bottom: 2rem;

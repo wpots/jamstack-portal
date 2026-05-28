@@ -44,7 +44,7 @@
   opacity: 0.95;
 }
 
-.timetableblock--double-impact {
+.program-theme--double-impact {
   --program-font-display: #{$font-fam-program-display};
   --program-font-title: #{$font-fam-program-title};
   --program-font-body: #{$font-fam-program-body};
@@ -57,19 +57,19 @@
   --program-color-surface: #fff8fc;
 }
 
-.timetableblock--double-impact .container {
+.program-theme--double-impact .container {
   position: relative;
   z-index: 1;
 }
 
-.timetableblock--double-impact .program-hero {
+.program-theme--double-impact .program-hero {
   background:
     radial-gradient(circle at 12% 18%, rgba(255, 77, 157, 0.22), transparent 24%),
     radial-gradient(circle at 88% 12%, rgba(59, 236, 168, 0.18), transparent 22%),
     linear-gradient(160deg, #140812 0%, #2a1322 54%, #120e1d 100%);
 }
 
-.timetableblock--double-impact .program-hero h1 {
+.program-theme--double-impact .program-hero h1 {
   font-family: var(--program-font-title, Georgia, serif);
   font-size: clamp(3.1rem, 9vw, 6.2rem);
   font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
@@ -78,18 +78,19 @@
   text-transform: none;
 }
 
-.timetableblock--double-impact .intermezzo,
-.timetableblock--double-impact .program-item {
-  min-width: 100vw;
+.program-theme--double-impact .intermezzo,
+.program-theme--double-impact .program-item {
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.timetableblock--double-impact .intermezzo {
+.program-theme--double-impact .intermezzo {
   position: relative;
   background: var(--program-color-surface);
   font-family: var(--program-font-body);
 }
 
-.timetableblock--double-impact .intermezzo::before {
+.program-theme--double-impact .intermezzo::before {
   content: '';
   position: absolute;
   top: 1rem;

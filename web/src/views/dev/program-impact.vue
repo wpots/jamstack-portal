@@ -336,7 +336,7 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Preview
 
 function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): PreviewTextBlock {
   const teaser = isTeaserCms(item.cms) ? item.cms : undefined;
-  const title = teaser?.title || `Teaser ${occurrence}`;
+  const title = typeof teaser?.title === 'string' ? teaser.title : `Teaser ${occurrence}`;
   const featuredContent = extractFeaturedContentItems(teaser);
 
   return {

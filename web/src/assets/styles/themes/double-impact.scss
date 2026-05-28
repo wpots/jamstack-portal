@@ -58,6 +58,17 @@
   pointer-events: none;
 }
 
+.program-theme--double-impact .program-hero h1 {
+  max-width: 10ch;
+  margin-bottom: 1rem;
+  font-family: var(--program-font-display, #{$font-fam-program-title});
+  font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
+  text-shadow: 0 12px 30px rgba($black, 0.4);
+  font-size: clamp(3.1rem, 8vw, 6.3rem);
+  line-height: 0.88;
+  letter-spacing: -0.03em;
+}
+
 .program-preview__hero-content,
 .program-theme--double-impact .program-hero__copy {
   position: relative;
@@ -101,16 +112,17 @@
 
 .program-preview__waves--front,
 .program-theme--double-impact .program-hero__waves--front {
-  z-index: 1;
+  z-index: 0;
   width: min(118rem, 146vw);
-  opacity: 0.95;
+  opacity: 0.75;
+  transform: translateX(-40%) translateX(-22%);
 }
 
 .program-theme--double-impact .program-hero__eyebrow,
 .program-preview__eyebrow,
 .program-preview__kicker {
   margin-bottom: 0.75rem;
-  color: var(--program-color-accent);
+  color: var(--program-color-surface);
   font-family: var(--program-font-display);
   font-size: 0.85rem;
   letter-spacing: 0.12em;
@@ -149,7 +161,8 @@
 
 .program-theme--double-impact .timetableblock .intermezzo,
 .program-theme--double-impact .timetableblock .program-item {
-  min-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .program-theme--double-impact .timetableblock .intermezzo {

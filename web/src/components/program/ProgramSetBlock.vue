@@ -57,7 +57,8 @@ export default defineComponent({
 
 .program-set {
   display: flex;
-  min-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
   flex-direction: column;
   padding: 1rem 2rem 2rem;
 }

@@ -6,17 +6,20 @@
     </header>
 
     <ProgramSongGrid :songs="songs" />
+    <ProgramFeedbackCTA />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import ProgramSongGrid from '@/components/program/ProgramSongGrid.vue';
+import ProgramFeedbackCTA from '@/components/program/ProgramFeedbackCTA.vue';
+
 import type { ProgramSongEntry } from '@/composables/useContent/program.types';
 
 export default defineComponent({
   name: 'ProgramSetBlock',
-  components: { ProgramSongGrid },
+  components: { ProgramSongGrid, ProgramFeedbackCTA },
   props: {
     sectionId: {
       type: String,

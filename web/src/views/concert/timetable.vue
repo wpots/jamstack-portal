@@ -4,13 +4,11 @@
       :title="getTimeTable.pageTitle"
       :eyebrow="getTimeTable.eyebrow"
       :lede="getTimeTable.intro"
+      :meta-items="metaItems"
     />
     <ProgramStatsCloud :programItems="getTimeTable.programItems" />
     <ProgramPageNavigation :sections="setSections" />
     <TimeTableBlock :cms="getTimeTable" />
-    <div class="container">
-      <FeedBackForm></FeedBackForm>
-    </div>
   </ProgramThemeProvider>
 </template>
 
@@ -20,8 +18,8 @@ import { useRoute } from 'vue-router';
 import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
 import { useContent } from '../../composables/useContent';
 import { useFeedback } from '../../composables/useFeedback';
-import FeedBackForm from '../../components/FeedBackForm.vue';
 import ProgramHero from '@/components/program/ProgramHero.vue';
+import { ProgramMetaItem } from '@/components/program/ProgramMeta.vue';
 import ProgramPageNavigation from '@/components/program/ProgramPageNavigation.vue';
 import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
 import ProgramThemeProvider from '@/components/program/ProgramThemeProvider.vue';
@@ -48,10 +46,27 @@ function createSectionSlug(value: string, fallback: string): string {
   return slug || fallback;
 }
 
+function formatConcertDate(value: string | undefined): string {
+  if (!value) {
+    return '';
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return new Intl.DateTimeFormat('nl-NL', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+
 export default defineComponent({
   components: {
     TimeTableBlock,
-    FeedBackForm,
     ProgramHero,
     ProgramPageNavigation,
     ProgramStatsCloud,
@@ -64,6 +79,26 @@ export default defineComponent({
     const { fetchSongRatings, getSongRatings } = useFeedback();
     const slug = computed(() => `${route.params.id || route.meta.previewConcertId || ''}`);
     const isDoubleImpactTheme = computed(() => slug.value === 'double-impact');
+    const metaItems = computed<ProgramMetaItem[]>(() => {
+      const items: ProgramMetaItem[] = [
+        {
+          term: 'onder leiding van',
+          description: 'Rolinde Zieverink',
+        },
+      ];
+      const concertDate = formatConcertDate(
+        'concertDatum' in getTimeTable.value ? getTimeTable.value.concertDatum : undefined,
+      );
+
+      if (concertDate) {
+        items.push({
+          term: 'Datum',
+          description: concertDate,
+        });
+      }
+
+      return items;
+    });
 
     const setSections = computed<ProgramPageNavigationSection[]>(() => {
       const seenIds = new Map<string, number>();
@@ -98,6 +133,7 @@ export default defineComponent({
       getSongRatings,
       getTimeTable,
       isDoubleImpactTheme,
+      metaItems,
       setSections,
       slug,
     };

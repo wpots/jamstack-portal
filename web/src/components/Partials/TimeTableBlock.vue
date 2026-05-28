@@ -371,6 +371,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 }
+
 .intermezzo {
   display: flex;
   width: 100%;

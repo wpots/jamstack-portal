@@ -8,6 +8,7 @@
       <p v-if="lede" class="program-hero__lede">
         {{ lede }}
       </p>
+      <ProgramMeta v-if="metaItems.length" :items="metaItems" class="program-hero__meta" />
     </div>
 
     <img
@@ -34,10 +35,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import ProgramMeta, { ProgramMetaItem } from './ProgramMeta.vue';
 
 export default defineComponent({
   name: 'ProgramHero',
+  components: {
+    ProgramMeta,
+  },
   props: {
     title: {
       type: String,
@@ -50,6 +55,10 @@ export default defineComponent({
     lede: {
       type: String,
       default: '',
+    },
+    metaItems: {
+      type: Array as PropType<ProgramMetaItem[]>,
+      default: () => [],
     },
   },
 });
@@ -101,6 +110,12 @@ export default defineComponent({
   text-shadow: 0 6px 18px rgba($black, 0.35);
 }
 
+.program-hero__meta {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 62rem);
+}
+
 @media (max-width: 767px) {
   .program-hero {
     min-height: 20rem;
@@ -114,6 +129,10 @@ export default defineComponent({
   .program-hero__lede {
     max-width: 22rem;
     font-size: 0.875rem;
+  }
+
+  .program-hero__meta {
+    width: 100%;
   }
 }
 </style>

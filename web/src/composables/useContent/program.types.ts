@@ -4,6 +4,7 @@ export interface ProgramPage {
   pageTitle?: string;
   eyebrow?: string;
   intro?: string;
+  concertDatum?: string;
   programItems: ProgramItem[];
 }
 

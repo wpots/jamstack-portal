@@ -4,6 +4,7 @@ query getProgramPageQuery($concertId: String!) {
       pageTitle
       eyebrow
       intro
+      concertDatum
       concertId
       programItemsCollection(limit: 20) {
         items {

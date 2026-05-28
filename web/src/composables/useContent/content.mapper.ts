@@ -22,6 +22,7 @@ interface ProgramPageEntry {
   pageTitle?: string;
   eyebrow?: string;
   intro?: string;
+  concertDatum?: string;
   programItemsCollection?: CollectionWithItems;
 }
 
@@ -225,6 +226,7 @@ const toDomain = {
       pageTitle: typeof page.pageTitle === 'string' ? page.pageTitle : undefined,
       eyebrow: typeof page.eyebrow === 'string' ? page.eyebrow : undefined,
       intro: typeof page.intro === 'string' ? page.intro : undefined,
+      concertDatum: typeof page.concertDatum === 'string' ? page.concertDatum : undefined,
       programItems: mapProgramPageItems(items),
     };
   },

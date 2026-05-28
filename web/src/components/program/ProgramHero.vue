@@ -61,7 +61,7 @@ export default defineComponent({
 
 .program-hero {
   position: relative;
-  padding: 8rem 0 4rem;
+  padding: 2rem 0 4rem;
   background:
     radial-gradient(circle at 12% 18%, rgba(255, 77, 157, 0.22), transparent 24%),
     radial-gradient(circle at 88% 12%, rgba(59, 236, 168, 0.18), transparent 22%),
@@ -112,8 +112,8 @@ export default defineComponent({
   }
 
   .program-hero__lede {
-    max-width: 16rem;
-    font-size: 0.92rem;
+    max-width: 22rem;
+    font-size: 0.875rem;
   }
 }
 </style>

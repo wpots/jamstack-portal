@@ -60,19 +60,27 @@ export default defineComponent({
       const valueRange = Math.max(maxValue - minValue, 1);
 
       return baseStats.map((stat, index) => {
-        const emphasis = (stat.value - minValue) / valueRange;
-        const scale = 0.94 + emphasis * 0.42;
-        const drift = 0.55 + emphasis * 0.35;
+        const emphasis = valueRange === 0 ? 0.5 : (stat.value - minValue) / valueRange;
+        const ratioToMax = stat.value / maxValue;
+        const sizeWeight = 0.35 + ratioToMax * 0.65;
+        const scale = 0.88 + sizeWeight * 0.34;
+        const drift = 0.14 + emphasis * 0.18;
+        const offsetX = -(index * 0.38 + (1 - ratioToMax) * 0.18);
+        const offsetY = (index % 2 === 0 ? -0.04 : 0.16) + index * 0.08 - emphasis * 0.08;
 
         return {
           ...stat,
           style: {
             '--program-stats-scale': scale.toFixed(2),
-            '--program-stats-offset-x': `${((index % 2 === 0 ? 1 : -1) * (0.2 + emphasis * 0.45)).toFixed(2)}rem`,
-            '--program-stats-offset-y': `${(-0.15 + index * 0.2 - emphasis * 0.18).toFixed(2)}rem`,
+            '--program-stats-font-size-min': `${(0.98 + sizeWeight * 0.28).toFixed(2)}rem`,
+            '--program-stats-font-size-max': `${(1.5 + sizeWeight * 0.92).toFixed(2)}rem`,
+            '--program-stats-padding-y': `${(0.48 + sizeWeight * 0.16).toFixed(2)}em`,
+            '--program-stats-padding-x': `${(0.96 + sizeWeight * 0.42).toFixed(2)}em`,
+            '--program-stats-offset-x': `${offsetX.toFixed(2)}rem`,
+            '--program-stats-offset-y': `${offsetY.toFixed(2)}rem`,
             '--program-stats-float-distance': `${drift.toFixed(2)}rem`,
-            '--program-stats-duration': `${(6.4 + index * 0.9 - emphasis * 0.8).toFixed(2)}s`,
-            '--program-stats-delay': `${(-1.1 * index).toFixed(2)}s`,
+            '--program-stats-duration': `${(11.5 + index * 1.4 - emphasis * 0.9).toFixed(2)}s`,
+            '--program-stats-delay': `${(-1.8 * index).toFixed(2)}s`,
           },
         };
       });
@@ -90,6 +98,7 @@ export default defineComponent({
   position: relative;
   z-index: 3;
   margin-top: -4rem;
+  margin-bottom: 2rem;
   padding: 0 1rem 1rem;
 }
 
@@ -97,32 +106,38 @@ export default defineComponent({
   display: flex;
   flex-wrap: wrap;
   gap: 0;
-  justify-content: center;
-  margin: 0 auto -2rem auto;
+  justify-content: flex-end;
+  margin: 0 0 -1.25rem auto;
   padding: 0;
   list-style: none;
   z-index: 2;
 }
 
 .program-stats-cloud__item {
-  margin: -0.3rem -0.35rem;
+  margin: -0.06rem -0.14rem;
 }
 
 .program-stats-cloud__pill {
   display: inline-flex;
   align-items: baseline;
   gap: 0.25rem;
-  padding: 0.6em 1.15em;
+  justify-content: flex-end;
+  padding: var(--program-stats-padding-y, 0.58em) var(--program-stats-padding-x, 1.1em);
   border-radius: 999px;
   color: vars.$white;
   font-family: var(--program-font-display, #{vars.$font-fam-heading});
-  font-size: clamp(1.1rem, 2vw + 0.3rem, 2.4rem);
+  font-size: clamp(
+    var(--program-stats-font-size-min, 1rem),
+    1.4vw + 0.65rem,
+    var(--program-stats-font-size-max, 2rem)
+  );
   line-height: 0.95;
   text-transform: uppercase;
   text-shadow: 1px 1px 3px rgba(vars.$black, 0.2);
   white-space: nowrap;
   mix-blend-mode: multiply;
   box-shadow: 0 14px 28px rgba(vars.$black, 0.12);
+  transform-origin: right center;
   transform: translate(var(--program-stats-offset-x, 0), var(--program-stats-offset-y, 0))
     scale(var(--program-stats-scale, 1));
   animation: stats-cloud-float var(--program-stats-duration, 6.5s) ease-in-out
@@ -176,16 +191,16 @@ export default defineComponent({
     padding: 0 0.75rem 0.75rem;
   }
 
-  .program-stats-cloud__list {
-    justify-content: flex-start;
-  }
-
   .program-stats-cloud__item {
-    margin: -0.15rem -0.2rem;
+    margin: -0.04rem -0.08rem;
   }
 
   .program-stats-cloud__pill {
-    font-size: clamp(1rem, 5vw, 1.8rem);
+    font-size: clamp(
+      calc(var(--program-stats-font-size-min, 1rem) * 0.94),
+      4.8vw,
+      calc(var(--program-stats-font-size-max, 2rem) * 0.8)
+    );
   }
 }
 

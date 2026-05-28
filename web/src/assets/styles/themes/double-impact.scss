@@ -116,14 +116,14 @@
   transform: translateX(-40%) translateX(-22%);
 }
 
-.program-theme--double-impact .program-hero h1,
-.program-preview__hero h1,
-.program-preview__section-header h2,
-.program-preview__spotlight-copy h2,
-.program-preview__editorial h2,
-.program-preview__note-block h2,
-.program-preview__pause-block h2 {
-  font-family: var(--program-font-display);
+.program-theme--double-impact .program-hero {
+  h1 {
+    font-family: var(--program-font-display);
+  }
+  .program-hero__eyebrow {
+    margin-bottom: 0;
+    color: rgba($white, 0.78);
+  }
 }
 
 .program-theme--double-impact .program-section-header {

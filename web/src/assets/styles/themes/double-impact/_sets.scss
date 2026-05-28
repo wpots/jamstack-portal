@@ -16,12 +16,20 @@
   .program-set__song-card,
   .program-set__song {
     display: flex;
-    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+    flex-flow: row wrap;
     height: 100%;
     overflow: hidden;
     background: $white;
     border-radius: 1rem;
     box-shadow: 0 16px 30px rgba($black, 0.08);
+    max-width: 100dvw;
+    &:only-of-type {
+      margin-left: -1rem;
+      margin-right: -1rem;
+    }
   }
 
   .program-set__song-art {
@@ -41,14 +49,22 @@
     object-fit: cover;
   }
 
-  .rating-item,
-  .program-set__custom-song {
-    width: 228px;
-    max-width: 228px;
-    min-height: 0;
-    overflow: hidden;
-    border-radius: 1rem;
-    box-shadow: 0 12px 24px rgba($black, 0.12);
+  // .rating-item,
+  // .program-set__custom-song {
+  //   width: 228px;
+  //   max-width: 228px;
+  //   min-height: 0;
+  //   overflow: hidden;
+  //   border-radius: 1rem;
+  //   box-shadow: 0 12px 24px rgba($black, 0.12);
+  // }
+
+  .rating-item__footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    gap: 1rem;
+    padding: 0 1rem 1rem;
   }
 
   .rating-item .song-meta {

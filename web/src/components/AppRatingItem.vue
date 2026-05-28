@@ -1,5 +1,6 @@
 <template>
   <article
+    v-bind="$attrs"
     class="rating-item"
     :class="{ 'rating-item--interactive': interactive, 'rating-item--rated': isRated }"
     :aria-controls="interactive ? dialogId : undefined"
@@ -117,6 +118,7 @@ function normalizeId(value: string) {
 
 export default defineComponent({
   name: 'AppRatingItem',
+  inheritAttrs: false,
   components: { AppSongCard },
   props: {
     song: {

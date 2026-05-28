@@ -1,10 +1,10 @@
 <template>
   <nav
     v-if="navigationItems.length"
-    class="program-page-navigation program-preview__nav"
+    class="program-page-navigation program-nav"
     aria-label="Programma navigatie"
   >
-    <div class="container-fluid program-preview__nav-inner">
+    <div class="container-fluid program-nav-inner">
       <a v-for="item in navigationItems" :key="item.id" :href="`#${item.id}`">
         {{ item.title }}
       </a>

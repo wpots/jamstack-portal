@@ -62,8 +62,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-
-
     const headerClass = computed(() => {
       return props.variant === 'knockout'
         ? 'program-section-header inverse'
@@ -131,18 +129,8 @@ export default defineComponent({
 
 .program-preview__text-block--knockout {
   padding: 2.5rem;
-  background: linear-gradient(135deg, $magenta, $black);
   color: $white;
   margin: 1rem -1rem;
-
-  .program-preview__kicker {
-    color: rgba($white, 0.78);
-  }
-
-  h2 {
-    margin-bottom: 0.5rem;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-  }
 }
 
 .program-preview__text-block--knockout.program-preview__text-block--with-image {

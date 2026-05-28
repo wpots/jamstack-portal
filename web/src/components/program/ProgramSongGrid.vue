@@ -70,6 +70,7 @@ export default defineComponent({
     display: flex;
     width: auto;
     overflow-x: auto;
+    overflow-y: hidden;
     overscroll-behavior-x: contain;
     margin-right: -1rem;
     padding-right: 1rem;

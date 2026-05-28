@@ -16,5 +16,5 @@ export default defineComponent({
 <style lang="scss">
 @use '@/assets/styles/common/variables' as *;
 @use '@/assets/styles/common/mixins' as *;
-@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One|Montserrat:400,700|Muli|Satisfy');
+@import url('https://fonts.googleapis.com/css?family=Julius+Sans+One|Montserrat:400,600,700|Muli|Satisfy');
 </style>

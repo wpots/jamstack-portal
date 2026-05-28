@@ -221,7 +221,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use '@/assets/styles/common/variables' as *;
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap');
 
 .program-booklet-preview {
   min-height: 100vh;
@@ -237,7 +237,7 @@ export default defineComponent({
 .program-booklet-preview__eyebrow {
   margin-bottom: 0.5rem;
   color: #ff4d9d;
-  font-family: 'Bebas Neue', $font-fam-heading;
+  font-family: $font-fam-program-display;
   font-size: 0.95rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -253,9 +253,13 @@ export default defineComponent({
 }
 
 .setlist--double-impact {
-  --program-font-display: 'Bebas Neue', $font-fam-heading;
-  --program-font-title: 'DM Serif Display', Georgia, serif;
-  --program-font-body: 'DM Sans', $font-fam-body;
+  --program-font-display: #{$font-fam-program-display};
+  --program-font-title: #{$font-fam-program-title};
+  --program-font-body: #{$font-fam-program-body};
+  --program-font-body-strong: #{$font-fam-program-body-strong};
+  --program-font-weight-title: #{$font-weight-program-title};
+  --program-font-weight-body: #{$font-weight-program-body};
+  --program-font-weight-body-strong: #{$font-weight-program-body-strong};
   --program-color-accent: #ff4d9d;
   --program-color-contrast: #1c1320;
   --program-color-surface: #fff8fc;

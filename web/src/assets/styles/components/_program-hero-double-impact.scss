@@ -1,6 +1,6 @@
 @use '@/assets/styles/common/variables' as *;
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap');
 
 .program-hero__waves,
 .program-hero__confetti {
@@ -45,9 +45,13 @@
 }
 
 .timetableblock--double-impact {
-  --program-font-display: 'Bebas Neue', #{$font-fam-heading};
-  --program-font-title: 'DM Serif Display', Georgia, serif;
-  --program-font-body: 'DM Sans', #{$font-fam-body};
+  --program-font-display: #{$font-fam-program-display};
+  --program-font-title: #{$font-fam-program-title};
+  --program-font-body: #{$font-fam-program-body};
+  --program-font-body-strong: #{$font-fam-program-body-strong};
+  --program-font-weight-title: #{$font-weight-program-title};
+  --program-font-weight-body: #{$font-weight-program-body};
+  --program-font-weight-body-strong: #{$font-weight-program-body-strong};
   --program-color-accent: #ff4d9d;
   --program-color-contrast: #1c1320;
   --program-color-surface: #fff8fc;
@@ -68,7 +72,7 @@
 .timetableblock--double-impact .program-hero h1 {
   font-family: var(--program-font-title, Georgia, serif);
   font-size: clamp(3.1rem, 9vw, 6.2rem);
-  font-weight: 400;
+  font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
   line-height: 0.88;
   letter-spacing: -0.03em;
   text-transform: none;

@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 // Glyphicons font path
 // $icon-font-path          : "../fonts/";
 
@@ -24,9 +24,22 @@ $magenta-tint60: color.mix($white, $magenta, 60%);
 
 // $brand-primary           : $black;
 //font families
-$font-fam-heading: "Julius Sans One", serif;
-$font-fam-body: "Muli", sans-serif;
-$font-fam-nav: "Montserrat", sans-serif;
+$font-fam-heading: 'Julius Sans One', serif;
+$font-fam-body: 'Montserrat', sans-serif;
+$font-fam-body-strong: $font-fam-body;
+$font-fam-nav: $font-fam-body;
+
+$font-weight-body: 400;
+$font-weight-body-strong: 600;
+
+$font-fam-program-display: 'Bebas Neue', $font-fam-heading;
+$font-fam-program-title: $font-fam-body-strong;
+$font-fam-program-body: $font-fam-body;
+$font-fam-program-body-strong: $font-fam-body-strong;
+
+$font-weight-program-title: $font-weight-body-strong;
+$font-weight-program-body: $font-weight-body;
+$font-weight-program-body-strong: $font-weight-body-strong;
 
 //links
 $link-color: $black;

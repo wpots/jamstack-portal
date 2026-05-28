@@ -3,7 +3,7 @@
   flex-flow: row nowrap;
   align-content: center;
   font-family: $font-fam-nav;
-  font-weight: 700;
+  font-weight: $font-weight-body-strong;
   text-transform: uppercase;
 
   .brand {

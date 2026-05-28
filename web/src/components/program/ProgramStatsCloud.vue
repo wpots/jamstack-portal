@@ -122,10 +122,8 @@ export default defineComponent({
   white-space: nowrap;
   mix-blend-mode: multiply;
   box-shadow: 0 14px 28px rgba(vars.$black, 0.12);
-  transform: translate(
-      var(--program-stats-offset-x, 0),
-      var(--program-stats-offset-y, 0)
-    ) scale(var(--program-stats-scale, 1));
+  transform: translate(var(--program-stats-offset-x, 0), var(--program-stats-offset-y, 0))
+    scale(var(--program-stats-scale, 1));
   animation: stats-cloud-float var(--program-stats-duration, 6.5s) ease-in-out
     var(--program-stats-delay, 0s) infinite;
   will-change: transform;
@@ -159,20 +157,16 @@ export default defineComponent({
 @keyframes stats-cloud-float {
   0%,
   100% {
-    transform: translate(
-        var(--program-stats-offset-x, 0),
-        var(--program-stats-offset-y, 0)
-      ) scale(var(--program-stats-scale, 1));
+    transform: translate(var(--program-stats-offset-x, 0), var(--program-stats-offset-y, 0))
+      scale(var(--program-stats-scale, 1));
   }
 
   50% {
     transform: translate(
         var(--program-stats-offset-x, 0),
-        calc(
-          var(--program-stats-offset-y, 0) -
-            var(--program-stats-float-distance, 0.65rem)
-        )
-      ) scale(var(--program-stats-scale, 1));
+        calc(var(--program-stats-offset-y, 0) - var(--program-stats-float-distance, 0.65rem))
+      )
+      scale(var(--program-stats-scale, 1));
   }
 }
 

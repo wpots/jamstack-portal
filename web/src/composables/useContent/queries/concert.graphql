@@ -8,6 +8,7 @@ query getConcertPageQuery($slug: String!) {
         items {
           ... on TeaserBlock {
             __typename
+            eyebrow
             title
             backgroundImage {
               url
@@ -17,6 +18,7 @@ query getConcertPageQuery($slug: String!) {
             columnContentCollection(limit: 2) {
               items {
                 ... on ContentTypeRichText {
+                  eyebrow
                   title
                   body {
                     json

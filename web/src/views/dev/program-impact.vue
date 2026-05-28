@@ -180,6 +180,7 @@ interface TeaserMedia {
 }
 
 interface TeaserCms {
+  eyebrow?: string;
   title?: string;
   backgroundImage?: TeaserMedia;
   columnContentCollection?: {
@@ -312,6 +313,10 @@ function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): s
   return firstColumnTitle || `Teaser ${occurrence}`;
 }
 
+function resolveEyebrow(value: unknown, fallback: string): string {
+  return typeof value === 'string' && value.trim() ? value : fallback;
+}
+
 function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlock {
   const title = item.title || `Set ${occurrence}`;
 
@@ -342,7 +347,7 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Preview
   return {
     id: `${slugify(title)}-${occurrence}`,
     type: isPause ? 'pause' : 'note',
-    kicker: isPause ? 'Pauze' : 'Tussenstuk',
+    kicker: resolveEyebrow(item.eyebrow, isPause ? 'Pauze' : 'Tussenstuk'),
     title,
     description,
     variant: isPause ? 'knockout' : 'default',
@@ -358,7 +363,7 @@ function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): Preview
   return {
     id: `${slugify(title)}-${occurrence}`,
     type: 'teaser',
-    kicker: 'Teaser',
+    kicker: resolveEyebrow(teaser?.eyebrow, 'Teaser'),
     title,
     description: descriptions[0] || 'Visueel tussenblok met beeld en copy uit de teasercomponent.',
     descriptions,

@@ -145,6 +145,7 @@ const mapProgramPageItems = (items: unknown[]): ProgramItem[] => {
       return [
         {
           type: 'richText',
+          eyebrow: typeof item.eyebrow === 'string' ? item.eyebrow : undefined,
           title: typeof item.title === 'string' ? item.title : undefined,
           body: item.body as { json: Record<string, unknown> },
           ticketForm: typeof item.ticketForm === 'boolean' ? item.ticketForm : undefined,

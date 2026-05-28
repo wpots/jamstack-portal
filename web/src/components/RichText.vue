@@ -1,5 +1,6 @@
 <template>
   <div class="rich-text">
+    <p v-if="cms.eyebrow" class="rich-text__eyebrow">{{ cms.eyebrow }}</p>
     <h1 v-if="cms.title">{{ cms.title }}</h1>
     <ContentfulRichText :document="cms.body" />
     <EmbeddedTicketForms v-if="embeddedForms" :cms="embeddedForms" />
@@ -36,6 +37,14 @@ export default defineComponent({
 @use "@/assets/styles/common/variables" as *;
 @use "@/assets/styles/common/mixins" as *;
 .rich-text {
+  &__eyebrow {
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.72;
+  }
+
   &.drop div:only-child {
     margin-top: 256px;
   }

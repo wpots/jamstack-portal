@@ -151,7 +151,6 @@ export default defineComponent({
       selected: null as number | null,
     });
     const { getSongRatings, resolveSongRating, setUserRating, isRatedSong } = useFeedback();
-
     const songTitle = computed(() => props.song?.title || 'Onbekend nummer');
     const songArtist = computed(() => props.song?.artist || '');
     const songAlbumArt = computed(() => {
@@ -287,6 +286,7 @@ export default defineComponent({
       isRated,
       loading,
       modal,
+      openModal,
       rateSelect,
       ratedClass,
       ratedMask,
@@ -504,22 +504,14 @@ export default defineComponent({
 .rating-item--program-preview {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.75rem 1rem;
+  gap: 0.5rem 0.9rem;
+  align-items: center;
   width: 100%;
   max-width: none;
-  padding: 1.25rem 1.25rem 1rem;
+  padding: 0;
   margin-top: 0;
-  border-radius: 0;
-  border: 0;
-  box-shadow: 0 10px 24px rgba($black, 0.12);
-
-  & > * {
-    flex: initial;
-  }
-
-  .song-meta {
-    display: none;
-  }
+  background: transparent;
+  box-shadow: none;
 
   .rating-summary {
     display: flex;
@@ -540,42 +532,64 @@ export default defineComponent({
   }
 
   .icon-heart {
-    --icon-size: 1.7rem;
+    --icon-size: 1.35rem;
   }
 
   .meta {
     margin-left: 0;
-    font-size: 2.2rem;
+    font-size: 1.2rem;
     line-height: 1;
     color: $tundora;
     font-style: normal;
   }
 
   .muted {
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     color: rgba($tundora, 0.45);
+    font-style: italic;
+  }
+}
+
+.rating-item__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
+.rating-trigger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: 2px solid rgba($black, 0.75);
+  background: $white;
+  color: rgba($black, 0.85);
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid $magenta;
+    outline-offset: 3px;
   }
 
   .icon-change,
   .icon-add {
-    width: 3rem;
-    height: 3rem;
-    padding: 0.85rem;
+    width: 1.2rem;
+    height: 1.2rem;
     margin: 0;
-    border: 2px solid rgba($black, 0.65);
-    justify-self: end;
-    align-self: center;
-    fill: rgba($black, 0.85);
-    background: $white;
+    padding: 0;
+    border: 0;
+    fill: currentColor;
   }
+}
 
-  .fancy {
-    position: static;
-    align-self: center;
-    margin-right: 0.35rem;
-    font-size: 1.05rem;
-    transform: rotate(-12deg);
-  }
+.rating-item--program-preview .fancy {
+  position: static;
+  margin: 0;
+  font-size: 1.05rem;
+  transform: rotate(-12deg);
 }
 
 .modal--program-preview {
@@ -690,11 +704,11 @@ export default defineComponent({
     grid-template-columns: minmax(0, 1fr) auto;
 
     .meta {
-      font-size: 1.9rem;
+      font-size: 1.05rem;
     }
 
     .muted {
-      font-size: 0.82rem;
+      font-size: 0.7rem;
     }
   }
 

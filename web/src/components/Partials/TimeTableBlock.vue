@@ -72,6 +72,7 @@ interface TeaserMedia {
 }
 
 interface TeaserCms {
+  eyebrow?: string;
   title?: string;
   backgroundImage?: TeaserMedia;
   columnContentCollection?: {
@@ -162,6 +163,10 @@ function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): s
   return firstColumnTitle || `Teaser ${occurrence}`;
 }
 
+function resolveEyebrow(value: unknown, fallback: string): string {
+  return typeof value === 'string' && value.trim() ? value : fallback;
+}
+
 function createTextBlock(item: ProgramRichTextItem, occurrence: number): ProgramTextBlockProps {
   const title = item.title || `Tussenstuk ${occurrence}`;
   const isPause = title.toLowerCase() === 'pauze';
@@ -172,7 +177,7 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Program
 
   return {
     variant: isPause ? 'knockout' : 'default',
-    kicker: isPause ? 'Pauze' : 'Tussenstuk',
+    kicker: resolveEyebrow(item.eyebrow, isPause ? 'Pauze' : 'Tussenstuk'),
     title,
     description,
   };
@@ -186,7 +191,7 @@ function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): Program
 
   return {
     variant: 'knockout',
-    kicker: 'Teaser',
+    kicker: resolveEyebrow(teaser?.eyebrow, 'Teaser'),
     title,
     description: descriptions[0] || 'Visueel tussenblok met beeld en copy uit de teasercomponent.',
     descriptions,

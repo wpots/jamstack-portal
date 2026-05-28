@@ -9,6 +9,7 @@ query getProgramPageQuery($concertId: String!) {
         items {
           __typename
           ... on ContentTypeRichText {
+            eyebrow
             title
             body {
               json
@@ -17,6 +18,7 @@ query getProgramPageQuery($concertId: String!) {
             embeddedYouTubeId
           }
           ... on TeaserBlock {
+            eyebrow
             title
             fullWidth
             backgroundImage {
@@ -27,6 +29,7 @@ query getProgramPageQuery($concertId: String!) {
               items {
                 __typename
                 ... on ContentTypeRichText {
+                  eyebrow
                   title
                   body {
                     json

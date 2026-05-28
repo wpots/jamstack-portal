@@ -9,6 +9,7 @@ export interface ProgramPage {
 
 export interface ProgramRichTextItem {
   type: 'richText';
+  eyebrow?: string;
   title?: string;
   body: {
     json: Record<string, unknown>;

@@ -1,6 +1,10 @@
 <template>
   <div class="setlist">
     <TimeTableBlock :cms="{ pageTitle, introduction, firstSetlist, intermezzo, lastSetlist }" />
+    <div class="container" v-if="upcomingEventsCms.length > 0">
+      <h2>Aankomende evenementen</h2>
+      <EventList :cms="upcomingEventsCms" />
+    </div>
     <div class="container">
       <FeedBackForm></FeedBackForm>
     </div>
@@ -14,24 +18,39 @@ import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
 import { useContent } from '../../composables/useContent';
 import { useFeedback } from '../../composables/useFeedback';
 import FeedBackForm from '../../components/FeedBackForm.vue';
+import EventList from '../../components/EventList.vue';
 
 export default defineComponent({
-  components: { TimeTableBlock, FeedBackForm },
+  components: { TimeTableBlock, FeedBackForm, EventList },
   name: 'TimeTablePage',
   setup() {
     const route = useRoute();
     const { getTimeTable } = useContent('timetable', { route });
+    const { getHomepage } = useContent('home');
     const { fetchSongRatings, getSongRatings } = useFeedback();
     const pageTitle = computed(() => getTimeTable.value.pageTitle);
     const introduction = computed(() => getTimeTable.value.introduction);
     const intermezzo = computed(() => getTimeTable.value.intermezzo);
     const firstSetlist = computed(() => getTimeTable.value.firstSetlist);
     const lastSetlist = computed(() => getTimeTable.value.lastSetList);
+    const upcomingEventsCms = computed(
+      () =>
+        getHomepage.value?.find(contentEntry => contentEntry?.eventlistCollection?.items?.length > 0)
+          ?.eventlistCollection?.items ?? [],
+    );
     onMounted(async () => {
       if (!getSongRatings.value) await fetchSongRatings();
     });
 
-    return { pageTitle, introduction, firstSetlist, intermezzo, lastSetlist, getSongRatings };
+    return {
+      pageTitle,
+      introduction,
+      firstSetlist,
+      intermezzo,
+      lastSetlist,
+      getSongRatings,
+      upcomingEventsCms,
+    };
   },
 });
 </script>

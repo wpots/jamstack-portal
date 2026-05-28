@@ -17,10 +17,6 @@
     >
       <article class="program-preview__feedback-modal-card">
         <header class="program-preview__feedback-modal-header">
-          <div>
-            <p class="program-preview__feedback-modal-kicker">Feedback</p>
-            <h2 id="program-feedback-title">Laat je reactie achter</h2>
-          </div>
           <button
             type="button"
             class="program-preview__feedback-modal-close"
@@ -151,7 +147,7 @@ export default defineComponent({
     border-radius: 999px;
     background: var(--program-color-accent);
     color: $white;
-    font-family: var(--program-font-display);
+    font-family: var(--program-font-body);
     font-size: 0.75rem;
     cursor: pointer;
     white-space: nowrap;
@@ -186,13 +182,9 @@ export default defineComponent({
 .program-preview__feedback-modal-header {
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 1rem;
   margin-bottom: 1rem;
-
-  h2 {
-    margin: 0;
-  }
 }
 
 .program-preview__feedback-modal-kicker {
@@ -229,6 +221,13 @@ export default defineComponent({
 
 :deep(.feedback-form h2) {
   margin-top: 0;
+  font-family: var(--program-font-display);
+}
+:deep(.form-submit) {
+  margin-top: 0;
+  font-family: var(--program-font-body);
+  border-radius: 999px;
+  background: $purple;
 }
 
 @media (max-width: 900px) {

@@ -1,7 +1,8 @@
 import { computed, ref } from 'vue';
 import { useStore } from '../../store';
 import fireBase from './firebase.js';
-import { getDatabase, ref as dbRef, child, push, update, get } from 'firebase/database';
+import { getDatabase, ref as dbRef, child, get } from 'firebase/database';
+import { getFeedbackAvailability } from './availability';
 
 export type FeedbackEntry = {
   id: string;
@@ -11,19 +12,78 @@ export type FeedbackEntry = {
 
 export type SongRating = {
   id: string;
-  average?: number | string | null | undefined;
+  rating?: number;
+  key?: string;
+  average?: number | string | null;
   votes?: {
     count: number;
     average?: number;
   };
 };
-const db = getDatabase(fireBase);
 
-const ratingMapper = result => {
+type FeedbackFormPayload = {
+  naam?: string | null;
+  tiptop: string;
+  website?: string;
+};
+
+type FeedbackResultMap = Record<string, FeedbackEntry>;
+type SongRatingResultMap = Record<string, Record<string, { rating: number }>>;
+
+const db = getDatabase(fireBase);
+const feedbackParticipantStorageKey = 'goed-gebekt-feedback-participant-id';
+
+function getApiPath(path: string) {
+  return `/api/v1/${path}`;
+}
+
+function createParticipantId() {
+  if (globalThis.window?.crypto?.randomUUID) {
+    return globalThis.window.crypto.randomUUID().replaceAll('-', '_');
+  }
+
+  return `participant_${Date.now()}_${Math.random().toString(36).slice(2, 12)}`;
+}
+
+function getParticipantId() {
+  if (globalThis.window === undefined) {
+    return createParticipantId();
+  }
+
+  const storedParticipantId = globalThis.window.localStorage.getItem(feedbackParticipantStorageKey);
+
+  if (storedParticipantId) {
+    return storedParticipantId;
+  }
+
+  const participantId = createParticipantId();
+  globalThis.window.localStorage.setItem(feedbackParticipantStorageKey, participantId);
+  return participantId;
+}
+
+async function postFeedbackRequest<T>(path: string, payload: Record<string, unknown>) {
+  const response = await fetch(getApiPath(path), {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const rawBody = await response.text();
+  const body = rawBody ? (JSON.parse(rawBody) as { message?: string } & T) : null;
+
+  if (!response.ok) {
+    throw new Error(body?.message || 'Er ging iets mis bij het versturen.');
+  }
+
+  return body;
+}
+
+const ratingMapper = (result: SongRatingResultMap) => {
   const ratings: SongRating[] = [];
   for (const songId in result) {
-    // @ts-ignore unknown
-    const votes = Object.values(result[songId]).map(vote => vote.rating);
+    const votes = Object.values(result[songId]).map((vote) => vote.rating);
     const averageVote = () => {
       const sum = votes.reduce((total, value) => total + value, 0);
       return sum / votes.length;
@@ -40,10 +100,13 @@ const ratingMapper = result => {
   return ratings;
 };
 
-const feedbackMapper = result => {
+const feedbackMapper = (result: FeedbackResultMap) => {
   const feedback: FeedbackEntry[] = [];
   for (const feedbackId in result) {
-    feedback.push(result[feedbackId]);
+    feedback.push({
+      id: feedbackId,
+      ...result[feedbackId],
+    });
   }
   return feedback;
 };
@@ -53,16 +116,14 @@ export function useFeedback() {
 
   const songRatings = ref<SongRating[] | null>(null);
   const getSongRatings = computed(() => store.state.feedback.allRatings);
-  const resolveSongRating = id => {
-    // @ts-ignore for later
-    if (getSongRatings?.value?.length > 0) {
-      // @ts-ignore for later
-      const votes = getSongRatings.value.find(s => s.id === id)?.votes;
+  const resolveSongRating = (id: string) => {
+    if (getSongRatings.value?.length) {
+      const votes = getSongRatings.value.find((song) => song.id === id)?.votes;
+
       if (votes?.average) {
-        const avg = Math.round(votes?.average * 10) / 10;
-        // @ts-ignore for later
-        const modulus = parseFloat(avg % 1);
-        const decimals = modulus !== 0 ? Math.round(modulus * 10) / 10 : false;
+        const avg = Math.round(votes.average * 10) / 10;
+        const modulus = avg % 1;
+        const decimals = modulus === 0 ? false : Math.round(modulus * 10) / 10;
         const percentage = decimals ? `${decimals * 100}%` : false;
 
         return {
@@ -74,69 +135,99 @@ export function useFeedback() {
         };
       }
     }
+
+    return null;
   };
 
-  const isRatedSong = id => store.getters['feedback/lookupSongRating'](id);
+  const isRatedSong = (id: string) => store.getters['feedback/lookupSongRating'](id);
 
-  const setUserRating = async songRating => {
+  const setUserRating = async (songRating: SongRating) => {
+    const { isVotingOpen } = getFeedbackAvailability();
+
+    if (isVotingOpen === false) {
+      throw new Error('Voting is momenteel gesloten.');
+    }
+
     const currentRating = isRatedSong(songRating.id);
-    const updates = {};
-    const postData = {
-      id: Date.now(),
-      rating: songRating.rating,
-    };
-    const postKey = currentRating?.key || push(child(dbRef(db), `songRatings`)).key;
+    const participantId = currentRating?.key || getParticipantId();
 
     try {
       if (!currentRating || currentRating.rating !== songRating.rating) {
-        updates[`songRatings/${songRating.id}/${postKey}`] = postData;
-        update(dbRef(db), updates);
-        songRating.key = songRating.key ?? postKey;
-        store.dispatch('feedback/setUserRating', songRating);
+        await postFeedbackRequest<{ key: string }>('submit-rating', {
+          participantId,
+          rating: songRating.rating,
+          songId: songRating.id,
+        });
+        songRating.key = songRating.key ?? participantId;
+        await store.dispatch('feedback/setUserRating', songRating);
       }
     } catch (error) {
       console.error('{SENDING SONG}', error);
+      throw error;
     }
-    fetchSongRatings();
+
+    await fetchSongRatings();
   };
 
   const fetchSongRatings = async () => {
     try {
-      const result = await get(child(dbRef(db), `songRatings`)).then(snapshot => {
+      const result = await get(child(dbRef(db), `songRatings`)).then((snapshot) => {
         if (snapshot.exists()) {
-          return ratingMapper(snapshot.val());
+          return ratingMapper(snapshot.val() as SongRatingResultMap);
         }
+
+        return [];
       });
-      store.dispatch('feedback/setAllRatings', result);
+
+      songRatings.value = result;
+      await store.dispatch('feedback/setAllRatings', result);
     } catch (error) {
       console.error('SongRatings', error);
+      throw error;
     }
   };
 
   const fetchFeedback = async () => {
     try {
-      const result = await get(child(dbRef(db), `feedback`)).then(snapshot => {
+      const result = await get(child(dbRef(db), `feedback`)).then((snapshot) => {
         if (snapshot.exists()) {
-          return feedbackMapper(snapshot.val());
+          return feedbackMapper(snapshot.val() as FeedbackResultMap);
         }
+
+        return [];
       });
-      store.dispatch('feedback/setAllFeedback', result);
+
+      await store.dispatch('feedback/setAllFeedback', result);
     } catch (error) {
       console.error('Feedback', error);
+      throw error;
     }
   };
 
   const getFeedback = computed(() => store.state.feedback.allFeedback);
 
-  const sendFeedbackForm = async form => {
-    form.date = Date.now();
+  const sendFeedbackForm = async (form: FeedbackFormPayload) => {
+    const { isFeedbackOpen } = getFeedbackAvailability();
+    const trimmedMessage = form.tiptop?.trim();
+    const trimmedName = form.naam?.trim() || '';
+
+    if (isFeedbackOpen === false) {
+      throw new Error('Feedback is momenteel gesloten.');
+    }
+
+    if (!trimmedMessage) {
+      throw new Error('Vul eerst een bericht in.');
+    }
+
     try {
-      const key = push(child(dbRef(db), 'feedback')).key;
-      const updates = {};
-      updates[`feedback/${key}`] = form;
-      await update(dbRef(db), updates);
+      return await postFeedbackRequest<{ id: string }>('submit-feedback', {
+        naam: trimmedName || null,
+        tiptop: trimmedMessage,
+        website: form.website || '',
+      });
     } catch (error) {
       console.error('Feedback', error);
+      throw error;
     }
   };
 

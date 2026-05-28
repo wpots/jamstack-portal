@@ -1,56 +1,31 @@
 <template>
-  <div :class="['program-hero', { 'program-preview__hero': isDoubleImpactTheme }]">
-    <div
-      :class="[
-        'program-hero__copy',
-        'container-fluid',
-        { 'program-preview__hero-content': isDoubleImpactTheme },
-      ]"
-    >
-      <p
-        v-if="eyebrow"
-        :class="['program-hero__eyebrow', { 'program-preview__eyebrow': isDoubleImpactTheme }]"
-      >
+  <div class="program-hero">
+    <div class="program-hero__copy container-fluid">
+      <p v-if="eyebrow" class="program-hero__eyebrow">
         {{ eyebrow }}
       </p>
       <h1>{{ title }}</h1>
-      <p
-        v-if="lede"
-        :class="['program-hero__lede', { 'program-preview__lede': isDoubleImpactTheme }]"
-      >
+      <p v-if="lede" class="program-hero__lede">
         {{ lede }}
       </p>
     </div>
 
     <img
-      v-if="isDoubleImpactTheme"
-      :class="['program-hero__confetti', { 'program-preview__confetti': isDoubleImpactTheme }]"
+      class="program-hero__confetti"
       src="/img/concerts/2026DuoConcert%20confetti.svg"
       alt=""
       aria-hidden="true"
     />
 
     <img
-      v-if="isDoubleImpactTheme"
-      :class="[
-        'program-hero__waves',
-        'program-hero__waves--back',
-        'program-preview__waves',
-        'program-preview__waves--back',
-      ]"
+      class="program-hero__waves program-hero__waves--back"
       src="/img/concerts/2026DuoConcert%20waves.svg"
       alt=""
       aria-hidden="true"
     />
 
     <img
-      v-if="isDoubleImpactTheme"
-      :class="[
-        'program-hero__waves',
-        'program-hero__waves--front',
-        'program-preview__waves',
-        'program-preview__waves--front',
-      ]"
+      class="program-hero__waves program-hero__waves--front"
       src="/img/concerts/2026DuoConcert%20waves2.svg"
       alt=""
       aria-hidden="true"
@@ -59,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'ProgramHero',
@@ -76,21 +51,13 @@ export default defineComponent({
       type: String,
       default: '',
     },
-    themeSlug: {
-      type: String,
-      default: '',
-    },
-  },
-  setup(props) {
-    const isDoubleImpactTheme = computed(() => props.themeSlug === 'double-impact');
-
-    return { isDoubleImpactTheme };
   },
 });
 </script>
 
 <style lang="scss">
 @use '@/assets/styles/common/variables' as *;
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap');
 
 .program-hero {
   position: relative;
@@ -102,6 +69,7 @@ export default defineComponent({
   color: $white;
   overflow: hidden;
 }
+
 .program-hero::after {
   content: '';
   position: absolute;
@@ -110,10 +78,16 @@ export default defineComponent({
   background: linear-gradient(180deg, transparent, rgba($black, 0.65));
   pointer-events: none;
 }
+
 .program-hero__copy {
   position: relative;
   z-index: 1;
   max-width: 70rem;
+}
+
+.program-hero__confetti,
+.program-hero__waves {
+  display: none;
 }
 
 .program-hero__eyebrow {
@@ -128,8 +102,8 @@ export default defineComponent({
 .program-hero h1 {
   max-width: 10ch;
   margin-bottom: 1rem;
-  font-family: var(--program-font-title);
-  font-weight: 400;
+  font-family: var(--program-font-title, #{$font-fam-program-title});
+  font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
   text-shadow: 0 12px 30px rgba($black, 0.4);
   font-size: clamp(3.1rem, 8vw, 6.3rem);
   line-height: 0.88;

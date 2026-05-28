@@ -44,7 +44,7 @@ query getProgramPageQuery($concertId: String!) {
                 title
                 artist
                 imageUrl
-                linkedScore {
+                linkedRepertoire {
                   sys {
                     id
                   }

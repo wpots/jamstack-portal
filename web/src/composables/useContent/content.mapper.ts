@@ -166,7 +166,7 @@ const mapProgramPageItems = (items: unknown[]): ProgramItem[] => {
               title: typeof song.title === 'string' ? song.title : '',
               artist: typeof song.artist === 'string' ? song.artist : undefined,
               imageUrl: typeof song.imageUrl === 'string' ? song.imageUrl : undefined,
-              linkedScore: mapLinkedScore(song.linkedScore),
+              linkedScore: mapLinkedScore(song.linkedRepertoire),
             }))
             .filter((song) => song.title)
         : [];

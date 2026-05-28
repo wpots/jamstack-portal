@@ -1,9 +1,9 @@
 <template>
-  <transition-group class="block-list" name="flow-in" tag="ul">
-    <li v-for="(item, index) in setItems" class="songset" :key="index">
-      <ul v-if="item.songlist?.length > 0" class="songlist">
+  <transition-group class="block-list" name="flow-in" tag="div">
+    <div v-for="(item, index) in setItems" class="songset" :key="index">
+      <div v-if="item.songlist?.length > 0" class="songlist">
         <AppRatingItem v-for="(song, idx) in item.songlist" :key="idx" :song="song" />
-      </ul>
+      </div>
       <p v-else-if="item.description" class="content">{{ item.description }}</p>
       <AppSoundWave v-if="item.description" :size="item.waveSize" class="soundwave-element" />
       <div v-else class="soundwave-set">
@@ -14,7 +14,7 @@
           class="soundwave-element"
         />
       </div>
-    </li>
+    </div>
   </transition-group>
 </template>
 
@@ -62,7 +62,7 @@ p {
   list-style-type: none;
   display: flex;
 
-  & > li {
+  & > * {
     flex: 1;
   }
 }
@@ -93,7 +93,7 @@ p {
   align-items: center;
   list-style-type: initial;
 
-  & > li {
+  & > * {
     margin-left: -1.5rem;
 
     &:active,

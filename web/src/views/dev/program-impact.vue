@@ -1,5 +1,5 @@
 <template>
-  <div class="program-preview">
+  <ProgramThemeProvider class="program-preview" themeSlug="double-impact">
     <header class="program-preview__hero">
       <img
         class="program-preview__confetti"
@@ -93,42 +93,38 @@
           />
 
           <ProgramSongGrid :short-label="block.shortLabel" :songs="block.songs" />
-
-          <ProgramFeedbackCTA />
         </template>
 
         <ProgramTextBlock
-          v-else-if="block.type === 'note'"
-          kicker="Tussenstuk"
+          v-else
+          :variant="block.variant"
+          :kicker="block.kicker"
           :title="block.title"
           :description="block.description"
-        />
-
-        <ProgramTextBlock
-          v-else-if="block.type === 'pause'"
-          variant="knockout"
-          kicker="Pauze"
-          :title="block.title"
-          :description="block.description"
+          :descriptions="block.descriptions"
+          :image-src="block.imageSrc"
+          :media-alt="block.imageAlt"
         />
       </section>
     </main>
-  </div>
+  </ProgramThemeProvider>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import ProgramFeedbackCTA from '@/components/program/ProgramFeedbackCTA.vue';
 import ProgramMeta, { ProgramMetaItem } from '@/components/program/ProgramMeta.vue';
 import ProgramSetBlockHeader from '@/components/program/ProgramSetBlockHeader.vue';
 import ProgramSongGrid from '@/components/program/ProgramSongGrid.vue';
 import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
+import ProgramThemeProvider from '@/components/program/ProgramThemeProvider.vue';
 import ProgramTextBlock from '@/components/program/ProgramTextBlock.vue';
 import { getProgramPreviewPage } from '@/content/program-preview-data';
 import type {
+  LinkedScore,
   ProgramItem,
   ProgramRichTextItem,
   ProgramSetItem,
+  ProgramTeaserItem,
 } from '@/composables/useContent/program.types';
 
 interface RichTextNode {
@@ -143,8 +139,7 @@ interface ProgramSource {
 
 interface PreviewSong {
   title: string;
-  initials: string;
-  subtitle: string;
+  linkedScore: LinkedScore;
 }
 
 interface PreviewSetBlock {
@@ -159,12 +154,38 @@ interface PreviewSetBlock {
 
 interface PreviewTextBlock {
   id: string;
-  type: 'note' | 'pause';
+  type: 'note' | 'pause' | 'teaser';
+  kicker: string;
   title: string;
   description: string;
+  descriptions?: string[];
+  variant: 'default' | 'knockout';
+  imageSrc?: string;
+  imageAlt?: string;
 }
 
 type PreviewBlock = PreviewSetBlock | PreviewTextBlock;
+
+interface TeaserRichTextColumn {
+  __typename?: string;
+  title?: string;
+  body?: {
+    json?: RichTextNode;
+  };
+}
+
+interface TeaserMedia {
+  url?: string;
+  title?: string;
+}
+
+interface TeaserCms {
+  title?: string;
+  backgroundImage?: TeaserMedia;
+  columnContentCollection?: {
+    items?: TeaserRichTextColumn[];
+  };
+}
 
 const noteDescriptions: Record<string, string> = {
   'Praatje/overgang': 'Korte intro om het publiek mee te nemen in de opbouw van de avond.',
@@ -179,20 +200,46 @@ const sectionDescriptions: Record<string, string> = {
   'Goed Gebekt': 'Direct en punchy. Hier werkt de huidige kaart-esthetiek heel goed door.',
 };
 
+const songArtists: Record<string, string> = {
+  'fix you': 'Coldplay',
+  'virtual insanity': 'Jamiroquai',
+  skywalker: 'Miguel',
+  'greatest showman': 'The Greatest Showman',
+  'what happens': 'Artemisia',
+  espresso: 'Sabrina Carpenter',
+  'my immortal': 'Evanescence',
+  toxic: 'Britney Spears',
+  'no time to die': 'Billie Eilish',
+  flowers: 'Miley Cyrus',
+  human: "Rag'n'Bone Man",
+  multicolour: 'Son Mieux',
+  creep: 'Radiohead',
+  'no roots': 'Alice Merton',
+  'what about us': 'P!nk',
+  wings: 'Little Mix',
+};
+
 function slugify(value: string) {
   return value
     .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replaceAll(/[\u0300-\u036f]/g, '')
     .replaceAll(/[^a-z0-9]+/g, '-')
     .replaceAll(/(^-|-$)/g, '');
 }
 
-function initials(title: string) {
-  return title
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('');
+function createPreviewLinkedScore(title: string, setTitle: string): LinkedScore {
+  const artist = songArtists[title.toLowerCase()] || setTitle;
+  const previewId = slugify(`${setTitle}-${title}`);
+
+  return {
+    sys: {
+      id: `preview-${previewId}`,
+    },
+    title,
+    artist,
+  };
 }
 
 function extractRichText(node: RichTextNode | undefined): string {
@@ -226,6 +273,45 @@ function getProgramItems(source: ProgramSource | null): ProgramItem[] {
   return source && Array.isArray(source.programItems) ? source.programItems : [];
 }
 
+function isTeaserCms(value: unknown): value is TeaserCms {
+  return Boolean(value) && typeof value === 'object';
+}
+
+function getTeaserColumns(value: TeaserCms | undefined): TeaserRichTextColumn[] {
+  const items = value?.columnContentCollection?.items;
+
+  return Array.isArray(items) ? items : [];
+}
+
+function getTeaserMedia(value: TeaserCms | undefined): TeaserMedia | undefined {
+  const media = value?.backgroundImage;
+
+  if (!media || typeof media !== 'object') {
+    return undefined;
+  }
+
+  return media;
+}
+
+function extractTeaserDescriptions(value: TeaserCms | undefined): string[] {
+  return getTeaserColumns(value)
+    .filter((item) => item.__typename === 'ContentTypeRichText')
+    .map((item) => extractRichText(getRichTextNode(item.body?.json)))
+    .filter(Boolean);
+}
+
+function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): string {
+  if (value?.title) {
+    return value.title;
+  }
+
+  const firstColumnTitle = getTeaserColumns(value)
+    .map((item) => item.title)
+    .find((title): title is string => Boolean(title));
+
+  return firstColumnTitle || `Teaser ${occurrence}`;
+}
+
 function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlock {
   const title = item.title || `Set ${occurrence}`;
 
@@ -240,14 +326,14 @@ function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlo
       'Nieuwe sectie in het programma-boekje met ruimte voor beeld en typografie.',
     songs: item.songs.map((song) => ({
       title: song.title,
-      initials: initials(song.title),
-      subtitle: song.artist || `${title} live in concert`,
+      linkedScore: song.linkedScore || createPreviewLinkedScore(song.title, title),
     })),
   };
 }
 
 function createTextBlock(item: ProgramRichTextItem, occurrence: number): PreviewTextBlock {
   const title = item.title || `Tussenstuk ${occurrence}`;
+  const isPause = title.toLowerCase() === 'pauze';
   const description =
     extractRichText(getRichTextNode(item.body?.json)) ||
     noteDescriptions[title] ||
@@ -255,9 +341,30 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Preview
 
   return {
     id: `${slugify(title)}-${occurrence}`,
-    type: title.toLowerCase() === 'pauze' ? 'pause' : 'note',
+    type: isPause ? 'pause' : 'note',
+    kicker: isPause ? 'Pauze' : 'Tussenstuk',
     title,
     description,
+    variant: isPause ? 'knockout' : 'default',
+  };
+}
+
+function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): PreviewTextBlock {
+  const teaser = isTeaserCms(item.cms) ? item.cms : undefined;
+  const title = extractTeaserTitle(teaser, occurrence);
+  const backgroundImage = getTeaserMedia(teaser);
+  const descriptions = extractTeaserDescriptions(teaser);
+
+  return {
+    id: `${slugify(title)}-${occurrence}`,
+    type: 'teaser',
+    kicker: 'Teaser',
+    title,
+    description: descriptions[0] || 'Visueel tussenblok met beeld en copy uit de teasercomponent.',
+    descriptions,
+    variant: 'knockout',
+    imageSrc: backgroundImage?.url || '',
+    imageAlt: backgroundImage?.title || title,
   };
 }
 
@@ -275,6 +382,11 @@ function normalizeBlocks(items: ProgramItem[]): PreviewBlock[] {
 
     if (item.type === 'richText') {
       blocks.push(createTextBlock(item, occurrence));
+      return;
+    }
+
+    if (item.type === 'teaser') {
+      blocks.push(createTeaserBlock(item, occurrence));
     }
   });
 
@@ -284,11 +396,11 @@ function normalizeBlocks(items: ProgramItem[]): PreviewBlock[] {
 export default defineComponent({
   name: 'ProgramImpactPreviewPage',
   components: {
-    ProgramFeedbackCTA,
     ProgramMeta,
     ProgramSetBlockHeader,
     ProgramSongGrid,
     ProgramStatsCloud,
+    ProgramThemeProvider,
     ProgramTextBlock,
   },
   setup() {
@@ -370,14 +482,6 @@ export default defineComponent({
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap');
 
 .program-preview {
-  --program-font-display: #{$font-fam-program-display};
-  --program-font-title: #{$font-fam-program-title};
-  --program-font-body: #{$font-fam-program-body};
-  --program-font-body-strong: #{$font-fam-program-body-strong};
-  --program-font-weight-title: #{$font-weight-program-title};
-  --program-font-weight-body: #{$font-weight-program-body};
-  --program-font-weight-body-strong: #{$font-weight-program-body-strong};
-  --program-color-accent: #ff4d9d;
   min-height: 100vh;
   padding-bottom: 4rem;
   background:

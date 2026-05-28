@@ -47,6 +47,7 @@ export function useContent(id, ctx) {
   }));
   const { result: programPage } = useQuery(getProgramPageQuery, { concertId: slug }, () => ({
     enabled: enableQuery.timetable,
+    errorPolicy: 'all',
   }));
   const { result: repertoire } = useQuery(getRepertoirBlock, { anchor: 'ons-repertoire' }, () => ({
     enabled: enableQuery.repertoire,

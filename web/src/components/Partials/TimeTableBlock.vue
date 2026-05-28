@@ -1,17 +1,28 @@
 <template>
-  <section :class="['section timetableblock', themeClass]">
+  <section class="section timetableblock">
     <div class="container-fluid">
       <div class="row">
         <div class="col-12 timetableblock__content">
           <template v-for="(item, index) in cms.programItems" :key="index">
-            <RichText v-if="item.type === 'richText'" :cms="item" class="intermezzo" />
+            <div
+              v-if="isDoubleImpactTheme && item.type === 'richText'"
+              class="program-item program-item--text"
+            >
+              <ProgramTextBlock v-bind="createTextBlock(item, index + 1)" />
+            </div>
+            <div
+              v-else-if="isDoubleImpactTheme && item.type === 'teaser'"
+              class="program-item program-item--text"
+            >
+              <ProgramTextBlock v-bind="createTeaserBlock(item, index + 1)" />
+            </div>
+            <RichText v-else-if="item.type === 'richText'" :cms="item" class="intermezzo" />
             <TeaserBlock v-else-if="item.type === 'teaser'" :cms="item.cms" class="program-item" />
             <ProgramSetBlock
               v-else-if="item.type === 'set'"
               :sectionId="getSetSectionId(index)"
               :title="item.title"
               :songs="item.songs"
-              :themeSlug="themeSlug"
               class="program-item"
             />
           </template>
@@ -26,10 +37,14 @@ import { computed, defineComponent, PropType } from 'vue';
 import RichText from '../RichText.vue';
 import TeaserBlock from './TeaserBlock.vue';
 import ProgramSetBlock from '@/components/program/ProgramSetBlock.vue';
+import ProgramTextBlock from '@/components/program/ProgramTextBlock.vue';
+import { useProgramTheme } from '@/components/program/programTheme';
 import type {
   ProgramItem,
   ProgramPage,
+  ProgramRichTextItem,
   ProgramSetItem,
+  ProgramTeaserItem,
 } from '@/composables/useContent/program.types';
 
 interface ProgramPageNavigationSection {
@@ -37,8 +52,147 @@ interface ProgramPageNavigationSection {
   title: string;
 }
 
+interface RichTextNode {
+  nodeType?: string;
+  value?: string;
+  content?: RichTextNode[];
+}
+
+interface TeaserRichTextColumn {
+  __typename?: string;
+  title?: string;
+  body?: {
+    json?: RichTextNode;
+  };
+}
+
+interface TeaserMedia {
+  url?: string;
+  title?: string;
+}
+
+interface TeaserCms {
+  title?: string;
+  backgroundImage?: TeaserMedia;
+  columnContentCollection?: {
+    items?: TeaserRichTextColumn[];
+  };
+}
+
+interface ProgramTextBlockProps {
+  variant: 'default' | 'knockout';
+  kicker: string;
+  title: string;
+  description: string;
+  descriptions?: string[];
+  imageSrc?: string;
+  mediaAlt?: string;
+}
+
+const noteDescriptions: Record<string, string> = {
+  'Praatje/overgang': 'Korte intro om het publiek mee te nemen in de opbouw van de avond.',
+  Overgang: 'Licht, ritme en positionering wisselen. Goed moment voor een visuele overgang.',
+  'Praatje / bedankje': 'Afsluitend woord met ruimte voor bedankjes en een zachte landing.',
+  Pauze: 'Bar open, foyer aan en even ademhalen voor het tweede deel.',
+};
+
 function isProgramSetItem(item: ProgramItem): item is ProgramSetItem {
   return item.type === 'set';
+}
+
+function isTeaserCms(value: unknown): value is TeaserCms {
+  return Boolean(value) && typeof value === 'object';
+}
+
+function isRichTextNode(value: unknown): value is RichTextNode {
+  return Boolean(value) && typeof value === 'object';
+}
+
+function getRichTextNode(value: unknown): RichTextNode | undefined {
+  return isRichTextNode(value) ? value : undefined;
+}
+
+function extractRichText(node: RichTextNode | undefined): string {
+  if (!node) {
+    return '';
+  }
+
+  if (node.nodeType === 'text') {
+    return node.value || '';
+  }
+
+  return (node.content || [])
+    .map((child) => extractRichText(child))
+    .join(' ')
+    .trim();
+}
+
+function getTeaserColumns(value: TeaserCms | undefined): TeaserRichTextColumn[] {
+  const items = value?.columnContentCollection?.items;
+
+  return Array.isArray(items) ? items : [];
+}
+
+function getTeaserMedia(value: TeaserCms | undefined): TeaserMedia | undefined {
+  const media = value?.backgroundImage;
+
+  if (!media || typeof media !== 'object') {
+    return undefined;
+  }
+
+  return media;
+}
+
+function extractTeaserDescriptions(value: TeaserCms | undefined): string[] {
+  return getTeaserColumns(value)
+    .filter((item) => item.__typename === 'ContentTypeRichText')
+    .map((item) => extractRichText(getRichTextNode(item.body?.json)))
+    .filter(Boolean);
+}
+
+function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): string {
+  if (value?.title) {
+    return value.title;
+  }
+
+  const firstColumnTitle = getTeaserColumns(value)
+    .map((item) => item.title)
+    .find((title): title is string => Boolean(title));
+
+  return firstColumnTitle || `Teaser ${occurrence}`;
+}
+
+function createTextBlock(item: ProgramRichTextItem, occurrence: number): ProgramTextBlockProps {
+  const title = item.title || `Tussenstuk ${occurrence}`;
+  const isPause = title.toLowerCase() === 'pauze';
+  const description =
+    extractRichText(getRichTextNode(item.body?.json)) ||
+    noteDescriptions[title] ||
+    'Compact tekstblok voor een overgang, toelichting of ritmische onderbreking.';
+
+  return {
+    variant: isPause ? 'knockout' : 'default',
+    kicker: isPause ? 'Pauze' : 'Tussenstuk',
+    title,
+    description,
+  };
+}
+
+function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): ProgramTextBlockProps {
+  const teaser = isTeaserCms(item.cms) ? item.cms : undefined;
+  const title = extractTeaserTitle(teaser, occurrence);
+  const descriptions = extractTeaserDescriptions(teaser);
+  const backgroundImage = getTeaserMedia(teaser);
+
+  return {
+    variant: 'knockout',
+    kicker: 'Teaser',
+    title,
+    description: descriptions[0] || 'Visueel tussenblok met beeld en copy uit de teasercomponent.',
+    descriptions,
+    imageSrc: backgroundImage?.url || '',
+    mediaAlt: backgroundImage?.title || title,
+  };
 }
 
 function createSectionSlug(value: string, fallback: string): string {
@@ -57,6 +211,7 @@ function createSectionSlug(value: string, fallback: string): string {
 export default defineComponent({
   name: 'TimeTableBlock',
   components: {
+    ProgramTextBlock,
     RichText,
     TeaserBlock,
     ProgramSetBlock,
@@ -74,10 +229,9 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const isDoubleImpactTheme = computed(() => props.themeSlug === 'double-impact');
-    const themeClass = computed(() =>
-      isDoubleImpactTheme.value ? 'timetableblock--double-impact' : '',
-    );
+    const { themeSlug } = useProgramTheme();
+    const resolvedThemeSlug = computed(() => props.themeSlug || themeSlug.value);
+    const isDoubleImpactTheme = computed(() => resolvedThemeSlug.value === 'double-impact');
 
     const setSectionMap = computed(() => {
       const seenIds = new Map<string, number>();
@@ -112,10 +266,11 @@ export default defineComponent({
     };
 
     return {
+      createTeaserBlock,
+      createTextBlock,
       getSetSectionId,
       isDoubleImpactTheme,
       setSections,
-      themeClass,
     };
   },
 });
@@ -155,5 +310,11 @@ export default defineComponent({
 
 .program-item {
   min-width: 100vw;
+}
+
+.program-item--text {
+  display: flex;
+  justify-content: center;
+  padding: 1rem 2rem;
 }
 </style>

@@ -1,10 +1,9 @@
 <template>
-  <div :class="['setlist', `setlist--${slug}`]">
+  <ProgramThemeProvider :class="['setlist', `setlist--${slug}`]" :themeSlug="slug">
     <ProgramHero
       :title="getTimeTable.pageTitle"
       :eyebrow="getTimeTable.eyebrow"
       :lede="getTimeTable.intro"
-      :themeSlug="slug"
     />
     <ProgramPageNavigation
       :sections="setSections"
@@ -12,11 +11,11 @@
       :includeHighlights="isDoubleImpactTheme"
     />
     <ProgramStatsCloud :programItems="getTimeTable.programItems" />
-    <TimeTableBlock :cms="getTimeTable" :themeSlug="slug" />
+    <TimeTableBlock :cms="getTimeTable" />
     <div class="container">
       <FeedBackForm></FeedBackForm>
     </div>
-  </div>
+  </ProgramThemeProvider>
 </template>
 
 <script lang="ts">
@@ -29,6 +28,7 @@ import FeedBackForm from '../../components/FeedBackForm.vue';
 import ProgramHero from '@/components/program/ProgramHero.vue';
 import ProgramPageNavigation from '@/components/program/ProgramPageNavigation.vue';
 import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
+import ProgramThemeProvider from '@/components/program/ProgramThemeProvider.vue';
 import type { ProgramItem, ProgramSetItem } from '@/composables/useContent/program.types';
 
 interface ProgramPageNavigationSection {
@@ -59,6 +59,7 @@ export default defineComponent({
     ProgramHero,
     ProgramPageNavigation,
     ProgramStatsCloud,
+    ProgramThemeProvider,
   },
   name: 'TimeTablePage',
   setup() {

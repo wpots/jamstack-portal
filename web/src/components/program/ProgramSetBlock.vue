@@ -1,5 +1,5 @@
 <template>
-  <section :id="sectionId || undefined" :class="['program-set', themeClass]">
+  <section :id="sectionId || undefined" class="program-set">
     <header v-if="title" class="program-set__header">
       <h3>{{ title }}</h3>
     </header>
@@ -44,19 +44,10 @@ export default defineComponent({
       type: String,
       default: '',
     },
-    themeSlug: {
-      type: String,
-      default: '',
-    },
     songs: {
       type: Array as PropType<ProgramSongEntry[]>,
       default: () => [],
     },
-  },
-  setup(props) {
-    return {
-      themeClass: props.themeSlug === 'double-impact' ? 'program-set--double-impact' : '',
-    };
   },
 });
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="list__items" v-if="songs?.length > 0">
-    <transition-group class="list list--figure row shuffle" name="shuffle" tag="ul">
+    <transition-group class="list list--figure row shuffle" name="shuffle" tag="div">
       <component
         :is="componentType"
         :interactive="false"

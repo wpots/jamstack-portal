@@ -1,10 +1,12 @@
 <template>
   <div class="program-preview__feedback-bar">
-    <p>{{ message }}</p>
+    <p>{{ displayMessage }}</p>
     <button ref="triggerButton" type="button" @click="handleOpen">
       {{ buttonLabel }}
     </button>
+  </div>
 
+  <teleport to="body">
     <dialog
       ref="modal"
       class="program-preview__feedback-modal"
@@ -29,14 +31,14 @@
           </button>
         </header>
 
-        <FeedBackForm />
+        <FeedBackForm @submitted="handleSubmitted" />
       </article>
     </dialog>
-  </div>
+  </teleport>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, onBeforeUnmount, ref } from 'vue';
 import FeedBackForm from '@/components/FeedBackForm.vue';
 
 export default defineComponent({
@@ -55,9 +57,22 @@ export default defineComponent({
       default: 'Geef je mening',
     },
   },
-  setup(_, { emit }) {
+  setup(props, { emit }) {
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
+    const confirmationMessage = ref('');
+    let confirmationTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const displayMessage = computed(() => {
+      return confirmationMessage.value || props.message;
+    });
+
+    const clearConfirmationTimeout = () => {
+      if (confirmationTimeout) {
+        clearTimeout(confirmationTimeout);
+        confirmationTimeout = null;
+      }
+    };
 
     const handleOpen = () => {
       emit('click');
@@ -83,13 +98,29 @@ export default defineComponent({
       }
     };
 
+    const handleSubmitted = () => {
+      confirmationMessage.value = 'Bedankt, je feedback is verstuurd.';
+      clearConfirmationTimeout();
+      confirmationTimeout = setTimeout(() => {
+        confirmationMessage.value = '';
+        confirmationTimeout = null;
+      }, 4000);
+      handleClose();
+    };
+
+    onBeforeUnmount(() => {
+      clearConfirmationTimeout();
+    });
+
     return {
+      displayMessage,
       modal,
       triggerButton,
       handleOpen,
       handleClose,
       handleDialogClose,
       handleBackdropClick,
+      handleSubmitted,
     };
   },
 });

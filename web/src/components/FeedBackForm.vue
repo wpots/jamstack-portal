@@ -55,8 +55,9 @@ import { defineComponent, reactive, ref } from 'vue';
 
 export default defineComponent({
   name: 'FeedbackForm',
+  emits: ['submitted'],
 
-  setup() {
+  setup(_, { emit }) {
     const pending = ref(false);
     const cleanForm = {
       naam: null,
@@ -83,6 +84,7 @@ export default defineComponent({
     const onSubmit = async () => {
       await sendFeedbackForm(form);
       onSuccessFulSubmit();
+      emit('submitted');
     };
 
     return { form, onSubmit, response, pending };

@@ -1,12 +1,12 @@
 <template>
   <main class="program-booklet-preview">
-    <div class="setlist setlist--double-impact">
-      <TimeTableBlock :cms="programPage" themeSlug="double-impact" />
+    <ProgramThemeProvider class="setlist setlist--double-impact" themeSlug="double-impact">
+      <TimeTableBlock :cms="programPage" />
 
       <div class="container">
         <FeedBackForm />
       </div>
-    </div>
+    </ProgramThemeProvider>
   </main>
 </template>
 
@@ -14,6 +14,7 @@
 import { computed, defineComponent } from 'vue';
 import FeedBackForm from '@/components/FeedBackForm.vue';
 import TimeTableBlock from '@/components/Partials/TimeTableBlock.vue';
+import ProgramThemeProvider from '@/components/program/ProgramThemeProvider.vue';
 import { getProgramPreviewData } from '@/content/program-preview-data';
 import type {
   ProgramItem,
@@ -205,6 +206,7 @@ export default defineComponent({
   name: 'ProgramBookletPreviewPage',
   components: {
     FeedBackForm,
+    ProgramThemeProvider,
     TimeTableBlock,
   },
   setup() {
@@ -250,19 +252,6 @@ export default defineComponent({
 .program-booklet-preview__intro p:last-child {
   max-width: 42rem;
   margin-bottom: 0;
-}
-
-.setlist--double-impact {
-  --program-font-display: #{$font-fam-program-display};
-  --program-font-title: #{$font-fam-program-title};
-  --program-font-body: #{$font-fam-program-body};
-  --program-font-body-strong: #{$font-fam-program-body-strong};
-  --program-font-weight-title: #{$font-weight-program-title};
-  --program-font-weight-body: #{$font-weight-program-body};
-  --program-font-weight-body-strong: #{$font-weight-program-body-strong};
-  --program-color-accent: #ff4d9d;
-  --program-color-contrast: #1c1320;
-  --program-color-surface: #fff8fc;
 }
 
 .setlist--double-impact :deep(.container) {

@@ -13,20 +13,7 @@
         <p class="program-preview__lede">
           {{ hero.description }}
         </p>
-        <dl class="program-preview__meta">
-          <div>
-            <dt>onder leiding van</dt>
-            <dd>Rolinde Zieverink</dd>
-          </div>
-          <div>
-            <dt>Locatie</dt>
-            <dd>{{ hero.venue }}</dd>
-          </div>
-          <div>
-            <dt>Datum</dt>
-            <dd>{{ hero.date }}</dd>
-          </div>
-        </dl>
+        <ProgramMeta :items="heroMeta" />
       </div>
       <img
         class="program-preview__waves program-preview__waves--back"
@@ -64,20 +51,7 @@
           </p>
         </article>
 
-        <aside class="program-preview__stats">
-          <div class="program-preview__stat-card">
-            <span>{{ totals.songCount }}</span>
-            <small>nummers</small>
-          </div>
-          <div class="program-preview__stat-card">
-            <span>{{ totals.setCount }}</span>
-            <small>sets</small>
-          </div>
-          <div class="program-preview__stat-card">
-            <span>{{ totals.ensembleCount }}</span>
-            <small>ensembles</small>
-          </div>
-        </aside>
+        <ProgramStatsCloud :programItems="programItems" />
       </section>
 
       <section id="spotlight" class="program-preview__spotlight container-fluid">
@@ -111,60 +85,32 @@
         class="program-preview__section container-fluid"
       >
         <template v-if="block.type === 'set'">
-          <header class="program-preview__section-header">
-            <div>
-              <p class="program-preview__kicker">{{ block.ensembleLabel }}</p>
-              <h2>{{ block.title }}</h2>
-            </div>
-            <div class="program-preview__section-note">
-              <p>{{ block.description }}</p>
-              <small>Mobiel eerst: compacte kaarten, tap om te stemmen, swipe voor de rest.</small>
-            </div>
-          </header>
+          <ProgramSetBlockHeader
+            :kicker="block.ensembleLabel"
+            :title="block.title"
+            :description="block.description"
+            note="Mobiel eerst: compacte kaarten, tap om te stemmen, swipe voor de rest."
+          />
 
-          <div class="program-preview__song-grid">
-            <article
-              v-for="(song, index) in block.songs"
-              :key="`${song.title}-${index}`"
-              class="program-preview__song-card"
-              :class="`tone-${index % 4}`"
-            >
-              <div class="program-preview__song-art">
-                <span>{{ song.initials }}</span>
-              </div>
-              <div class="program-preview__song-copy">
-                <p>{{ block.shortLabel }}</p>
-                <h3>{{ song.title }}</h3>
-                <small>{{ song.subtitle }}</small>
-              </div>
-              <footer class="program-preview__song-actions">
-                <div class="program-preview__vote-pill" aria-hidden="true">
-                  <span>♥</span>
-                  <span>♥</span>
-                  <span>♥</span>
-                </div>
-                <small>Tap om te stemmen</small>
-              </footer>
-            </article>
-          </div>
+          <ProgramSongGrid :short-label="block.shortLabel" :songs="block.songs" />
 
-          <div class="program-preview__feedback-bar">
-            <p>Na deze set: snelle vote + open feedback blijft beschikbaar.</p>
-            <button type="button">Geef je mening</button>
-          </div>
+          <ProgramFeedbackCTA />
         </template>
 
-        <article v-else-if="block.type === 'note'" class="program-preview__note-block">
-          <p class="program-preview__kicker">Tussenstuk</p>
-          <h2>{{ block.title }}</h2>
-          <p>{{ block.description }}</p>
-        </article>
+        <ProgramTextBlock
+          v-else-if="block.type === 'note'"
+          kicker="Tussenstuk"
+          :title="block.title"
+          :description="block.description"
+        />
 
-        <article v-else-if="block.type === 'pause'" class="program-preview__pause-block">
-          <p>Pauze</p>
-          <h2>{{ block.title }}</h2>
-          <small>{{ block.description }}</small>
-        </article>
+        <ProgramTextBlock
+          v-else-if="block.type === 'pause'"
+          variant="knockout"
+          kicker="Pauze"
+          :title="block.title"
+          :description="block.description"
+        />
       </section>
     </main>
   </div>
@@ -172,7 +118,13 @@
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
-import { getProgramOverride } from '@/content/program-overrides';
+import ProgramFeedbackCTA from '@/components/program/ProgramFeedbackCTA.vue';
+import ProgramMeta, { ProgramMetaItem } from '@/components/program/ProgramMeta.vue';
+import ProgramSetBlockHeader from '@/components/program/ProgramSetBlockHeader.vue';
+import ProgramSongGrid from '@/components/program/ProgramSongGrid.vue';
+import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
+import ProgramTextBlock from '@/components/program/ProgramTextBlock.vue';
+import { getProgramPreviewPage } from '@/content/program-preview-data';
 import type {
   ProgramItem,
   ProgramRichTextItem,
@@ -271,7 +223,7 @@ function isProgramSource(value: unknown): value is ProgramSource {
 }
 
 function getProgramItems(source: ProgramSource | null): ProgramItem[] {
-  return Array.isArray(source?.programItems) ? source.programItems : [];
+  return source && Array.isArray(source.programItems) ? source.programItems : [];
 }
 
 function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlock {
@@ -331,12 +283,21 @@ function normalizeBlocks(items: ProgramItem[]): PreviewBlock[] {
 
 export default defineComponent({
   name: 'ProgramImpactPreviewPage',
+  components: {
+    ProgramFeedbackCTA,
+    ProgramMeta,
+    ProgramSetBlockHeader,
+    ProgramSongGrid,
+    ProgramStatsCloud,
+    ProgramTextBlock,
+  },
   setup() {
-    const override = getProgramOverride('double-impact');
-    const programSource = isProgramSource(override) ? override : null;
+    const previewPage = getProgramPreviewPage('double-impact');
+    const programSource = isProgramSource(previewPage) ? previewPage : null;
+    const programItems = getProgramItems(programSource);
 
     const previewBlocks = computed(() => {
-      return normalizeBlocks(getProgramItems(programSource));
+      return normalizeBlocks(programItems);
     });
 
     const setSections = computed(() => {
@@ -371,13 +332,31 @@ export default defineComponent({
       description:
         'Voorzet voor een nieuw programma-boekje: meer hoofdstukken, meer beeld, meer rust en een duidelijkere flow dan de oude timetable.',
       concert: 'Goed Gebekt × Firma Vocaal',
+      conductor: 'Rolinde Zieverink',
       venue: 'Lokale previewroute',
       date: 'Najaar 2026',
     };
 
+    const heroMeta: ProgramMetaItem[] = [
+      {
+        term: 'onder leiding van',
+        description: hero.conductor,
+      },
+      {
+        term: 'Locatie',
+        description: hero.venue,
+      },
+      {
+        term: 'Datum',
+        description: hero.date,
+      },
+    ];
+
     return {
       hero,
+      heroMeta,
       highlights,
+      programItems,
       previewBlocks,
       setSections,
       totals,
@@ -475,11 +454,8 @@ export default defineComponent({
 }
 
 .program-preview__hero h1,
-.program-preview__section-header h2,
 .program-preview__spotlight-copy h2,
-.program-preview__editorial h2,
-.program-preview__note-block h2,
-.program-preview__pause-block h2 {
+.program-preview__editorial h2 {
   font-family: var(--program-font-display);
 }
 
@@ -499,28 +475,6 @@ export default defineComponent({
   margin-bottom: 2rem;
   font-size: 1.15rem;
   text-shadow: 0 6px 18px rgba($black, 0.35);
-}
-
-.program-preview__meta {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
-  gap: 1rem;
-  margin: 0;
-  padding: 1rem;
-  background: rgba($black, 0.28);
-  backdrop-filter: blur(10px);
-
-  dt {
-    margin-bottom: 0.25rem;
-    color: rgba($white, 0.65);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-  }
-
-  dd {
-    margin: 0;
-    font-size: 1rem;
-  }
 }
 
 .program-preview__nav {
@@ -566,36 +520,19 @@ export default defineComponent({
 }
 
 .program-preview__editorial,
-.program-preview__spotlight-copy,
-.program-preview__note-block {
+.program-preview__spotlight-copy {
   padding: 2rem;
   background: rgba($white, 0.88);
   box-shadow: 0 20px 40px rgba($black, 0.06);
 }
 
-.program-preview__stats {
-  display: grid;
-  gap: 1rem;
+.program-preview :deep(.program-stats-cloud) {
+  margin-top: 0;
+  padding: 0;
 }
 
-.program-preview__stat-card {
-  display: flex;
-  min-height: 7rem;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.5rem;
-  background: $black;
-  color: $white;
-
-  span {
-    color: var(--program-color-accent);
-    font-family: var(--program-font-display);
-    font-size: 2.3rem;
-  }
-
-  small {
-    text-transform: uppercase;
-  }
+.program-preview :deep(.program-stats-cloud__list) {
+  justify-content: flex-start;
 }
 
 .program-preview__spotlight {
@@ -628,196 +565,14 @@ export default defineComponent({
   }
 }
 
-.program-preview__section-header {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(18rem, 26rem);
-  gap: 2rem;
-  align-items: end;
-  margin-bottom: 1.5rem;
-}
-
-.program-preview__section-note {
-  margin-bottom: 0;
-  color: rgba($tundora, 0.8);
-
-  p,
-  small {
-    margin: 0;
-  }
-
-  small {
-    display: block;
-    margin-top: 0.4rem;
-    color: rgba($tundora, 0.65);
-  }
-}
-
-.program-preview__song-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 1rem;
-}
-
-.program-preview__song-card {
-  overflow: hidden;
-  background: $white;
-  box-shadow: 0 16px 30px rgba($black, 0.08);
-  border-radius: 1rem;
-}
-
-.program-preview__song-art {
-  display: flex;
-  aspect-ratio: 1.1;
-  align-items: center;
-  justify-content: center;
-  color: $white;
-  font-family: $font-fam-heading;
-  font-size: 2.25rem;
-}
-
-.program-preview__song-copy {
-  padding: 0.85rem 0.85rem 0.5rem;
-
-  p {
-    margin-bottom: 0.35rem;
-    color: var(--program-color-accent);
-    font-family: var(--program-font-display);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-  }
-
-  h3 {
-    margin-bottom: 0.35rem;
-    font-size: 1rem;
-    line-height: 1.15;
-  }
-
-  small {
-    display: block;
-    line-height: 1.3;
-  }
-}
-
-.program-preview__song-actions {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 0.85rem 0.85rem;
-
-  small {
-    color: rgba($tundora, 0.7);
-    font-size: 0.7rem;
-  }
-}
-
-.program-preview__vote-pill {
-  display: inline-flex;
-  gap: 0.15rem;
-  padding: 0.25rem 0.5rem;
-  border-radius: 999px;
-  background: rgba($magenta, 0.1);
-  color: var(--program-color-accent);
-  font-size: 0.75rem;
-}
-
-.program-preview__feedback-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-top: 1rem;
-  padding: 0.9rem 1rem;
-  border-radius: 1rem;
-  background: rgba($white, 0.82);
-  box-shadow: 0 12px 24px rgba($black, 0.05);
-
-  p {
-    margin: 0;
-    font-size: 0.9rem;
-  }
-
-  button {
-    padding: 0.7rem 1rem;
-    border: 0;
-    border-radius: 999px;
-    background: var(--program-color-accent);
-    color: $white;
-    font-family: var(--program-font-display);
-    font-size: 0.75rem;
-    white-space: nowrap;
-  }
-}
-
-.tone-0 .program-preview__song-art {
-  background: linear-gradient(135deg, $magenta, #ff5bb9);
-}
-
-.tone-1 .program-preview__song-art {
-  background: linear-gradient(135deg, $green-alt, $theme-color-accent);
-}
-
-.tone-2 .program-preview__song-art {
-  background: linear-gradient(135deg, $black, $tundora);
-}
-
-.tone-3 .program-preview__song-art {
-  background: linear-gradient(135deg, $red, #ff8b4d);
-}
-
-.program-preview__note-block,
-.program-preview__pause-block {
-  max-width: 44rem;
-}
-
-.program-preview__pause-block {
-  padding: 2.5rem;
-  background: linear-gradient(135deg, $magenta, $black);
-  color: $white;
-
-  p {
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
-
-  h2 {
-    margin-bottom: 0.5rem;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-  }
-}
-
 @media (max-width: 900px) {
   .program-preview__intro,
-  .program-preview__spotlight,
-  .program-preview__section-header {
+  .program-preview__spotlight {
     grid-template-columns: 1fr;
   }
 
   .program-preview__highlight-grid {
     grid-template-columns: 1fr;
-  }
-
-  .program-preview__song-grid {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(9.5rem, 11rem);
-    overflow-x: auto;
-    padding-bottom: 0.5rem;
-    scroll-snap-type: x proximity;
-  }
-
-  .program-preview__song-card {
-    scroll-snap-align: start;
-  }
-
-  .program-preview__feedback-bar {
-    position: sticky;
-    bottom: 1rem;
-    z-index: 10;
-    flex-direction: column;
-    align-items: stretch;
-
-    button {
-      width: 100%;
-    }
   }
 
   .program-preview__confetti {

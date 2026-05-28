@@ -57,9 +57,6 @@ function createSectionSlug(value: string, fallback: string): string {
 export default defineComponent({
   name: 'TimeTableBlock',
   components: {
-    ProgramHero,
-    ProgramPageNavigation,
-    ProgramStatsCloud,
     RichText,
     TeaserBlock,
     ProgramSetBlock,

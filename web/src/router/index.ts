@@ -83,7 +83,10 @@ if (import.meta.env.DEV) {
         {
           path: '',
           name: 'program-booklet-preview',
-          component: () => import('@/views/dev/program-booklet-preview.vue'),
+          component: TimeTablePage,
+          meta: {
+            previewConcertId: 'double-impact',
+          },
         },
       ],
     },

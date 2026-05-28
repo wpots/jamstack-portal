@@ -3,6 +3,7 @@ import { useStore } from '../../store';
 import { useRoute } from 'vue-router';
 import { useQuery } from '@vue/apollo-composable';
 import { toDomain } from './content.mapper';
+import { getProgramPreviewPage } from '@/content/program-preview-data';
 import { getHomePageQuery } from './queries/home.graphql';
 import { getLayoutComponentsQuery } from './queries/layout.graphql';
 import { getTimeTableQuery } from './queries/timeTableBlock.graphql';
@@ -22,10 +23,12 @@ export function useContent(id, ctx) {
   });
 
   const store = useStore();
-  const route = useRoute();
+  const route = ctx?.route || useRoute();
 
   const slug = route.params.id;
   const layoutName = ctx?.layout || 'default';
+  const previewConcertId = route.meta?.previewConcertId;
+  const previewProgramPage = getProgramPreviewPage(previewConcertId);
 
   const { result: homepage } = useQuery(getHomePageQuery, { title: 'Home' }, () => ({
     enabled: enableQuery.home,
@@ -62,6 +65,10 @@ export function useContent(id, ctx) {
   const getHomepage = computed(() => toDomain.mapHomepage(homepage.value));
   const getConcertpage = computed(() => toDomain.mapConcertpage(concert.value));
   const getTimeTable = computed(() => {
+    if (previewProgramPage?.programItems?.length) {
+      return previewProgramPage;
+    }
+
     const cmsProgramPage = toDomain.mapProgramPage(programPage.value);
     const legacyTimeTable = toDomain.mapTimeTable(timetable.value);
 
@@ -92,6 +99,10 @@ export function useContent(id, ctx) {
 
   onMounted(() => {
     if (id) {
+      if (id === 'timetable' && previewProgramPage?.programItems?.length) {
+        return;
+      }
+
       enableQuery[id] = true;
     }
     fetchLayout();

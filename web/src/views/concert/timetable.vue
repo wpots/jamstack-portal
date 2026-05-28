@@ -1,9 +1,9 @@
 <template>
   <div :class="['setlist', `setlist--${slug}`]">
     <ProgramHero
-      :title="getTimeTable.value.pageTitle"
-      :eyebrow="getTimeTable.value.eyebrow"
-      :lede="getTimeTable.value.intro"
+      :title="getTimeTable.pageTitle"
+      :eyebrow="getTimeTable.eyebrow"
+      :lede="getTimeTable.intro"
       :themeSlug="slug"
     />
     <ProgramPageNavigation
@@ -11,7 +11,7 @@
       :includeOverview="isDoubleImpactTheme"
       :includeHighlights="isDoubleImpactTheme"
     />
-    <ProgramStatsCloud :programItems="getTimeTable.value.programItems" />
+    <ProgramStatsCloud :programItems="getTimeTable.programItems" />
     <TimeTableBlock :cms="getTimeTable" :themeSlug="slug" />
     <div class="container">
       <FeedBackForm></FeedBackForm>
@@ -29,6 +29,28 @@ import FeedBackForm from '../../components/FeedBackForm.vue';
 import ProgramHero from '@/components/program/ProgramHero.vue';
 import ProgramPageNavigation from '@/components/program/ProgramPageNavigation.vue';
 import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
+import type { ProgramItem, ProgramSetItem } from '@/composables/useContent/program.types';
+
+interface ProgramPageNavigationSection {
+  id: string;
+  title: string;
+}
+
+function isProgramSetItem(item: ProgramItem): item is ProgramSetItem {
+  return item.type === 'set';
+}
+
+function createSectionSlug(value: string, fallback: string): string {
+  const slug = value
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replaceAll(/[\u0300-\u036f]/g, '')
+    .replaceAll(/[^a-z0-9]+/g, '-')
+    .replaceAll(/(^-|-$)/g, '');
+
+  return slug || fallback;
+}
 
 export default defineComponent({
   components: {
@@ -43,12 +65,45 @@ export default defineComponent({
     const route = useRoute();
     const { getTimeTable } = useContent('timetable', { route });
     const { fetchSongRatings, getSongRatings } = useFeedback();
-    const slug = computed(() => `${route.params.id || ''}`);
+    const slug = computed(() => `${route.params.id || route.meta.previewConcertId || ''}`);
+    const isDoubleImpactTheme = computed(() => slug.value === 'double-impact');
+
+    const setSections = computed<ProgramPageNavigationSection[]>(() => {
+      const seenIds = new Map<string, number>();
+      const sections: ProgramPageNavigationSection[] = [];
+      let setNumber = 0;
+
+      getTimeTable.value.programItems.forEach((item) => {
+        if (!isProgramSetItem(item)) {
+          return;
+        }
+
+        setNumber += 1;
+        const title = item.title || `Set ${setNumber}`;
+        const fallbackId = `set-${setNumber}`;
+        const baseId = createSectionSlug(title, fallbackId);
+        const occurrence = (seenIds.get(baseId) || 0) + 1;
+        const id = occurrence > 1 ? `${baseId}-${occurrence}` : baseId;
+
+        seenIds.set(baseId, occurrence);
+
+        sections.push({ id, title });
+      });
+
+      return sections;
+    });
+
     onMounted(async () => {
       if (!getSongRatings.value) await fetchSongRatings();
     });
 
-    return { slug, getTimeTable, getSongRatings };
+    return {
+      getSongRatings,
+      getTimeTable,
+      isDoubleImpactTheme,
+      setSections,
+      slug,
+    };
   },
 });
 </script>

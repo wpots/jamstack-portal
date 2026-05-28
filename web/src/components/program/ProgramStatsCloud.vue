@@ -1,9 +1,16 @@
 <template>
   <aside v-if="stats.length" class="program-stats-cloud" aria-label="Programma statistieken">
     <ul class="program-stats-cloud__list">
-      <li v-for="stat in stats" :key="stat.label" class="program-stats-cloud__item">
-        <span class="program-stats-cloud__label">{{ stat.label }}</span>
-        <span class="program-stats-cloud__count">({{ stat.value }})</span>
+      <li
+        v-for="stat in stats"
+        :key="stat.label"
+        class="program-stats-cloud__item"
+        :style="stat.style"
+      >
+        <span class="program-stats-cloud__pill">
+          <span class="program-stats-cloud__value">{{ stat.value }}</span>
+          <span class="program-stats-cloud__label">{{ stat.label }}</span>
+        </span>
       </li>
     </ul>
   </aside>
@@ -16,6 +23,7 @@ import type { ProgramItem, ProgramSetItem } from '@/composables/useContent/progr
 interface ProgramStat {
   label: string;
   value: number;
+  style: Record<string, string>;
 }
 
 function isProgramSetItem(item: ProgramItem): item is ProgramSetItem {
@@ -40,11 +48,34 @@ export default defineComponent({
         .filter((title): title is string => Boolean(title));
       const ensembleCount = new Set(ensembleTitles).size || setCount;
 
-      return [
+      const baseStats = [
         { label: 'Nummers', value: songCount },
         { label: 'Sets', value: setCount },
         { label: 'Ensembles', value: ensembleCount },
       ].filter((stat) => stat.value > 0);
+
+      const values = baseStats.map((stat) => stat.value);
+      const maxValue = Math.max(...values, 1);
+      const minValue = Math.min(...values, maxValue);
+      const valueRange = Math.max(maxValue - minValue, 1);
+
+      return baseStats.map((stat, index) => {
+        const emphasis = (stat.value - minValue) / valueRange;
+        const scale = 0.94 + emphasis * 0.42;
+        const drift = 0.55 + emphasis * 0.35;
+
+        return {
+          ...stat,
+          style: {
+            '--program-stats-scale': scale.toFixed(2),
+            '--program-stats-offset-x': `${((index % 2 === 0 ? 1 : -1) * (0.2 + emphasis * 0.45)).toFixed(2)}rem`,
+            '--program-stats-offset-y': `${(-0.15 + index * 0.2 - emphasis * 0.18).toFixed(2)}rem`,
+            '--program-stats-float-distance': `${drift.toFixed(2)}rem`,
+            '--program-stats-duration': `${(6.4 + index * 0.9 - emphasis * 0.8).toFixed(2)}s`,
+            '--program-stats-delay': `${(-1.1 * index).toFixed(2)}s`,
+          },
+        };
+      });
     });
 
     return { stats };
@@ -73,54 +104,76 @@ export default defineComponent({
 }
 
 .program-stats-cloud__item {
+  margin: -0.3rem -0.35rem;
+}
+
+.program-stats-cloud__pill {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.35rem;
-  margin: 0.2rem;
-  padding: 0.45em 1.05em;
+  gap: 0.45rem;
+  padding: 0.6em 1.15em;
   border-radius: 999px;
   color: vars.$white;
   font-family: var(--program-font-display, #{vars.$font-fam-heading});
-  font-size: clamp(1.35rem, 2.8vw, 2.45rem);
+  font-size: clamp(1.2rem, 2vw + 0.7rem, 2.9rem);
   line-height: 0.95;
   text-transform: uppercase;
   text-shadow: 1px 1px 3px rgba(vars.$black, 0.2);
   white-space: nowrap;
   mix-blend-mode: multiply;
   box-shadow: 0 14px 28px rgba(vars.$black, 0.12);
+  transform: translate(
+      var(--program-stats-offset-x, 0),
+      var(--program-stats-offset-y, 0)
+    ) scale(var(--program-stats-scale, 1));
+  animation: stats-cloud-float var(--program-stats-duration, 6.5s) ease-in-out
+    var(--program-stats-delay, 0s) infinite;
+  will-change: transform;
+}
 
-  &:nth-child(3n + 1) {
-    background: var(--program-color-accent, #{vars.$magenta});
-  }
+.program-stats-cloud__item:nth-child(3n + 1) .program-stats-cloud__pill {
+  background: var(--program-color-accent, #{vars.$magenta});
+}
 
-  &:nth-child(3n + 2) {
-    background: #fe265e;
-  }
+.program-stats-cloud__item:nth-child(3n + 2) .program-stats-cloud__pill {
+  background: #fe265e;
+}
 
-  &:nth-child(3n) {
-    background: #3beca8;
-  }
+.program-stats-cloud__item:nth-child(3n) .program-stats-cloud__pill {
+  background: #3beca8;
+}
 
-  &:nth-child(4n) {
-    background: #a9f946;
-  }
-
-  &:nth-child(2) {
-    transform: translateY(0.9rem);
-  }
-
-  &:nth-child(3) {
-    transform: translateY(-0.2rem);
-  }
+.program-stats-cloud__item:nth-child(4n) .program-stats-cloud__pill {
+  background: #a9f946;
 }
 
 .program-stats-cloud__label {
   letter-spacing: 0.03em;
 }
 
-.program-stats-cloud__count {
-  font-size: 0.7em;
-  opacity: 0.95;
+.program-stats-cloud__value {
+  font-size: 1.25em;
+  letter-spacing: 0.03em;
+}
+
+@keyframes stats-cloud-float {
+  0%,
+  100% {
+    transform: translate(
+        var(--program-stats-offset-x, 0),
+        var(--program-stats-offset-y, 0)
+      ) scale(var(--program-stats-scale, 1));
+  }
+
+  50% {
+    transform: translate(
+        var(--program-stats-offset-x, 0),
+        calc(
+          var(--program-stats-offset-y, 0) -
+            var(--program-stats-float-distance, 0.65rem)
+        )
+      ) scale(var(--program-stats-scale, 1));
+  }
 }
 
 @media (max-width: 767px) {
@@ -134,12 +187,17 @@ export default defineComponent({
   }
 
   .program-stats-cloud__item {
-    font-size: clamp(1.15rem, 6vw, 1.8rem);
+    margin: -0.15rem -0.2rem;
+  }
 
-    &:nth-child(2),
-    &:nth-child(3) {
-      transform: none;
-    }
+  .program-stats-cloud__pill {
+    font-size: clamp(1rem, 5vw, 1.8rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .program-stats-cloud__pill {
+    animation: none;
   }
 }
 </style>

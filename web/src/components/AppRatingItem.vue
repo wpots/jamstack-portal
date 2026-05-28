@@ -17,8 +17,8 @@
       </slot>
     </div>
 
-    <div class="rating-item__footer">
-      <div class="rating-summary">
+    <div v-if="showSummary || interactive" class="rating-item__footer">
+      <div v-if="showSummary" class="rating-summary">
         <div class="rating">
           <span class="rating-hearts" :aria-label="currentRatingLabel">
             <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
@@ -126,6 +126,10 @@ export default defineComponent({
       default: () => ({}),
     },
     interactive: {
+      type: Boolean,
+      default: true,
+    },
+    showSummary: {
       type: Boolean,
       default: true,
     },

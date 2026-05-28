@@ -1,13 +1,14 @@
 <template>
-  <div class="program-preview__feedback-bar">
+  <div v-if="isFeedbackOpen || confirmationMessage" class="program-preview__feedback-bar">
     <p>{{ displayMessage }}</p>
-    <button ref="triggerButton" type="button" @click="handleOpen">
+    <button v-if="isFeedbackOpen" ref="triggerButton" type="button" @click="handleOpen">
       {{ buttonLabel }}
     </button>
   </div>
 
   <teleport to="body">
     <dialog
+      v-if="isFeedbackOpen"
       ref="modal"
       class="program-preview__feedback-modal"
       aria-labelledby="program-feedback-title"
@@ -36,6 +37,7 @@
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, ref } from 'vue';
 import FeedBackForm from '@/components/FeedBackForm.vue';
+import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
 
 export default defineComponent({
   name: 'ProgramFeedbackCTA',
@@ -57,10 +59,15 @@ export default defineComponent({
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
     const confirmationMessage = ref('');
+    const { isFeedbackOpen } = useFeedbackAvailability();
     let confirmationTimeout: ReturnType<typeof setTimeout> | null = null;
 
     const displayMessage = computed(() => {
-      return confirmationMessage.value || props.message;
+      if (confirmationMessage.value) {
+        return confirmationMessage.value;
+      }
+
+      return props.message;
     });
 
     const clearConfirmationTimeout = () => {
@@ -71,6 +78,10 @@ export default defineComponent({
     };
 
     const handleOpen = () => {
+      if (isFeedbackOpen.value === false) {
+        return;
+      }
+
       emit('click');
 
       if (!modal.value?.open) {
@@ -110,6 +121,8 @@ export default defineComponent({
 
     return {
       displayMessage,
+      confirmationMessage,
+      isFeedbackOpen,
       modal,
       triggerButton,
       handleOpen,

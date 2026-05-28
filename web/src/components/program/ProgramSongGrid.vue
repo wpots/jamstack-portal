@@ -1,5 +1,14 @@
 <template>
-  <AppRatingItem v-if="singleSong" class="program-set__song" :song="singleSong.linkedScore">
+  <AppRatingItem
+    v-if="singleSong"
+    :class="[
+      'program-set__song',
+      { 'program-set__song--single': isVotingOpen === false },
+    ]"
+    :interactive="isVotingOpen"
+    :show-summary="isVotingOpen"
+    :song="getRatingSong(singleSong)"
+  >
     <ProgramSongCard :song="singleSong" tag="div" tone="tone-0" />
   </AppRatingItem>
 
@@ -8,7 +17,9 @@
       v-for="(song, index) in songs"
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
       class="program-set__song"
-      :song="song.linkedScore"
+      :interactive="isVotingOpen"
+      :show-summary="isVotingOpen"
+      :song="getRatingSong(song)"
     >
       <ProgramSongCard :song="song" tag="div" :tone="`tone-${index % 4}`" />
     </AppRatingItem>
@@ -19,11 +30,13 @@ import { computed, defineComponent, onMounted, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
 import ProgramSongCard from '@/components/program/ProgramSongCard.vue';
 import { useFeedback } from '@/composables/useFeedback';
+import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
 import type { LinkedScore } from '@/composables/useContent/program.types';
 
 interface ProgramSongGridItem {
   title: string;
   artist?: string;
+  imageUrl?: string;
   linkedScore?: LinkedScore;
 }
 
@@ -35,17 +48,29 @@ export default defineComponent({
   },
   setup(props) {
     const { fetchSongRatings, getSongRatings } = useFeedback();
+    const { isVotingOpen } = useFeedbackAvailability();
     const singleSong = computed<ProgramSongGridItem | undefined>(() =>
       props.songs.length === 1 ? props.songs[0] : undefined,
     );
 
+    const getRatingSong = (song: ProgramSongGridItem): LinkedScore => {
+      return {
+        albumart:
+          song.linkedScore?.albumart ||
+          (song.imageUrl ? { url: song.imageUrl } : undefined),
+        artist: song.linkedScore?.artist || song.artist,
+        sys: song.linkedScore?.sys,
+        title: song.linkedScore?.title || song.title,
+      };
+    };
+
     onMounted(async () => {
-      if (!getSongRatings.value) {
+      if (isVotingOpen.value && !getSongRatings.value) {
         await fetchSongRatings();
       }
     });
 
-    return { singleSong };
+    return { getRatingSong, isVotingOpen, singleSong };
   },
 });
 </script>
@@ -65,11 +90,17 @@ export default defineComponent({
   min-width: 0;
 }
 
+.program-set__song--single {
+  width: 100%;
+  max-width: 100%;
+}
+
 @media (max-width: 900px) {
   .program-set__song-grid {
     display: flex;
     width: auto;
     overflow-x: auto;
+    overflow-y: hidden;
     overscroll-behavior-x: contain;
     margin-right: -1rem;
     padding-right: 1rem;
@@ -85,6 +116,12 @@ export default defineComponent({
     max-width: min(13rem, calc(100vw - 4.5rem));
     scroll-snap-align: start;
     scroll-snap-stop: always;
+  }
+
+  :deep(.program-set__song--single.rating-item) {
+    flex: 1 0 100%;
+    width: 100%;
+    max-width: 100%;
   }
 }
 </style>

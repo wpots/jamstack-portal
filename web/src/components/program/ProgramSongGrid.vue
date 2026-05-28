@@ -3,7 +3,7 @@
     v-if="singleSong"
     class="program-set__song"
     :interactive="isVotingOpen"
-    :song="singleSong.linkedScore"
+    :song="getRatingSong(singleSong)"
   >
     <ProgramSongCard :song="singleSong" tag="div" tone="tone-0" />
   </AppRatingItem>
@@ -14,7 +14,7 @@
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
       class="program-set__song"
       :interactive="isVotingOpen"
-      :song="song.linkedScore"
+      :song="getRatingSong(song)"
     >
       <ProgramSongCard :song="song" tag="div" :tone="`tone-${index % 4}`" />
     </AppRatingItem>
@@ -31,6 +31,7 @@ import type { LinkedScore } from '@/composables/useContent/program.types';
 interface ProgramSongGridItem {
   title: string;
   artist?: string;
+  imageUrl?: string;
   linkedScore?: LinkedScore;
 }
 
@@ -47,13 +48,22 @@ export default defineComponent({
       props.songs.length === 1 ? props.songs[0] : undefined,
     );
 
+    const getRatingSong = (song: ProgramSongGridItem): LinkedScore => {
+      return {
+        albumart: song.linkedScore?.albumart || (song.imageUrl ? { url: song.imageUrl } : undefined),
+        artist: song.linkedScore?.artist || song.artist,
+        sys: song.linkedScore?.sys,
+        title: song.linkedScore?.title || song.title,
+      };
+    };
+
     onMounted(async () => {
       if (!getSongRatings.value) {
         await fetchSongRatings();
       }
     });
 
-    return { isVotingOpen, singleSong };
+    return { getRatingSong, isVotingOpen, singleSong };
   },
 });
 </script>

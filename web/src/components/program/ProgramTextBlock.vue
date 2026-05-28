@@ -92,10 +92,6 @@ export default defineComponent({
 .program-preview__text-block {
   max-width: 44rem;
   overflow: hidden;
-
-  h2 {
-    font-family: var(--program-font-display);
-  }
 }
 
 .program-preview__text-block-copy {
@@ -120,15 +116,6 @@ export default defineComponent({
   object-fit: cover;
 }
 
-.program-preview__kicker {
-  margin-bottom: 0.75rem;
-  color: var(--program-color-accent);
-  font-family: var(--program-font-display);
-  font-size: 0.85rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
 .program-preview__text-block--default {
   padding: 2rem;
   background: rgba($white, 0.88);
@@ -139,9 +126,9 @@ export default defineComponent({
   padding: 2.5rem;
   background: linear-gradient(135deg, $magenta, $black);
   color: $white;
+  margin: 1rem -1rem;
 
   .program-preview__kicker {
-    margin-bottom: 0.5rem;
     color: rgba($white, 0.78);
   }
 

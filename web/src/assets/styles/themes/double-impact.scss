@@ -9,8 +9,8 @@
   --program-font-weight-title: #{$font-weight-program-title};
   --program-font-weight-body: #{$font-weight-program-body};
   --program-font-weight-body-strong: #{$font-weight-program-body-strong};
-  --program-color-accent: #ff4d9d;
-  --program-color-contrast: #1c1320;
+  --program-color-accent: #{$pimple};
+  --program-color-contrast: #{$purple};
   --program-color-surface: #fff8fc;
 
   .feedbackform,
@@ -30,7 +30,7 @@
   min-height: 100vh;
   padding-bottom: 4rem;
   background:
-    radial-gradient(circle at top left, rgba($magenta, 0.14), transparent 35%),
+    radial-gradient(circle at top left, rgba($purple, 0.14), transparent 35%),
     linear-gradient(180deg, $white 0%, $smoke 100%);
   color: $tundora;
   font-family: var(--program-font-body);
@@ -119,10 +119,17 @@
 .program-theme--double-impact .program-hero__eyebrow,
 .program-preview__eyebrow,
 .program-preview__kicker {
-  color: var(--program-color-surface);
-  font-family: var(--program-font-title);
+  color: var(--program-color-accent);
+  font-family: var(--program-font-body);
   font-size: 0.85rem;
+  font-weight: var(--program-font-weight-body-strong);
   text-transform: uppercase;
+  margin-bottom: 0;
+  letter-spacing: 0.16em;
+}
+
+.program-theme--double-impact .program-hero__eyebrow {
+  color: rgba($white, 0.78);
 }
 
 .program-theme--double-impact .program-hero h1,
@@ -133,6 +140,29 @@
 .program-preview__note-block h2,
 .program-preview__pause-block h2 {
   font-family: var(--program-font-display);
+}
+
+.program-theme--double-impact .program-preview__text-block {
+  color: var(--program-color-contrast);
+
+  h2 {
+    font-family: var(--program-font-title);
+    font-weight: var(--program-font-weight-title);
+  }
+}
+
+.program-theme--double-impact .program-preview__text-block--knockout {
+  background: linear-gradient(135deg, $purple, $black);
+  color: $white;
+
+  .program-preview__kicker {
+    color: rgba($white, 0.78);
+  }
+
+  h2 {
+    margin-bottom: 0.5rem;
+    font-size: clamp(2.4rem, 6vw, 4rem);
+  }
 }
 
 .program-preview__lede,

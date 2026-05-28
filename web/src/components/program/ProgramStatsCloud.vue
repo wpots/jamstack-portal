@@ -111,12 +111,12 @@ export default defineComponent({
 .program-stats-cloud__pill {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.45rem;
+  gap: 0.25rem;
   padding: 0.6em 1.15em;
   border-radius: 999px;
   color: vars.$white;
   font-family: var(--program-font-display, #{vars.$font-fam-heading});
-  font-size: clamp(1.2rem, 2vw + 0.7rem, 2.9rem);
+  font-size: clamp(1.1rem, 2vw + 0.3rem, 2.4rem);
   line-height: 0.95;
   text-transform: uppercase;
   text-shadow: 1px 1px 3px rgba(vars.$black, 0.2);
@@ -131,19 +131,19 @@ export default defineComponent({
 }
 
 .program-stats-cloud__item:nth-child(3n + 1) .program-stats-cloud__pill {
-  background: var(--program-color-accent, #{vars.$magenta});
+  background: #{vars.$rose};
 }
 
 .program-stats-cloud__item:nth-child(3n + 2) .program-stats-cloud__pill {
-  background: #fe265e;
+  background: #{vars.$pink};
 }
 
 .program-stats-cloud__item:nth-child(3n) .program-stats-cloud__pill {
-  background: #3beca8;
+  background: #{vars.$pimple};
 }
 
 .program-stats-cloud__item:nth-child(4n) .program-stats-cloud__pill {
-  background: #a9f946;
+  background: #{vars.$pink};
 }
 
 .program-stats-cloud__label {
@@ -151,8 +151,7 @@ export default defineComponent({
 }
 
 .program-stats-cloud__value {
-  font-size: 1.25em;
-  letter-spacing: 0.03em;
+  font-size: 1em;
 }
 
 @keyframes stats-cloud-float {

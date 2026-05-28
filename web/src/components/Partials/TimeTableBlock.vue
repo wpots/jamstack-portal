@@ -376,7 +376,6 @@ export default defineComponent({
 .program-item--text {
   display: flex;
   justify-content: center;
-  padding: 1rem 2rem;
 }
 
 .program-preview__teaser-stack {

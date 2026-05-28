@@ -20,12 +20,18 @@ $chocolaterie: #200d10;
 $black: #000;
 $tundora: #4a4244;
 
+$purple: #140140;
+$pink: #b30861;
+$pimple: #5b017b;
+$rose: #fe265e;
+
 $magenta-tint60: color.mix($white, $magenta, 60%);
 
 // $brand-primary           : $black;
 //font families
 $font-fam-heading: 'Julius Sans One', serif;
 $font-fam-body: 'Montserrat', sans-serif;
+$font-fam-display: 'Satisfy', cursive;
 $font-fam-body-strong: $font-fam-body;
 $font-fam-nav: $font-fam-body;
 
@@ -40,6 +46,8 @@ $font-fam-program-body-strong: $font-fam-body-strong;
 $font-weight-program-title: $font-weight-body-strong;
 $font-weight-program-body: $font-weight-body;
 $font-weight-program-body-strong: $font-weight-body-strong;
+
+$color-program-accent: $purple;
 
 //links
 $link-color: $black;

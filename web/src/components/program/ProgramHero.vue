@@ -91,11 +91,6 @@ export default defineComponent({
 }
 
 .program-hero__eyebrow {
-  margin-bottom: 0.5rem;
-  color: var(--program-color-accent, #{$magenta});
-  font-family: var(--program-font-display, #{$font-fam-heading});
-  font-size: 0.95rem;
-  letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 

@@ -1,55 +1,36 @@
 <template>
-  <article v-if="singleSong" class="program-preview__song-card tone-0">
-    <div class="program-preview__song-art">
-      <span>{{ getInitials(singleSong.title) }}</span>
-    </div>
-    <div class="program-preview__song-copy">
-      <p>{{ shortLabel }}</p>
-      <h3>{{ singleSong.title }}</h3>
-      <small>{{ getSubtitle(singleSong) }}</small>
-    </div>
-    <footer class="program-preview__song-actions">
-      <AppRatingItem :song="singleSong.linkedScore" variant="program-preview" />
-    </footer>
-  </article>
+  <AppRatingItem v-if="singleSong" class="program-set__song-rating" :song="singleSong.linkedScore">
+    <ProgramSongCard :song="singleSong" tag="div" tone="tone-0" />
+  </AppRatingItem>
 
-  <div v-else class="program-preview__song-grid">
-    <article
+  <div v-else class="program-set__song-grid">
+    <AppRatingItem
       v-for="(song, index) in songs"
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
-      class="program-preview__song-card"
-      :class="`tone-${index % 4}`"
+      class="program-set__song-rating"
+      :song="song.linkedScore"
     >
-      <div class="program-preview__song-art">
-        <span>{{ getInitials(song.title) }}</span>
-      </div>
-      <div class="program-preview__song-copy">
-        <p>{{ shortLabel }}</p>
-        <h3>{{ song.title }}</h3>
-        <small>{{ getSubtitle(song) }}</small>
-      </div>
-      <footer class="program-preview__song-actions">
-        <AppRatingItem :song="song.linkedScore" variant="program-preview" />
-      </footer>
-    </article>
+      <ProgramSongCard :song="song" tag="div" :tone="`tone-${index % 4}`" />
+    </AppRatingItem>
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, onMounted, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
+import ProgramSongCard from '@/components/program/ProgramSongCard.vue';
 import { useFeedback } from '@/composables/useFeedback';
 import type { LinkedScore } from '@/composables/useContent/program.types';
 
 interface ProgramSongGridItem {
   title: string;
+  artist?: string;
   linkedScore?: LinkedScore;
 }
 
 export default defineComponent({
   name: 'ProgramSongGrid',
-  components: { AppRatingItem },
+  components: { AppRatingItem, ProgramSongCard },
   props: {
-    shortLabel: { type: String, default: '' },
     songs: { type: Array as PropType<ProgramSongGridItem[]>, default: () => [] },
   },
   setup(props) {
@@ -64,26 +45,14 @@ export default defineComponent({
       }
     });
 
-    const getInitials = (title: string): string =>
-      title
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part.charAt(0).toUpperCase())
-        .join('');
-
-    const getSubtitle = (song: ProgramSongGridItem): string =>
-      song.linkedScore?.artist || props.shortLabel || 'Live in concert';
-
-    return { getInitials, getSubtitle, singleSong };
+    return { singleSong };
   },
 });
 </script>
 <style lang="scss" scoped>
 @use '@/assets/styles/common/variables' as *;
-@use '@/assets/styles/common/mixins' as *;
 
-.program-preview__song-grid {
+.program-set__song-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
   gap: 0.9rem;
@@ -92,74 +61,91 @@ export default defineComponent({
   list-style: none;
 }
 
-.program-preview__song-card {
+:deep(.program-set__song-rating.rating-item) {
   display: flex;
   flex-direction: column;
   height: 100%;
+  width: 100%;
+  max-width: none;
+  padding: 0;
+  margin-top: 0;
   overflow: hidden;
   background: $white;
   box-shadow: 0 16px 30px rgba($black, 0.08);
   border-radius: 1rem;
 }
 
-.program-preview__song-art {
-  display: flex;
-  aspect-ratio: 1;
-  align-items: center;
-  justify-content: center;
-  color: $white;
-  font-family: $font-fam-heading;
-  font-size: 2.25rem;
+:deep(.program-set__song-rating .rating-item__body) {
+  flex: 1 1 auto;
 }
 
-.program-preview__song-copy {
+:deep(.program-set__song-rating .rating-item__footer) {
   display: flex;
-  flex: 1;
-  flex-direction: column;
-  padding: 0.85rem 0.85rem 0.5rem;
-
-  p {
-    margin-bottom: 0.35rem;
-    color: var(--program-color-accent);
-    font-family: var(--program-font-display);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-  }
-
-  h3 {
-    margin-bottom: 0.35rem;
-    font-size: 1rem;
-    line-height: 1.15;
-  }
-
-  small {
-    display: block;
-    line-height: 1.3;
-  }
-}
-
-.program-preview__song-actions {
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
   padding: 0 0.85rem 0.85rem;
 }
 
-.tone-0 .program-preview__song-art {
-  background: linear-gradient(135deg, $magenta, #ff5bb9);
+:deep(.program-set__song-rating .rating-summary) {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
-.tone-1 .program-preview__song-art {
-  background: linear-gradient(135deg, $green-alt, $theme-color-accent);
+:deep(.program-set__song-rating .rating-item__action) {
+  flex: 0 0 auto;
+  align-self: center;
 }
 
-.tone-2 .program-preview__song-art {
-  background: linear-gradient(135deg, $black, $tundora);
+:deep(.program-set__song-rating .rating) {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 0;
 }
 
-.tone-3 .program-preview__song-art {
-  background: linear-gradient(135deg, $red, #ff8b4d);
+:deep(.program-set__song-rating .rating-hearts) {
+  display: inline-flex;
+  gap: 0.15rem;
+}
+
+:deep(.program-set__song-rating .icon-heart) {
+  --icon-size: 1.35rem;
+}
+
+:deep(.program-set__song-rating .icon-add),
+:deep(.program-set__song-rating .icon-change) {
+  width: 1.2rem;
+  height: 1.2rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+:deep(.program-set__song-rating .meta) {
+  margin-left: 0;
+  font-size: 1.2rem;
+  line-height: 1;
+  color: $tundora;
+  font-style: normal;
+}
+
+:deep(.program-set__song-rating .muted) {
+  font-size: 0.75rem;
+  color: rgba($tundora, 0.45);
+  font-style: italic;
+}
+
+:deep(.program-set__song-rating .fancy) {
+  position: static;
+  margin: 0;
+  font-size: 1.05rem;
+  transform: rotate(-12deg);
 }
 
 @media (max-width: 900px) {
-  .program-preview__song-grid {
+  .program-set__song-grid {
     grid-auto-flow: column;
     grid-auto-columns: minmax(9.5rem, 11rem);
     overflow-x: auto;
@@ -168,8 +154,16 @@ export default defineComponent({
     gap: 0.7rem;
   }
 
-  .program-preview__song-card {
+  :deep(.program-set__song-rating.rating-item) {
     scroll-snap-align: start;
+  }
+
+  :deep(.program-set__song-rating .meta) {
+    font-size: 1.05rem;
+  }
+
+  :deep(.program-set__song-rating .muted) {
+    font-size: 0.7rem;
   }
 }
 </style>

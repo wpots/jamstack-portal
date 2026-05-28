@@ -6,11 +6,7 @@
       :lede="getTimeTable.intro"
     />
     <ProgramStatsCloud :programItems="getTimeTable.programItems" />
-    <ProgramPageNavigation
-      :sections="setSections"
-      :includeOverview="isDoubleImpactTheme"
-      :includeHighlights="isDoubleImpactTheme"
-    />
+    <ProgramPageNavigation :sections="setSections" />
     <TimeTableBlock :cms="getTimeTable" />
     <div class="container">
       <FeedBackForm></FeedBackForm>

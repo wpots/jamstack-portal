@@ -1,10 +1,7 @@
 <template>
   <article
     class="rating-item"
-    :class="[
-      `rating-item--${variant}`,
-      { 'rating-item--interactive': interactive, 'rating-item--rated': isRated },
-    ]"
+    :class="{ 'rating-item--interactive': interactive, 'rating-item--rated': isRated }"
     :aria-controls="interactive ? dialogId : undefined"
     :aria-expanded="interactive ? String(Boolean(modal?.open)) : undefined"
     :aria-haspopup="interactive ? 'dialog' : undefined"
@@ -13,44 +10,41 @@
     @click="handleClick"
     @keydown="handleKeydown"
   >
-    <div class="song-meta">
-      <img v-if="songAlbumArt" :src="songAlbumArt" :alt="songTitle" />
-      <div v-else class="song-art-fallback" aria-hidden="true">
-        <span>{{ songInitials }}</span>
-      </div>
-      <div class="song-title">
-        <h4>{{ songTitle }}</h4>
-        <small v-if="songArtist">{{ songArtist }}</small>
-      </div>
+    <div class="rating-item__body">
+      <slot>
+        <AppSongCard :artist="songArtist" :image-url="songAlbumArt" :title="songTitle" />
+      </slot>
     </div>
 
-    <div class="rating-summary">
-      <div class="rating">
-        <span class="rating-hearts" :aria-label="currentRatingLabel">
-          <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
-            <use href="#icon-heart" :mask="ratedMask(i)"></use>
+    <div class="rating-item__footer">
+      <div class="rating-summary">
+        <div class="rating">
+          <span class="rating-hearts" :aria-label="currentRatingLabel">
+            <svg class="icon-heart" :class="ratedClass(i)" v-for="i in rating.range" :key="i">
+              <use href="#icon-heart" :mask="ratedMask(i)"></use>
+            </svg>
+          </span>
+          <small v-if="currentRating?.avg" class="meta">{{ currentRating.avg }}</small>
+        </div>
+        <small v-if="currentRating?.count" class="muted"
+          >{{ currentRating.count }} beoordelingen</small
+        >
+      </div>
+
+      <div v-if="interactive" class="rating-item__action">
+        <template v-if="!isRated">
+          <svg class="icon-add" aria-hidden="true">
+            <use href="#icon-plus"></use>
           </svg>
-        </span>
-        <small v-if="currentRating?.avg" class="meta">{{ currentRating.avg }}</small>
+          <p class="fancy">stem ook!</p>
+        </template>
+        <template v-else>
+          <svg class="icon-change" aria-hidden="true">
+            <use href="#icon-chevron-down"></use>
+          </svg>
+        </template>
       </div>
-      <small v-if="currentRating?.count" class="muted"
-        >{{ currentRating.count }} beoordelingen</small
-      >
     </div>
-
-    <template v-if="interactive">
-      <template v-if="!isRated">
-        <svg class="icon-add" aria-hidden="true">
-          <use href="#icon-plus"></use>
-        </svg>
-        <p class="fancy">stem ook!</p>
-      </template>
-      <template v-else>
-        <svg class="icon-change" aria-hidden="true">
-          <use href="#icon-chevron-down"></use>
-        </svg>
-      </template>
-    </template>
   </article>
 
   <dialog
@@ -58,24 +52,19 @@
     ref="modal"
     :id="dialogId"
     class="modal"
-    :class="`modal--${variant}`"
     :aria-labelledby="dialogTitleId"
     aria-modal="true"
     @click="handleDialogBackdropClick"
   >
     <div class="modal-card">
       <div class="modal-header">
-        <slot>
-          <div class="song-meta song-meta--modal">
-            <img v-if="songAlbumArt" :src="songAlbumArt" :alt="songTitle" />
-            <div v-else class="song-art-fallback song-art-fallback--modal" aria-hidden="true">
-              <span>{{ songInitials }}</span>
-            </div>
-            <div class="song-title">
-              <h4 :id="dialogTitleId">{{ songTitle }}</h4>
-              <small v-if="songArtist">{{ songArtist }}</small>
-            </div>
-          </div>
+        <slot name="modal-card">
+          <AppSongCard
+            :artist="songArtist"
+            :heading-id="dialogTitleId"
+            :image-url="songAlbumArt"
+            :title="songTitle"
+          />
         </slot>
         <p>jouw beoordeling...</p>
       </div>
@@ -113,6 +102,7 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
+import AppSongCard from '@/components/AppSongCard.vue';
 import { useFeedback } from '../composables/useFeedback';
 
 function normalizeId(value: string) {
@@ -127,6 +117,7 @@ function normalizeId(value: string) {
 
 export default defineComponent({
   name: 'AppRatingItem',
+  components: { AppSongCard },
   props: {
     song: {
       type: Object,
@@ -135,10 +126,6 @@ export default defineComponent({
     interactive: {
       type: Boolean,
       default: true,
-    },
-    variant: {
-      type: String,
-      default: 'default',
     },
   },
   setup(props) {
@@ -156,14 +143,6 @@ export default defineComponent({
     const songAlbumArt = computed(() => {
       const url = props.song?.albumart?.url;
       return url ? `${url}?w=150` : '';
-    });
-    const songInitials = computed(() => {
-      return songTitle.value
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part.charAt(0).toUpperCase())
-        .join('');
     });
     const songId = computed(() => {
       return props.song?.sys?.id || `rating-${normalizeId(songTitle.value)}`;
@@ -293,7 +272,6 @@ export default defineComponent({
       rating,
       songAlbumArt,
       songArtist,
-      songInitials,
       songTitle,
       submitText,
     };
@@ -331,6 +309,14 @@ export default defineComponent({
   }
 }
 
+.rating-item__body {
+  flex: 1 0 100%;
+}
+
+.rating-item__footer {
+  display: contents;
+}
+
 .icon-change,
 .icon-add {
   margin-right: 1rem;
@@ -358,6 +344,13 @@ export default defineComponent({
   display: contents;
 }
 
+.rating-item__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.55rem;
+}
+
 .rating {
   margin-top: 1rem;
 }
@@ -380,40 +373,6 @@ export default defineComponent({
     outline-offset: 4px;
     border-radius: 999px;
   }
-}
-
-.song-meta {
-  display: flex;
-  gap: 1rem;
-
-  small {
-    font-family: 'Julius Sans One', serif;
-    color: $gray;
-    font-size: 0.7em;
-  }
-
-  img,
-  .song-art-fallback {
-    flex: 0 0 20%;
-    max-width: 20%;
-    border: 2px solid $smoke;
-    border-radius: 4px;
-  }
-
-  img {
-    aspect-ratio: 1;
-    object-fit: cover;
-  }
-}
-
-.song-art-fallback {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba($magenta, 0.95), rgba($black, 0.9));
-  color: $white;
-  font-size: 1rem;
-  font-weight: 700;
 }
 
 .meta {
@@ -498,250 +457,6 @@ export default defineComponent({
     padding: 1rem;
     text-align: right;
     font-style: italic;
-  }
-}
-
-.rating-item--program-preview {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 0.5rem 0.9rem;
-  align-items: center;
-  width: 100%;
-  max-width: none;
-  padding: 0;
-  margin-top: 0;
-  background: transparent;
-  box-shadow: none;
-
-  .rating-summary {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-
-  .rating {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    margin-top: 0;
-  }
-
-  .rating-hearts {
-    display: inline-flex;
-    gap: 0.15rem;
-  }
-
-  .icon-heart {
-    --icon-size: 1.35rem;
-  }
-
-  .meta {
-    margin-left: 0;
-    font-size: 1.2rem;
-    line-height: 1;
-    color: $tundora;
-    font-style: normal;
-  }
-
-  .muted {
-    font-size: 0.75rem;
-    color: rgba($tundora, 0.45);
-    font-style: italic;
-  }
-}
-
-.rating-item__action {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 0.55rem;
-}
-
-.rating-trigger {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  padding: 0;
-  border: 2px solid rgba($black, 0.75);
-  background: $white;
-  color: rgba($black, 0.85);
-  cursor: pointer;
-
-  &:focus-visible {
-    outline: 2px solid $magenta;
-    outline-offset: 3px;
-  }
-
-  .icon-change,
-  .icon-add {
-    width: 1.2rem;
-    height: 1.2rem;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    fill: currentColor;
-  }
-}
-
-.rating-item--program-preview .fancy {
-  position: static;
-  margin: 0;
-  font-size: 1.05rem;
-  transform: rotate(-12deg);
-}
-
-.modal--program-preview {
-  width: min(58rem, calc(100vw - 2rem));
-  max-width: 58rem;
-  padding: 0;
-  border: 0;
-  border-radius: 1.1rem;
-  background: transparent;
-  box-shadow: none;
-
-  .modal-card {
-    padding: 1.9rem 1.9rem 1.6rem;
-    border-radius: 1.1rem;
-    background: rgba($white, 0.98);
-    box-shadow: 0 24px 60px rgba($black, 0.18);
-  }
-
-  .modal-header {
-    p {
-      padding-top: 1.5rem;
-      margin-bottom: 0;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: $black;
-    }
-  }
-
-  .song-meta--modal {
-    align-items: flex-start;
-
-    img,
-    .song-art-fallback {
-      flex: 0 0 11rem;
-      width: 11rem;
-      max-width: 11rem;
-      border: 0;
-      border-radius: 0.55rem;
-      box-shadow: 0 8px 20px rgba($black, 0.18);
-    }
-
-    .song-title {
-      padding-top: 0.25rem;
-    }
-
-    h4 {
-      margin-bottom: 0.45rem;
-      font-size: clamp(2.1rem, 4vw, 3.4rem);
-      line-height: 1.04;
-    }
-
-    small {
-      display: block;
-      font-size: 0.95rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: rgba($gray, 0.9);
-    }
-  }
-
-  .song-art-fallback--modal {
-    font-size: 2rem;
-  }
-
-  .modal-content {
-    padding: 0.5rem 0 0;
-  }
-
-  .rating-hearts--selectable {
-    gap: 1.5rem;
-    justify-content: space-between;
-  }
-
-  .rating-heart-button .icon-heart {
-    --icon-size: clamp(4rem, 9vw, 5.25rem);
-    fill: #f6c1e0;
-  }
-
-  .modal-actions {
-    align-items: center;
-    margin-top: 0.5rem;
-
-    button {
-      min-width: 11.75rem;
-      margin: 0;
-      border: 0;
-      border-radius: 0.45rem;
-      font-size: 1rem;
-      font-weight: 700;
-      text-transform: lowercase;
-    }
-
-    .btn--default {
-      background: #bfbfbf;
-      color: $white;
-    }
-
-    .btn--primary {
-      background: #ff2d7a;
-      color: $white;
-    }
-
-    small {
-      padding: 0.75rem 0 0;
-      text-align: left;
-    }
-  }
-}
-
-@media (max-width: 900px) {
-  .rating-item--program-preview {
-    grid-template-columns: minmax(0, 1fr) auto;
-
-    .meta {
-      font-size: 1.05rem;
-    }
-
-    .muted {
-      font-size: 0.7rem;
-    }
-  }
-
-  .modal--program-preview {
-    width: min(100vw - 1rem, 40rem);
-
-    .modal-card {
-      padding: 1.1rem;
-    }
-
-    .song-meta--modal {
-      gap: 0.8rem;
-
-      img,
-      .song-art-fallback {
-        flex: 0 0 5.8rem;
-        width: 5.8rem;
-        max-width: 5.8rem;
-      }
-    }
-
-    .rating-hearts--selectable {
-      gap: 0.35rem;
-    }
-
-    .modal-actions {
-      gap: 0.75rem;
-
-      button {
-        flex: 1 1 calc(50% - 0.375rem);
-        min-width: 0;
-      }
-    }
   }
 }
 </style>

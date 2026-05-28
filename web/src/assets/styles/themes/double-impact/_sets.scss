@@ -16,7 +16,6 @@
   .program-set__song-card,
   .program-set__song {
     display: flex;
-
     align-items: center;
     justify-content: center;
     flex-flow: row wrap;
@@ -25,6 +24,7 @@
     background: $white;
     border-radius: 1rem;
     box-shadow: 0 16px 30px rgba($black, 0.08);
+    min-width: 228px;
     max-width: 100dvw;
     &:only-of-type {
       margin-left: -1rem;
@@ -48,16 +48,6 @@
     height: 100%;
     object-fit: cover;
   }
-
-  // .rating-item,
-  // .program-set__custom-song {
-  //   width: 228px;
-  //   max-width: 228px;
-  //   min-height: 0;
-  //   overflow: hidden;
-  //   border-radius: 1rem;
-  //   box-shadow: 0 12px 24px rgba($black, 0.12);
-  // }
 
   .rating-item__footer {
     display: flex;

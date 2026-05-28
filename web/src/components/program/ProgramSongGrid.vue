@@ -50,120 +50,41 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@use '@/assets/styles/common/variables' as *;
-
 .program-set__song-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  align-items: stretch;
   gap: 0.9rem;
+  width: 100%;
   margin: 0;
   padding: 0;
   list-style: none;
 }
 
-// :deep(.program-set__song-rating.rating-item) {
-//   display: flex;
-//   flex-direction: column;
-//   height: 100%;
-//   width: 100%;
-//   max-width: none;
-//   padding: 0;
-//   margin-top: 0;
-//   overflow: hidden;
-//   background: $white;
-//   box-shadow: 0 16px 30px rgba($black, 0.08);
-//   border-radius: 1rem;
-// }
-
-// :deep(.program-set__song-rating .rating-item__body) {
-//   flex: 1 1 auto;
-// }
-
-// :deep(.program-set__song-rating .rating-item__footer) {
-//   display: flex;
-//   align-items: flex-end;
-//   justify-content: space-between;
-//   gap: 0.75rem;
-//   padding: 0 0.85rem 0.85rem;
-// }
-
-// :deep(.program-set__song-rating .rating-summary) {
-//   display: flex;
-//   flex-direction: column;
-//   gap: 0.25rem;
-// }
-
-// :deep(.program-set__song-rating .rating-item__action) {
-//   flex: 0 0 auto;
-//   align-self: center;
-// }
-
-// :deep(.program-set__song-rating .rating) {
-//   display: flex;
-//   align-items: center;
-//   gap: 0.55rem;
-//   margin-top: 0;
-// }
-
-// :deep(.program-set__song-rating .rating-hearts) {
-//   display: inline-flex;
-//   gap: 0.15rem;
-// }
-
-// :deep(.program-set__song-rating .icon-heart) {
-//   --icon-size: 1.35rem;
-// }
-
-// :deep(.program-set__song-rating .icon-add),
-// :deep(.program-set__song-rating .icon-change) {
-//   width: 1.2rem;
-//   height: 1.2rem;
-//   margin: 0;
-//   padding: 0;
-//   border: 0;
-// // }
-
-// :deep(.program-set__song-rating .meta) {
-//   margin-left: 0;
-//   font-size: 1.2rem;
-//   line-height: 1;
-//   color: $tundora;
-//   font-style: normal;
-// }
-
-// :deep(.program-set__song-rating .muted) {
-//   font-size: 0.75rem;
-//   color: rgba($tundora, 0.45);
-//   font-style: italic;
-// }
-
-// :deep(.program-set__song-rating .fancy) {
-//   position: static;
-//   margin: 0;
-//   font-size: 1.05rem;
-//   transform: rotate(-12deg);
-// }
+:deep(.program-set__song) {
+  min-width: 0;
+}
 
 @media (max-width: 900px) {
   .program-set__song-grid {
-    grid-auto-flow: column;
-    grid-auto-columns: minmax(9.5rem, 11rem);
+    display: flex;
+    width: auto;
     overflow-x: auto;
+    overscroll-behavior-x: contain;
+    margin-right: -1rem;
+    padding-right: 1rem;
     padding-bottom: 0.5rem;
-    scroll-snap-type: x proximity;
+    scroll-padding-inline: 0 1rem;
+    scroll-snap-type: x mandatory;
     gap: 0.7rem;
-  }}
+  }
 
-//   :deep(.program-set__song-rating.rating-item) {
-//     scroll-snap-align: start;
-//   }
-
-//   :deep(.program-set__song-rating .meta) {
-//     font-size: 1.05rem;
-//   }
-
-//   :deep(.program-set__song-rating .muted) {
-//     font-size: 0.7rem;
-//   }
-// }
+  :deep(.program-set__song.rating-item) {
+    flex: 0 0 min(13rem, calc(100vw - 4.5rem));
+    width: min(13rem, calc(100vw - 4.5rem));
+    max-width: min(13rem, calc(100vw - 4.5rem));
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+  }
+}
 </style>

@@ -1,5 +1,5 @@
 @import '../common/variables';
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Montserrat:wght@400;600;700&display=swap');
 
 .program-theme--double-impact {
   --program-font-display: #{$font-fam-program-display};
@@ -59,14 +59,12 @@
 }
 
 .program-theme--double-impact .program-hero h1 {
-  max-width: 10ch;
   margin-bottom: 1rem;
   font-family: var(--program-font-display, #{$font-fam-program-title});
   font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
   text-shadow: 0 12px 30px rgba($black, 0.4);
   font-size: clamp(3.1rem, 8vw, 6.3rem);
   line-height: 0.88;
-  letter-spacing: -0.03em;
 }
 
 .program-preview__hero-content,
@@ -121,11 +119,9 @@
 .program-theme--double-impact .program-hero__eyebrow,
 .program-preview__eyebrow,
 .program-preview__kicker {
-  margin-bottom: 0.75rem;
   color: var(--program-color-surface);
-  font-family: var(--program-font-display);
+  font-family: var(--program-font-title);
   font-size: 0.85rem;
-  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
@@ -139,23 +135,10 @@
   font-family: var(--program-font-display);
 }
 
-.program-preview__hero h1,
-.program-theme--double-impact .program-hero h1 {
-  max-width: 10ch;
-  margin-bottom: 1rem;
-  font-family: var(--program-font-title);
-  font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
-  text-shadow: 0 12px 30px rgba($black, 0.4);
-  font-size: clamp(3.1rem, 8vw, 6.3rem);
-  line-height: 0.88;
-  letter-spacing: -0.03em;
-}
-
 .program-preview__lede,
 .program-theme--double-impact .program-hero__lede {
-  max-width: 42rem;
   margin-bottom: 2rem;
-  font-size: 1.15rem;
+  font-size: 1rem;
   text-shadow: 0 6px 18px rgba($black, 0.35);
 }
 

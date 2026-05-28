@@ -98,9 +98,10 @@ export default defineComponent({
   flex-wrap: wrap;
   gap: 0;
   justify-content: center;
-  margin: 0 auto;
+  margin: 0 auto -2rem auto;
   padding: 0;
   list-style: none;
+  z-index: 2;
 }
 
 .program-stats-cloud__item {

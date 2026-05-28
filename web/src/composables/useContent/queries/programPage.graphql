@@ -25,7 +25,7 @@ query getProgramPageQuery($concertId: String!) {
               url
               title
             }
-            columnContentCollection(limit: 2) {
+            columnContentCollection(limit: 4) {
               items {
                 __typename
                 ... on ContentTypeRichText {
@@ -36,6 +36,15 @@ query getProgramPageQuery($concertId: String!) {
                   }
                   ticketForm
                   embeddedYouTubeId
+                }
+                ... on FeaturedContent {
+                  label
+                  title
+                  ctaText
+                  ctaUrl
+                  lead {
+                    json
+                  }
                 }
               }
             }

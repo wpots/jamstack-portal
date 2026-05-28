@@ -14,7 +14,19 @@
               v-else-if="isDoubleImpactTheme && item.type === 'teaser'"
               class="program-item program-item--text"
             >
-              <ProgramTextBlock v-bind="createTeaserBlock(item, index + 1)" />
+              <div class="program-preview__teaser-stack">
+                <ProgramTextBlock v-bind="createTeaserBlock(item, index + 1)" />
+                <div
+                  v-if="hasFeaturedContent(item)"
+                  class="program-preview__featured-grid"
+                >
+                  <ProgramPageFeaturedContent
+                    v-for="(featuredItem, featuredIndex) in getFeaturedContentItems(item)"
+                    :key="featuredItem.title || `${index}-${featuredIndex}`"
+                    v-bind="featuredItem"
+                  />
+                </div>
+              </div>
             </div>
             <RichText v-else-if="item.type === 'richText'" :cms="item" class="intermezzo" />
             <TeaserBlock v-else-if="item.type === 'teaser'" :cms="item.cms" class="program-item" />
@@ -36,6 +48,7 @@
 import { computed, defineComponent, PropType } from 'vue';
 import RichText from '../RichText.vue';
 import TeaserBlock from './TeaserBlock.vue';
+import ProgramPageFeaturedContent from '@/components/program/ProgramPageFeaturedContent.vue';
 import ProgramSetBlock from '@/components/program/ProgramSetBlock.vue';
 import ProgramTextBlock from '@/components/program/ProgramTextBlock.vue';
 import { useProgramTheme } from '@/components/program/programTheme';
@@ -58,10 +71,16 @@ interface RichTextNode {
   content?: RichTextNode[];
 }
 
-interface TeaserRichTextColumn {
+interface TeaserColumnItem {
   __typename?: string;
+  label?: string;
   title?: string;
+  ctaText?: string;
+  ctaUrl?: string;
   body?: {
+    json?: RichTextNode;
+  };
+  lead?: {
     json?: RichTextNode;
   };
 }
@@ -76,7 +95,7 @@ interface TeaserCms {
   title?: string;
   backgroundImage?: TeaserMedia;
   columnContentCollection?: {
-    items?: TeaserRichTextColumn[];
+    items?: TeaserColumnItem[];
   };
 }
 
@@ -88,6 +107,14 @@ interface ProgramTextBlockProps {
   descriptions?: string[];
   imageSrc?: string;
   mediaAlt?: string;
+}
+
+interface FeaturedContentCardProps {
+  label: string;
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaUrl: string;
 }
 
 const noteDescriptions: Record<string, string> = {
@@ -128,7 +155,7 @@ function extractRichText(node: RichTextNode | undefined): string {
     .trim();
 }
 
-function getTeaserColumns(value: TeaserCms | undefined): TeaserRichTextColumn[] {
+function getTeaserColumns(value: TeaserCms | undefined): TeaserColumnItem[] {
   const items = value?.columnContentCollection?.items;
 
   return Array.isArray(items) ? items : [];
@@ -149,6 +176,19 @@ function extractTeaserDescriptions(value: TeaserCms | undefined): string[] {
     .filter((item) => item.__typename === 'ContentTypeRichText')
     .map((item) => extractRichText(getRichTextNode(item.body?.json)))
     .filter(Boolean);
+}
+
+function extractFeaturedContentItems(value: TeaserCms | undefined): FeaturedContentCardProps[] {
+  return getTeaserColumns(value)
+    .filter((item) => item.__typename === 'FeaturedContent')
+    .map((item, index) => ({
+      label: resolveEyebrow(item.label, 'Featured'),
+      title: item.title || `Link ${index + 1}`,
+      description: extractRichText(getRichTextNode(item.lead?.json)),
+      ctaText: item.ctaText || 'Meer informatie',
+      ctaUrl: item.ctaUrl || '',
+    }))
+    .filter((item) => item.title || item.ctaUrl);
 }
 
 function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): string {
@@ -188,12 +228,17 @@ function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): Program
   const title = extractTeaserTitle(teaser, occurrence);
   const descriptions = extractTeaserDescriptions(teaser);
   const backgroundImage = getTeaserMedia(teaser);
+  const featuredContentItems = extractFeaturedContentItems(teaser);
 
   return {
     variant: 'knockout',
     kicker: resolveEyebrow(teaser?.eyebrow, 'Teaser'),
     title,
-    description: descriptions[0] || 'Visueel tussenblok met beeld en copy uit de teasercomponent.',
+    description:
+      descriptions[0] ||
+      (featuredContentItems.length
+        ? 'Snelle links naar de plekken waar het koornieuws verder leeft.'
+        : 'Visueel tussenblok met beeld en copy uit de teasercomponent.'),
     descriptions,
     imageSrc: backgroundImage?.url || '',
     mediaAlt: backgroundImage?.title || title,
@@ -216,6 +261,7 @@ function createSectionSlug(value: string, fallback: string): string {
 export default defineComponent({
   name: 'TimeTableBlock',
   components: {
+    ProgramPageFeaturedContent,
     ProgramTextBlock,
     RichText,
     TeaserBlock,
@@ -270,10 +316,22 @@ export default defineComponent({
       return setSectionMap.value.get(index)?.id || '';
     };
 
+    const getFeaturedContentItems = (item: ProgramTeaserItem): FeaturedContentCardProps[] => {
+      const teaser = isTeaserCms(item.cms) ? item.cms : undefined;
+
+      return extractFeaturedContentItems(teaser);
+    };
+
+    const hasFeaturedContent = (item: ProgramTeaserItem): boolean => {
+      return getFeaturedContentItems(item).length > 0;
+    };
+
     return {
       createTeaserBlock,
       createTextBlock,
+      getFeaturedContentItems,
       getSetSectionId,
+      hasFeaturedContent,
       isDoubleImpactTheme,
       setSections,
     };
@@ -321,5 +379,17 @@ export default defineComponent({
   display: flex;
   justify-content: center;
   padding: 1rem 2rem;
+}
+
+.program-preview__teaser-stack {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 62rem);
+}
+
+.program-preview__featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
 }
 </style>

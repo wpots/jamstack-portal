@@ -1,5 +1,5 @@
 <template>
-  <ProgramThemeProvider class="program-preview" themeSlug="double-impact">
+  <div class="program-preview">
     <header class="program-preview__hero">
       <img
         class="program-preview__confetti"
@@ -93,34 +93,57 @@
           />
 
           <ProgramSongGrid :short-label="block.shortLabel" :songs="block.songs" />
+
+          <ProgramFeedbackCTA />
         </template>
 
         <ProgramTextBlock
-          v-else
-          :variant="block.variant"
-          :kicker="block.kicker"
+          v-else-if="block.type === 'note'"
+          kicker="Tussenstuk"
           :title="block.title"
           :description="block.description"
-          :descriptions="block.descriptions"
-          :image-src="block.imageSrc"
-          :media-alt="block.imageAlt"
         />
+
+        <ProgramTextBlock
+          v-else-if="block.type === 'pause'"
+          variant="knockout"
+          kicker="Pauze"
+          :title="block.title"
+          :description="block.description"
+        />
+
+        <div v-else class="program-preview__teaser-stack">
+          <ProgramTextBlock
+            variant="knockout"
+            kicker="Featured"
+            :title="block.title"
+            :description="block.description"
+          />
+
+          <div class="program-preview__featured-grid">
+            <ProgramPageFeaturedContent
+              v-for="(featuredItem, featuredIndex) in block.featuredContent"
+              :key="featuredItem.title || `${block.id}-${featuredIndex}`"
+              v-bind="featuredItem"
+            />
+          </div>
+        </div>
       </section>
     </main>
-  </ProgramThemeProvider>
+  </div>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from 'vue';
+import ProgramFeedbackCTA from '@/components/program/ProgramFeedbackCTA.vue';
 import ProgramMeta, { ProgramMetaItem } from '@/components/program/ProgramMeta.vue';
+import ProgramPageFeaturedContent from '@/components/program/ProgramPageFeaturedContent.vue';
 import ProgramSetBlockHeader from '@/components/program/ProgramSetBlockHeader.vue';
 import ProgramSongGrid from '@/components/program/ProgramSongGrid.vue';
 import ProgramStatsCloud from '@/components/program/ProgramStatsCloud.vue';
-import ProgramThemeProvider from '@/components/program/ProgramThemeProvider.vue';
 import ProgramTextBlock from '@/components/program/ProgramTextBlock.vue';
 import { getProgramPreviewPage } from '@/content/program-preview-data';
 import type {
-  LinkedScore,
   ProgramItem,
   ProgramRichTextItem,
   ProgramSetItem,
@@ -139,7 +162,8 @@ interface ProgramSource {
 
 interface PreviewSong {
   title: string;
-  linkedScore: LinkedScore;
+  initials: string;
+  subtitle: string;
 }
 
 interface PreviewSetBlock {
@@ -155,36 +179,40 @@ interface PreviewSetBlock {
 interface PreviewTextBlock {
   id: string;
   type: 'note' | 'pause' | 'teaser';
-  kicker: string;
   title: string;
   description: string;
-  descriptions?: string[];
-  variant: 'default' | 'knockout';
-  imageSrc?: string;
-  imageAlt?: string;
+  featuredContent?: PreviewFeaturedContent[];
 }
 
 type PreviewBlock = PreviewSetBlock | PreviewTextBlock;
 
-interface TeaserRichTextColumn {
+interface TeaserColumnItem {
   __typename?: string;
+  label?: string;
   title?: string;
+  ctaText?: string;
+  ctaUrl?: string;
   body?: {
+    json?: RichTextNode;
+  };
+  lead?: {
     json?: RichTextNode;
   };
 }
 
-interface TeaserMedia {
-  url?: string;
-  title?: string;
+interface PreviewFeaturedContent {
+  label: string;
+  title: string;
+  description: string;
+  ctaText: string;
+  ctaUrl: string;
 }
 
 interface TeaserCms {
   eyebrow?: string;
   title?: string;
-  backgroundImage?: TeaserMedia;
   columnContentCollection?: {
-    items?: TeaserRichTextColumn[];
+    items?: TeaserColumnItem[];
   };
 }
 
@@ -201,46 +229,20 @@ const sectionDescriptions: Record<string, string> = {
   'Goed Gebekt': 'Direct en punchy. Hier werkt de huidige kaart-esthetiek heel goed door.',
 };
 
-const songArtists: Record<string, string> = {
-  'fix you': 'Coldplay',
-  'virtual insanity': 'Jamiroquai',
-  skywalker: 'Miguel',
-  'greatest showman': 'The Greatest Showman',
-  'what happens': 'Artemisia',
-  espresso: 'Sabrina Carpenter',
-  'my immortal': 'Evanescence',
-  toxic: 'Britney Spears',
-  'no time to die': 'Billie Eilish',
-  flowers: 'Miley Cyrus',
-  human: "Rag'n'Bone Man",
-  multicolour: 'Son Mieux',
-  creep: 'Radiohead',
-  'no roots': 'Alice Merton',
-  'what about us': 'P!nk',
-  wings: 'Little Mix',
-};
-
 function slugify(value: string) {
   return value
     .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replaceAll(/[\u0300-\u036f]/g, '')
     .replaceAll(/[^a-z0-9]+/g, '-')
     .replaceAll(/(^-|-$)/g, '');
 }
 
-function createPreviewLinkedScore(title: string, setTitle: string): LinkedScore {
-  const artist = songArtists[title.toLowerCase()] || setTitle;
-  const previewId = slugify(`${setTitle}-${title}`);
-
-  return {
-    sys: {
-      id: `preview-${previewId}`,
-    },
-    title,
-    artist,
-  };
+function initials(title: string) {
+  return title
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part.charAt(0).toUpperCase())
+    .join('');
 }
 
 function extractRichText(node: RichTextNode | undefined): string {
@@ -278,43 +280,23 @@ function isTeaserCms(value: unknown): value is TeaserCms {
   return Boolean(value) && typeof value === 'object';
 }
 
-function getTeaserColumns(value: TeaserCms | undefined): TeaserRichTextColumn[] {
+function getTeaserColumns(value: TeaserCms | undefined): TeaserColumnItem[] {
   const items = value?.columnContentCollection?.items;
 
   return Array.isArray(items) ? items : [];
 }
 
-function getTeaserMedia(value: TeaserCms | undefined): TeaserMedia | undefined {
-  const media = value?.backgroundImage;
-
-  if (!media || typeof media !== 'object') {
-    return undefined;
-  }
-
-  return media;
-}
-
-function extractTeaserDescriptions(value: TeaserCms | undefined): string[] {
+function extractFeaturedContentItems(value: TeaserCms | undefined): PreviewFeaturedContent[] {
   return getTeaserColumns(value)
-    .filter((item) => item.__typename === 'ContentTypeRichText')
-    .map((item) => extractRichText(getRichTextNode(item.body?.json)))
-    .filter(Boolean);
-}
-
-function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): string {
-  if (value?.title) {
-    return value.title;
-  }
-
-  const firstColumnTitle = getTeaserColumns(value)
-    .map((item) => item.title)
-    .find((title): title is string => Boolean(title));
-
-  return firstColumnTitle || `Teaser ${occurrence}`;
-}
-
-function resolveEyebrow(value: unknown, fallback: string): string {
-  return typeof value === 'string' && value.trim() ? value : fallback;
+    .filter((item) => item.__typename === 'FeaturedContent')
+    .map((item, index) => ({
+      label: item.label || 'Featured',
+      title: item.title || `Link ${index + 1}`,
+      description: extractRichText(getRichTextNode(item.lead?.json)),
+      ctaText: item.ctaText || 'Meer informatie',
+      ctaUrl: item.ctaUrl || '',
+    }))
+    .filter((item) => item.title || item.ctaUrl);
 }
 
 function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlock {
@@ -331,14 +313,14 @@ function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlo
       'Nieuwe sectie in het programma-boekje met ruimte voor beeld en typografie.',
     songs: item.songs.map((song) => ({
       title: song.title,
-      linkedScore: song.linkedScore || createPreviewLinkedScore(song.title, title),
+      initials: initials(song.title),
+      subtitle: song.artist || `${title} live in concert`,
     })),
   };
 }
 
 function createTextBlock(item: ProgramRichTextItem, occurrence: number): PreviewTextBlock {
   const title = item.title || `Tussenstuk ${occurrence}`;
-  const isPause = title.toLowerCase() === 'pauze';
   const description =
     extractRichText(getRichTextNode(item.body?.json)) ||
     noteDescriptions[title] ||
@@ -346,30 +328,25 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Preview
 
   return {
     id: `${slugify(title)}-${occurrence}`,
-    type: isPause ? 'pause' : 'note',
-    kicker: resolveEyebrow(item.eyebrow, isPause ? 'Pauze' : 'Tussenstuk'),
+    type: title.toLowerCase() === 'pauze' ? 'pause' : 'note',
     title,
     description,
-    variant: isPause ? 'knockout' : 'default',
   };
 }
 
 function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): PreviewTextBlock {
   const teaser = isTeaserCms(item.cms) ? item.cms : undefined;
-  const title = extractTeaserTitle(teaser, occurrence);
-  const backgroundImage = getTeaserMedia(teaser);
-  const descriptions = extractTeaserDescriptions(teaser);
+  const title = teaser?.title || `Teaser ${occurrence}`;
+  const featuredContent = extractFeaturedContentItems(teaser);
 
   return {
     id: `${slugify(title)}-${occurrence}`,
     type: 'teaser',
-    kicker: resolveEyebrow(teaser?.eyebrow, 'Teaser'),
     title,
-    description: descriptions[0] || 'Visueel tussenblok met beeld en copy uit de teasercomponent.',
-    descriptions,
-    variant: 'knockout',
-    imageSrc: backgroundImage?.url || '',
-    imageAlt: backgroundImage?.title || title,
+    description:
+      featuredContent[0]?.description ||
+      'Snelle links naar de plekken waar het koornieuws verder leeft.',
+    featuredContent,
   };
 }
 
@@ -391,7 +368,11 @@ function normalizeBlocks(items: ProgramItem[]): PreviewBlock[] {
     }
 
     if (item.type === 'teaser') {
-      blocks.push(createTeaserBlock(item, occurrence));
+      const block = createTeaserBlock(item, occurrence);
+
+      if (block.featuredContent?.length) {
+        blocks.push(block);
+      }
     }
   });
 
@@ -401,11 +382,12 @@ function normalizeBlocks(items: ProgramItem[]): PreviewBlock[] {
 export default defineComponent({
   name: 'ProgramImpactPreviewPage',
   components: {
+    ProgramFeedbackCTA,
     ProgramMeta,
+    ProgramPageFeaturedContent,
     ProgramSetBlockHeader,
     ProgramSongGrid,
     ProgramStatsCloud,
-    ProgramThemeProvider,
     ProgramTextBlock,
   },
   setup() {
@@ -484,9 +466,13 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 @use '@/assets/styles/common/variables' as *;
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Montserrat:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:ital@0;1&display=swap');
 
 .program-preview {
+  --program-font-display: 'Bebas Neue', #{$font-fam-heading};
+  --program-font-title: 'DM Serif Display', Georgia, serif;
+  --program-font-body: 'DM Sans', #{$font-fam-body};
+  --program-color-accent: #ff4d9d;
   min-height: 100vh;
   padding-bottom: 4rem;
   background:
@@ -576,7 +562,7 @@ export default defineComponent({
   max-width: 10ch;
   margin-bottom: 1rem;
   font-family: var(--program-font-title);
-  font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
+  font-weight: 400;
   text-shadow: 0 12px 30px rgba($black, 0.4);
   font-size: clamp(3.1rem, 8vw, 6.3rem);
   line-height: 0.88;
@@ -658,6 +644,19 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
+}
+
+.program-preview__teaser-stack {
+  display: grid;
+  gap: 1rem;
+  width: min(100%, 62rem);
+}
+
+.program-preview__featured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  width: min(100%, 62rem);
 }
 
 .program-preview__highlight-card {

@@ -1,5 +1,10 @@
 <template>
-  <div class="program-preview__song-grid">
+  <div
+    :class="[
+      'program-preview__song-grid',
+      { 'program-preview__song-grid--single': songs.length === 1 },
+    ]"
+  >
     <article
       v-for="(song, index) in songs"
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
@@ -20,7 +25,6 @@
     </article>
   </div>
 </template>
-
 <script lang="ts">
 import { defineComponent, onMounted, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
@@ -29,55 +33,61 @@ import type { LinkedScore } from '@/composables/useContent/program.types';
 
 interface ProgramSongGridItem {
   title: string;
-  linkedScore: LinkedScore;
-}
-
-function getInitials(title: string): string {
-  return title
-    .split(/\s+/)
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('');
+  linkedScore?: LinkedScore;
 }
 
 export default defineComponent({
   name: 'ProgramSongGrid',
-  components: {
-    AppRatingItem,
-  setup(props) {
+  components: { AppRatingItem },
   props: {
-
-    const getSubtitle = (song: ProgramSongGridItem): string => {
-      return song.linkedScore?.artist || props.shortLabel || 'Live in concert';
-    };
-    shortLabel: {
-      type: String,
-      default: '',
-    },
-    songs: {
-      type: Array as PropType<ProgramSongGridItem[]>,
-      default: () => [],
-    return {
-      getInitials,
-      getSubtitle,
-    };
+    shortLabel: { type: String, default: '' },
+    songs: { type: Array as PropType<ProgramSongGridItem[]>, default: () => [] },
   },
-  setup() {
+  setup(props) {
     const { fetchSongRatings, getSongRatings } = useFeedback();
 
     onMounted(async () => {
-@use '@/assets/styles/common/variables' as *;
-
       if (!getSongRatings.value) {
         await fetchSongRatings();
-  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
-  gap: 1rem;
+      }
     });
 
-    return {};
+    const getInitials = (title: string): string =>
+      title
+        .split(/\s+/)
+        .filter(Boolean)
+        .slice(0, 2)
+        .map((part) => part.charAt(0).toUpperCase())
+        .join('');
+
+    const getSubtitle = (song: ProgramSongGridItem): string =>
+      song.linkedScore?.artist || props.shortLabel || 'Live in concert';
+
+    return { getInitials, getSubtitle };
+  },
+});
+</script>
+<style lang="scss" scoped>
+@use '@/assets/styles/common/variables' as *;
+@use '@/assets/styles/common/mixins' as *;
+
+.program-preview__song-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: 0.9rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.program-preview__song-grid--single {
+  display: block;
+}
 
 .program-preview__song-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   overflow: hidden;
   background: $white;
   box-shadow: 0 16px 30px rgba($black, 0.08);
@@ -86,7 +96,7 @@ export default defineComponent({
 
 .program-preview__song-art {
   display: flex;
-  aspect-ratio: 1.1;
+  aspect-ratio: 1;
   align-items: center;
   justify-content: center;
   color: $white;
@@ -95,6 +105,9 @@ export default defineComponent({
 }
 
 .program-preview__song-copy {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   padding: 0.85rem 0.85rem 0.5rem;
 
   p {
@@ -136,30 +149,19 @@ export default defineComponent({
 .tone-3 .program-preview__song-art {
   background: linear-gradient(135deg, $red, #ff8b4d);
 }
-  },
-});
-</script>
+
+@media (max-width: 900px) {
+  .program-preview__song-grid {
     grid-auto-flow: column;
     grid-auto-columns: minmax(9.5rem, 11rem);
     overflow-x: auto;
     padding-bottom: 0.5rem;
     scroll-snap-type: x proximity;
+    gap: 0.7rem;
   }
 
   .program-preview__song-card {
     scroll-snap-align: start;
-<style lang="scss" scoped>
-.program-preview__song-grid {
-  display: grid;
-  gap: 0.9rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-@media (max-width: 900px) {
-  .program-preview__song-grid {
-    gap: 0.7rem;
   }
 }
 </style>

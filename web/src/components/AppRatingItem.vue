@@ -95,6 +95,7 @@
         </button>
         <small>
           <span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span>
+          <span v-if="submissionError">{{ submissionError }}</span>
         </small>
       </div>
     </div>
@@ -134,6 +135,7 @@ export default defineComponent({
     const loading = ref(false);
     const modal = ref<HTMLDialogElement | null>(null);
     const rateSelect = ref<HTMLElement[] | null>(null);
+    const submissionError = ref('');
     const rating = reactive({
       icon: 'heart',
       range: 5,
@@ -194,6 +196,7 @@ export default defineComponent({
 
     const openModal = () => {
       if (props.interactive && modal.value && !modal.value.open) {
+        submissionError.value = '';
         modal.value.showModal();
       }
     };
@@ -228,12 +231,21 @@ export default defineComponent({
     };
 
     const handleSubmit = async () => {
+      submissionError.value = '';
       loading.value = true;
-      if (rating.selected) {
-        await setUserRating({ id: songId.value, rating: rating.selected });
+
+      try {
+        if (rating.selected) {
+          await setUserRating({ id: songId.value, rating: rating.selected });
+        }
+
+        modal.value?.close();
+      } catch (error) {
+        submissionError.value =
+          error instanceof Error ? error.message : 'Stemmen is mislukt. Probeer het opnieuw.';
+      } finally {
+        loading.value = false;
       }
-      loading.value = false;
-      modal.value?.close();
     };
 
     const handleModalClose = () => {
@@ -275,6 +287,7 @@ export default defineComponent({
       songAlbumArt,
       songArtist,
       songTitle,
+      submissionError,
       submitText,
     };
   },

@@ -1,5 +1,10 @@
 <template>
-  <AppRatingItem v-if="singleSong" class="program-set__song" :song="singleSong.linkedScore">
+  <AppRatingItem
+    v-if="singleSong"
+    class="program-set__song"
+    :interactive="isVotingOpen"
+    :song="singleSong.linkedScore"
+  >
     <ProgramSongCard :song="singleSong" tag="div" tone="tone-0" />
   </AppRatingItem>
 
@@ -8,6 +13,7 @@
       v-for="(song, index) in songs"
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
       class="program-set__song"
+      :interactive="isVotingOpen"
       :song="song.linkedScore"
     >
       <ProgramSongCard :song="song" tag="div" :tone="`tone-${index % 4}`" />
@@ -19,6 +25,7 @@ import { computed, defineComponent, onMounted, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
 import ProgramSongCard from '@/components/program/ProgramSongCard.vue';
 import { useFeedback } from '@/composables/useFeedback';
+import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
 import type { LinkedScore } from '@/composables/useContent/program.types';
 
 interface ProgramSongGridItem {
@@ -35,6 +42,7 @@ export default defineComponent({
   },
   setup(props) {
     const { fetchSongRatings, getSongRatings } = useFeedback();
+    const { isVotingOpen } = useFeedbackAvailability();
     const singleSong = computed<ProgramSongGridItem | undefined>(() =>
       props.songs.length === 1 ? props.songs[0] : undefined,
     );
@@ -45,7 +53,7 @@ export default defineComponent({
       }
     });
 
-    return { singleSong };
+    return { isVotingOpen, singleSong };
   },
 });
 </script>

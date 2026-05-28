@@ -12,6 +12,19 @@
     >
       <input type="hidden" name="form-name" value="feedback-form" />
 
+      <div class="hidden" aria-hidden="true">
+        <label for="website">Website</label>
+        <input
+          type="text"
+          id="website"
+          name="website"
+          v-model="form.website"
+          tabindex="-1"
+          autocomplete="off"
+          :disabled="pending"
+        />
+      </div>
+
       <div class="form-group">
         <input
           type="text"
@@ -21,6 +34,7 @@
           size="40"
           class="form-control"
           :class="{ filled: form.naam }"
+          :disabled="pending"
         /><br />
         <label for="naam">Naam</label>
       </div>
@@ -34,6 +48,7 @@
           rows="10"
           class="form-control"
           :class="{ filled: form.tiptop }"
+          :disabled="pending"
           required
         ></textarea
         ><br />
@@ -41,15 +56,15 @@
       </div>
       <div data-netlify-recaptcha="true"></div>
       <div class="form-group">
-        <input type="submit" value="Verstuur" class="form-submit" />
+        <input type="submit" value="Verstuur" class="form-submit" :disabled="pending" />
       </div>
-      <small v-if="response.message"
+      <small v-if="response.message" :class="response.status"
         ><i>{{ response.message }}</i></small
       >
     </form>
   </div>
 </template>
-<script>
+<script lang="ts">
 import { useFeedback } from '@/composables/useFeedback';
 import { defineComponent, reactive, ref } from 'vue';
 
@@ -60,31 +75,48 @@ export default defineComponent({
   setup(_, { emit }) {
     const pending = ref(false);
     const cleanForm = {
-      naam: null,
-      tiptop: null,
+      naam: '',
+      tiptop: '',
+      website: '',
     };
     const form = reactive({
       ...cleanForm,
     });
     const response = reactive({
-      status: null,
-      message: null,
+      status: '',
+      message: '',
     });
     const { sendFeedbackForm } = useFeedback();
+
+    const clearResponse = () => {
+      response.status = '';
+      response.message = '';
+    };
+
     const onSuccessFulSubmit = () => {
-      pending.value = true;
+      response.status = 'success';
       response.message = 'Jouw feedback is verstuurd';
       setTimeout(() => {
         Object.assign(form, cleanForm);
-        pending.value = false;
-        response.message = null;
+        clearResponse();
       }, 4000);
     };
 
     const onSubmit = async () => {
-      await sendFeedbackForm(form);
-      onSuccessFulSubmit();
-      emit('submitted');
+      pending.value = true;
+      clearResponse();
+
+      try {
+        await sendFeedbackForm(form);
+        onSuccessFulSubmit();
+        emit('submitted');
+      } catch (error) {
+        response.status = 'error';
+        response.message =
+          error instanceof Error ? error.message : 'Versturen is mislukt. Probeer het opnieuw.';
+      } finally {
+        pending.value = false;
+      }
     };
 
     return { form, onSubmit, response, pending };
@@ -110,5 +142,13 @@ export default defineComponent({
 }
 small {
   padding: 2rem;
+
+  &.error {
+    color: $red;
+  }
+
+  &.success {
+    color: $green;
+  }
 }
 </style>

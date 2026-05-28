@@ -5,6 +5,7 @@ import { FeedbackEntry } from '@/composables/useFeedback';
 type SongRating = {
   id: string;
   rating: number;
+  key?: string;
 };
 
 export type FeedbackState = {
@@ -25,17 +26,24 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     allFeedback: null,
   },
   getters: {
-    lookupSongRating: state => (songId: string) => {
-      return state.userRatings?.find(song => song.id === songId);
+    lookupSongRating: (state) => (songId: string) => {
+      return state.userRatings?.find((song) => song.id === songId);
     },
-    getUserId: state => state.userId,
+    getUserId: (state) => state.userId,
   },
   mutations: {
     setUserId(state, id) {
       state.userId = id;
     },
     setUserRating(state, songRating: SongRating) {
-      state.userRatings?.push(songRating);
+      const currentIndex = state.userRatings.findIndex((song) => song.id === songRating.id);
+
+      if (currentIndex >= 0) {
+        state.userRatings.splice(currentIndex, 1, songRating);
+        return;
+      }
+
+      state.userRatings.push(songRating);
     },
     setAllRatings(state, ratings) {
       state.allRatings = ratings;

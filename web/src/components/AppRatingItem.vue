@@ -33,7 +33,9 @@
         </span>
         <small v-if="currentRating?.avg" class="meta">{{ currentRating.avg }}</small>
       </div>
-      <small v-if="currentRating?.count" class="muted">{{ currentRating.count }} beoordelingen</small>
+      <small v-if="currentRating?.count" class="muted"
+        >{{ currentRating.count }} beoordelingen</small
+      >
     </div>
 
     <template v-if="interactive">
@@ -300,8 +302,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use "@/assets/styles/common/variables" as *;
-@use "@/assets/styles/common/mixins" as *;
+@use '@/assets/styles/common/variables' as *;
+@use '@/assets/styles/common/mixins' as *;
 
 .rating-item {
   position: relative;

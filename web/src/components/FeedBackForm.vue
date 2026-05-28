@@ -92,8 +92,8 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@use "@/assets/styles/common/variables" as *;
-@use "@/assets/styles/common/mixins" as *;
+@use '@/assets/styles/common/variables' as *;
+@use '@/assets/styles/common/mixins' as *;
 .hidden {
   display: none;
 }

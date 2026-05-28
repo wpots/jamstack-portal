@@ -156,6 +156,21 @@ interface RichTextNode {
   content?: RichTextNode[];
 }
 
+const blockNodeTypes = new Set([
+  'paragraph',
+  'heading-1',
+  'heading-2',
+  'heading-3',
+  'heading-4',
+  'heading-5',
+  'heading-6',
+  'blockquote',
+  'hr',
+  'unordered-list',
+  'ordered-list',
+  'list-item',
+]);
+
 interface ProgramSource {
   programItems?: ProgramItem[];
 }
@@ -254,10 +269,17 @@ function extractRichText(node: RichTextNode | undefined): string {
     return node.value || '';
   }
 
-  return (node.content || [])
-    .map((child) => extractRichText(child))
-    .join(' ')
-    .trim();
+  if (node.nodeType === 'hardBreak') {
+    return '\n';
+  }
+
+  const content = (node.content || []).map((child) => extractRichText(child)).join('');
+
+  if (blockNodeTypes.has(node.nodeType || '')) {
+    return `${content}\n\n`;
+  }
+
+  return content;
 }
 
 function isRichTextNode(value: unknown): value is RichTextNode {
@@ -322,7 +344,7 @@ function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlo
 function createTextBlock(item: ProgramRichTextItem, occurrence: number): PreviewTextBlock {
   const title = item.title || `Tussenstuk ${occurrence}`;
   const description =
-    extractRichText(getRichTextNode(item.body?.json)) ||
+    extractRichText(getRichTextNode(item.body?.json)).trim() ||
     noteDescriptions[title] ||
     'Compact tekstblok voor een overgang, toelichting of ritmische onderbreking.';
 

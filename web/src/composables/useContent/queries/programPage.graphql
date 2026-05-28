@@ -50,6 +50,7 @@ query getProgramPageQuery($concertId: String!) {
             }
           }
           ... on ProgramSetBlock {
+            eyebrow
             title
             songsCollection(limit: 20) {
               items {

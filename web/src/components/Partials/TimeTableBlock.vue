@@ -30,6 +30,7 @@
             <ProgramSetBlock
               v-else-if="item.type === 'set'"
               :sectionId="getSetSectionId(index)"
+              :kicker="item.eyebrow"
               :title="item.title"
               :songs="item.songs"
               class="program-item"
@@ -67,6 +68,21 @@ interface RichTextNode {
   value?: string;
   content?: RichTextNode[];
 }
+
+const blockNodeTypes = new Set([
+  'paragraph',
+  'heading-1',
+  'heading-2',
+  'heading-3',
+  'heading-4',
+  'heading-5',
+  'heading-6',
+  'blockquote',
+  'hr',
+  'unordered-list',
+  'ordered-list',
+  'list-item',
+]);
 
 interface TeaserColumnItem {
   __typename?: string;
@@ -146,10 +162,17 @@ function extractRichText(node: RichTextNode | undefined): string {
     return node.value || '';
   }
 
-  return (node.content || [])
-    .map((child) => extractRichText(child))
-    .join(' ')
-    .trim();
+  if (node.nodeType === 'hardBreak') {
+    return '\n';
+  }
+
+  const content = (node.content || []).map((child) => extractRichText(child)).join('');
+
+  if (blockNodeTypes.has(node.nodeType || '')) {
+    return `${content}\n\n`;
+  }
+
+  return content;
 }
 
 function getTeaserColumns(value: TeaserCms | undefined): TeaserColumnItem[] {
@@ -208,7 +231,7 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Program
   const title = item.title || `Tussenstuk ${occurrence}`;
   const isPause = title.toLowerCase() === 'pauze';
   const description =
-    extractRichText(getRichTextNode(item.body?.json)) ||
+    extractRichText(getRichTextNode(item.body?.json)).trim() ||
     noteDescriptions[title] ||
     'Compact tekstblok voor een overgang, toelichting of ritmische onderbreking.';
 

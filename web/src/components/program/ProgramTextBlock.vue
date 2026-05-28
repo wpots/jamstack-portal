@@ -10,16 +10,14 @@
       <img :src="imageSrc" :alt="mediaAlt" class="program-preview__text-block-image" />
     </div>
     <div class="program-preview__text-block-copy">
-      <p v-if="kicker" class="program-preview__kicker">{{ kicker }}</p>
-      <h2>{{ title }}</h2>
+      <header v-if="kicker || title" :class="headerClass">
+        <p v-if="kicker" class="kicker">{{ kicker }}</p>
+        <h2 v-if="title" class="title-fancy">{{ title }}</h2>
+      </header>
       <div v-if="normalizedDescriptions.length" class="program-preview__text-block-body">
-        <component
-          :is="descriptionTag"
-          v-for="(item, index) in normalizedDescriptions"
-          :key="`${title}-${index}`"
-        >
+        <p v-for="(item, index) in normalizedDescriptions" :key="`${title}-${index}`">
           {{ item }}
-        </component>
+        </p>
       </div>
     </div>
   </article>
@@ -64,8 +62,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const descriptionTag = computed(() => {
-      return props.variant === 'knockout' ? 'small' : 'p';
+
+
+    const headerClass = computed(() => {
+      return props.variant === 'knockout'
+        ? 'program-section-header inverse'
+        : 'program-section-header';
     });
 
     const hasImage = computed(() => Boolean(props.imageSrc));
@@ -78,9 +80,9 @@ export default defineComponent({
     });
 
     return {
-      descriptionTag,
       hasImage,
       normalizedDescriptions,
+      headerClass,
     };
   },
 });
@@ -102,6 +104,11 @@ export default defineComponent({
 .program-preview__text-block-body {
   display: grid;
   gap: 0.85rem;
+
+  > * {
+    margin: 0;
+    white-space: pre-wrap;
+  }
 }
 
 .program-preview__text-block-media {

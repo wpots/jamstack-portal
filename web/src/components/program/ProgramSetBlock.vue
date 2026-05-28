@@ -1,9 +1,31 @@
 <template>
   <section :id="sectionId || undefined" class="program-set">
-    <header v-if="title" class="program-set__header">
-      <h3>{{ title }}</h3>
+    <header v-if="kicker || title" class="program-section-header">
+      <p v-if="kicker" class="kicker">{{ kicker }}</p>
+      <h2 class="title">{{ title }}</h2>
     </header>
-    <ul class="program-set__songs">
+
+    <template v-if="singleSong">
+      <AppRatingItem
+        v-if="singleSong.linkedScore?.sys?.id"
+        :interactive="false"
+        :song="singleSong.linkedScore"
+      />
+      <article v-else class="program-set__custom-song">
+        <img
+          v-if="singleSong.imageUrl"
+          :src="singleSong.imageUrl"
+          :alt="singleSong.title"
+          class="program-set__image"
+        />
+        <div class="program-set__meta">
+          <h4>{{ singleSong.title }}</h4>
+          <small v-if="singleSong.artist">{{ singleSong.artist }}</small>
+        </div>
+      </article>
+    </template>
+
+    <ul v-else class="program-set__songs">
       <li v-for="(song, index) in songs" :key="`${song.title}-${index}`" class="program-set__song">
         <AppRatingItem
           v-if="song.linkedScore?.sys?.id"
@@ -28,7 +50,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
 import type { ProgramSongEntry } from '@/composables/useContent/program.types';
 
@@ -44,10 +66,21 @@ export default defineComponent({
       type: String,
       default: '',
     },
+    kicker: {
+      type: String,
+      default: '',
+    },
     songs: {
       type: Array as PropType<ProgramSongEntry[]>,
       default: () => [],
     },
+  },
+  setup(props) {
+    const singleSong = computed<ProgramSongEntry | undefined>(() =>
+      props.songs.length === 1 ? props.songs[0] : undefined,
+    );
+
+    return { singleSong };
   },
 });
 </script>
@@ -61,14 +94,6 @@ export default defineComponent({
   box-sizing: border-box;
   flex-direction: column;
   padding: 1rem 2rem 2rem;
-}
-
-.program-set__header {
-  margin-bottom: 1rem;
-
-  h3 {
-    margin-bottom: 0;
-  }
 }
 
 .program-set__songs {

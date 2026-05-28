@@ -175,6 +175,7 @@ const mapProgramPageItems = (items: unknown[]): ProgramItem[] => {
       return [
         {
           type: 'set',
+          eyebrow: typeof item.eyebrow === 'string' ? item.eyebrow : undefined,
           title: typeof item.title === 'string' ? item.title : undefined,
           songs,
         },

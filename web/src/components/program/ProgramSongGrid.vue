@@ -1,10 +1,19 @@
 <template>
-  <div
-    :class="[
-      'program-preview__song-grid',
-      { 'program-preview__song-grid--single': songs.length === 1 },
-    ]"
-  >
+  <article v-if="singleSong" class="program-preview__song-card tone-0">
+    <div class="program-preview__song-art">
+      <span>{{ getInitials(singleSong.title) }}</span>
+    </div>
+    <div class="program-preview__song-copy">
+      <p>{{ shortLabel }}</p>
+      <h3>{{ singleSong.title }}</h3>
+      <small>{{ getSubtitle(singleSong) }}</small>
+    </div>
+    <footer class="program-preview__song-actions">
+      <AppRatingItem :song="singleSong.linkedScore" variant="program-preview" />
+    </footer>
+  </article>
+
+  <div v-else class="program-preview__song-grid">
     <article
       v-for="(song, index) in songs"
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
@@ -26,7 +35,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, PropType } from 'vue';
+import { computed, defineComponent, onMounted, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
 import { useFeedback } from '@/composables/useFeedback';
 import type { LinkedScore } from '@/composables/useContent/program.types';
@@ -45,6 +54,9 @@ export default defineComponent({
   },
   setup(props) {
     const { fetchSongRatings, getSongRatings } = useFeedback();
+    const singleSong = computed<ProgramSongGridItem | undefined>(() =>
+      props.songs.length === 1 ? props.songs[0] : undefined,
+    );
 
     onMounted(async () => {
       if (!getSongRatings.value) {
@@ -63,7 +75,7 @@ export default defineComponent({
     const getSubtitle = (song: ProgramSongGridItem): string =>
       song.linkedScore?.artist || props.shortLabel || 'Live in concert';
 
-    return { getInitials, getSubtitle };
+    return { getInitials, getSubtitle, singleSong };
   },
 });
 </script>
@@ -78,10 +90,6 @@ export default defineComponent({
   margin: 0;
   padding: 0;
   list-style: none;
-}
-
-.program-preview__song-grid--single {
-  display: block;
 }
 
 .program-preview__song-card {

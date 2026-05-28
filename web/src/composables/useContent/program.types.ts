@@ -25,6 +25,7 @@ export interface ProgramTeaserItem {
 
 export interface ProgramSetItem {
   type: 'set';
+  eyebrow?: string;
   title?: string;
   songs: ProgramSongEntry[];
 }

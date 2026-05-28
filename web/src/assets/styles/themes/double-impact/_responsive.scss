@@ -1,0 +1,49 @@
+@media (max-width: 900px) {
+  .program-preview__intro,
+  .program-preview__spotlight,
+  .program-preview__section-header {
+    grid-template-columns: 1fr;
+  }
+
+  .program-preview__highlight-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .program-preview__song-grid {
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(9.5rem, 11rem);
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x proximity;
+  }
+
+  .program-preview__song-card {
+    scroll-snap-align: start;
+  }
+
+  .program-preview__feedback-bar {
+    position: sticky;
+    bottom: 1rem;
+    z-index: 10;
+    flex-direction: column;
+    align-items: stretch;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .program-preview__confetti {
+    top: 0.75rem;
+    right: 0.5rem;
+    width: 8.5rem;
+  }
+
+  .program-preview__waves--back {
+    width: 165vw;
+  }
+
+  .program-preview__waves--front {
+    width: 160vw;
+  }
+}

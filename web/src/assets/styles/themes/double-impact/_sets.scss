@@ -1,0 +1,78 @@
+.program-theme--double-impact .program-set {
+  .program-set__header h3 {
+    color: var(--program-color-accent, #{$magenta});
+    font-family: var(--program-font-display, #{$font-fam-heading});
+    font-size: clamp(2rem, 7vw, 3rem);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .program-set__songs {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    scroll-snap-type: x proximity;
+  }
+
+  .program-set__song-card,
+  .program-set__song {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    background: $white;
+    border-radius: 1rem;
+    box-shadow: 0 16px 30px rgba($black, 0.08);
+  }
+
+  .program-set__song-art {
+    display: flex;
+    aspect-ratio: 1.1;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    color: $white;
+    font-family: $font-fam-heading;
+    font-size: 2.25rem;
+  }
+
+  .program-set__song-art-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .rating-item,
+  .program-set__custom-song {
+    width: 228px;
+    max-width: 228px;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: 1rem;
+    box-shadow: 0 12px 24px rgba($black, 0.12);
+  }
+
+  .rating-item .song-meta {
+    gap: 0.65rem;
+  }
+
+  .program-set__image {
+    width: 100%;
+    height: 92px;
+    margin-bottom: 0.65rem;
+    border-radius: 0.75rem;
+    object-fit: cover;
+  }
+
+  .rating-item h4,
+  .program-set__meta h4 {
+    font-family: var(--program-font-body, #{$font-fam-body});
+    font-size: 0.95rem;
+    line-height: 1.15;
+  }
+
+  .rating-item small,
+  .program-set__meta small {
+    font-family: var(--program-font-body, #{$font-fam-body});
+    font-size: 0.72rem;
+  }
+}

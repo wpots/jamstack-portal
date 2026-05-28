@@ -289,7 +289,7 @@ export default defineComponent({
   flex-flow: row wrap;
   align-items: flex-end;
   justify-content: space-between;
-  padding: 1rem;
+
   margin-top: 0.5rem;
   max-width: 228px;
   background: $white;

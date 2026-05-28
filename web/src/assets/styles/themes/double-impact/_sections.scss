@@ -1,0 +1,45 @@
+.program-theme--double-impact .program-section-header {
+  margin-bottom: 0.875rem;
+
+  .title,
+  .title-fancy {
+    margin-bottom: 0.5rem;
+    color: var(--program-color-contrast);
+    font-size: clamp(1.875rem, 6vw, 4rem);
+  }
+
+  .title-fancy {
+    font-family: var(--program-font-display);
+  }
+
+  .title {
+    font-family: var(--program-font-title);
+    font-size: calc(1.175rem + 0.9vw);
+    font-weight: var(--program-font-weight-body);
+  }
+
+  .kicker {
+    margin-bottom: 0;
+    color: rgba($pimple, 0.58);
+    font-family: var(--program-font-body);
+    font-size: 0.7em;
+    font-weight: var(--program-font-weight-body-strong);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+
+  &.inverse {
+    .title,
+    .title-fancy {
+      color: $white;
+    }
+
+    .kicker {
+      color: rgba($white, 0.78);
+    }
+  }
+}
+
+.program-theme--double-impact .program-preview__text-block--knockout {
+  background: linear-gradient(135deg, $purple, $black);
+}

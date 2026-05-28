@@ -1,0 +1,82 @@
+.program-theme--double-impact .program-hero {
+  position: relative;
+  padding: 8rem 0 4rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 77, 157, 0.22), transparent 24%),
+    radial-gradient(circle at 88% 12%, rgba(59, 236, 168, 0.18), transparent 22%),
+    linear-gradient(160deg, #140812 0%, #2a1322 54%, #120e1d 100%);
+  color: $white;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 7rem;
+    background: linear-gradient(180deg, transparent, rgba($black, 0.65));
+    pointer-events: none;
+  }
+
+  h1 {
+    margin-bottom: 1rem;
+    font-family: var(--program-font-display, #{$font-fam-program-title});
+    font-size: clamp(3.1rem, 8vw, 6.3rem);
+    font-weight: var(--program-font-weight-title, #{$font-weight-program-title});
+    line-height: 0.88;
+    text-shadow: 0 12px 30px rgba($black, 0.4);
+  }
+
+  .program-hero__eyebrow {
+    margin-bottom: 0;
+    color: rgba($white, 0.78);
+  }
+}
+
+.program-preview__hero-content,
+.program-theme--double-impact .program-hero__copy {
+  position: relative;
+  z-index: 1;
+  max-width: 70rem;
+}
+
+.program-preview__confetti,
+.program-preview__waves,
+.program-theme--double-impact .program-hero__confetti,
+.program-theme--double-impact .program-hero__waves {
+  display: block;
+  position: absolute;
+  pointer-events: none;
+}
+
+.program-preview__confetti,
+.program-theme--double-impact .program-hero__confetti {
+  top: 1rem;
+  right: 1rem;
+  z-index: 1;
+  width: min(15rem, 34vw);
+  opacity: 0.9;
+}
+
+.program-preview__waves,
+.program-theme--double-impact .program-hero__waves {
+  left: 50%;
+  bottom: -1px;
+  width: min(120rem, 150vw);
+  max-width: none;
+  transform: translateX(-50%);
+  transform-origin: center bottom;
+}
+
+.program-preview__waves--back,
+.program-theme--double-impact .program-hero__waves--back {
+  z-index: 0;
+  opacity: 0.85;
+}
+
+.program-preview__waves--front,
+.program-theme--double-impact .program-hero__waves--front {
+  z-index: 0;
+  width: min(118rem, 146vw);
+  opacity: 0.75;
+  transform: translateX(-40%) translateX(-22%);
+}

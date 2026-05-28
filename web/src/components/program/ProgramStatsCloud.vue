@@ -58,15 +58,19 @@ export default defineComponent({
       const maxValue = Math.max(...values, 1);
       const minValue = Math.min(...values, maxValue);
       const valueRange = Math.max(maxValue - minValue, 1);
+      const centerIndex = (baseStats.length - 1) / 2;
 
       return baseStats.map((stat, index) => {
         const emphasis = valueRange === 0 ? 0.5 : (stat.value - minValue) / valueRange;
         const ratioToMax = stat.value / maxValue;
         const sizeWeight = 0.35 + ratioToMax * 0.65;
         const scale = 0.88 + sizeWeight * 0.34;
-        const drift = 0.14 + emphasis * 0.18;
-        const offsetX = -(index * 0.38 + (1 - ratioToMax) * 0.18);
-        const offsetY = (index % 2 === 0 ? -0.04 : 0.16) + index * 0.08 - emphasis * 0.08;
+        const driftY = 0.2 + emphasis * 0.16;
+        const spreadDirection = index - centerIndex;
+        const direction = spreadDirection === 0 ? 0 : Math.sign(spreadDirection);
+        const offsetX = spreadDirection * 0.46 + direction * (1 - ratioToMax) * 0.12;
+        const offsetY = (index % 2 === 0 ? -0.08 : 0.18) + index * 0.1 - emphasis * 0.1;
+        const driftX = direction * (0.12 + emphasis * 0.12);
 
         return {
           ...stat,
@@ -78,9 +82,10 @@ export default defineComponent({
             '--program-stats-padding-x': `${(0.96 + sizeWeight * 0.42).toFixed(2)}em`,
             '--program-stats-offset-x': `${offsetX.toFixed(2)}rem`,
             '--program-stats-offset-y': `${offsetY.toFixed(2)}rem`,
-            '--program-stats-float-distance': `${drift.toFixed(2)}rem`,
-            '--program-stats-duration': `${(11.5 + index * 1.4 - emphasis * 0.9).toFixed(2)}s`,
-            '--program-stats-delay': `${(-1.8 * index).toFixed(2)}s`,
+            '--program-stats-float-distance-y': `${driftY.toFixed(2)}rem`,
+            '--program-stats-float-distance-x': `${driftX.toFixed(2)}rem`,
+            '--program-stats-duration': `${(7.8 + index * 0.9 - emphasis * 0.45).toFixed(2)}s`,
+            '--program-stats-delay': `${(-1.2 * index).toFixed(2)}s`,
           },
         };
       });
@@ -99,7 +104,8 @@ export default defineComponent({
   z-index: 3;
   margin-top: -4rem;
   margin-bottom: 2rem;
-  padding: 0 1rem 1rem;
+  padding: 0.45rem 1rem 1.25rem;
+  overflow: visible;
 }
 
 .program-stats-cloud__list {
@@ -107,14 +113,16 @@ export default defineComponent({
   flex-wrap: wrap;
   gap: 0;
   justify-content: flex-end;
-  margin: 0 0 -1.25rem auto;
+  margin: 0 0 -0.9rem auto;
   padding: 0;
   list-style: none;
   z-index: 2;
+  width: fit-content;
+  max-width: 100%;
 }
 
 .program-stats-cloud__item {
-  margin: -0.06rem -0.14rem;
+  margin: -0.04rem -0.12rem;
 }
 
 .program-stats-cloud__pill {
@@ -140,7 +148,7 @@ export default defineComponent({
   transform-origin: right center;
   transform: translate(var(--program-stats-offset-x, 0), var(--program-stats-offset-y, 0))
     scale(var(--program-stats-scale, 1));
-  animation: stats-cloud-float var(--program-stats-duration, 6.5s) ease-in-out
+  animation: stats-cloud-float var(--program-stats-duration, 6.5s) cubic-bezier(0.42, 0, 0.22, 1)
     var(--program-stats-delay, 0s) infinite;
   will-change: transform;
 }
@@ -178,8 +186,8 @@ export default defineComponent({
 
   50% {
     transform: translate(
-        var(--program-stats-offset-x, 0),
-        calc(var(--program-stats-offset-y, 0) - var(--program-stats-float-distance, 0.65rem))
+        calc(var(--program-stats-offset-x, 0) + var(--program-stats-float-distance-x, 0rem)),
+        calc(var(--program-stats-offset-y, 0) - var(--program-stats-float-distance-y, 0.65rem))
       )
       scale(var(--program-stats-scale, 1));
   }
@@ -188,11 +196,11 @@ export default defineComponent({
 @media (max-width: 767px) {
   .program-stats-cloud {
     margin-top: -3rem;
-    padding: 0 0.75rem 0.75rem;
+    padding: 0.35rem 0.75rem 0.9rem;
   }
 
   .program-stats-cloud__item {
-    margin: -0.04rem -0.08rem;
+    margin: -0.03rem -0.08rem;
   }
 
   .program-stats-cloud__pill {

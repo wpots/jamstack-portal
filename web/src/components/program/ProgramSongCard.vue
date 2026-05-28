@@ -1,17 +1,16 @@
 <template>
-  <component :is="tag" class="program-song-card" :class="tone">
+  <component :is="tag" class="program-song-card">
     <div class="program-song-card__art">
       <img
         v-if="albumArtUrl"
         :src="albumArtUrl"
-        :alt="song.title"
+        :alt="titleText"
         class="program-song-card__art-image"
       />
-      <span v-else>{{ initials }}</span>
     </div>
     <div class="program-song-card__copy">
-      <h3>{{ song.title }}</h3>
-      <small v-if="song.artist">{{ song.artist }}</small>
+      <h3>{{ titleText }}</h3>
+      <p v-if="artistText">{{ artistText }}</p>
     </div>
   </component>
 </template>
@@ -49,16 +48,10 @@ export default defineComponent({
     const albumArtUrl = computed(
       () => props.song.imageUrl || props.song.linkedScore?.albumart?.url || '',
     );
-    const initials = computed(() =>
-      props.song.title
-        .split(/\s+/)
-        .filter(Boolean)
-        .slice(0, 2)
-        .map((part) => part.charAt(0).toUpperCase())
-        .join(''),
-    );
+    const titleText = computed(() => props.song.title || props.song.linkedScore?.title || '');
+    const artistText = computed(() => props.song.artist || props.song.linkedScore?.artist || '');
 
-    return { albumArtUrl, initials };
+    return { albumArtUrl, titleText, artistText };
   },
 });
 </script>
@@ -79,9 +72,6 @@ export default defineComponent({
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  color: $white;
-  font-family: $font-fam-heading;
-  font-size: 2.25rem;
 }
 
 .program-song-card__art-image {
@@ -98,29 +88,14 @@ export default defineComponent({
 
   h3 {
     margin-bottom: 0.35rem;
-    font-size: 1rem;
+
     line-height: 1.15;
+    font-family: var(--program-font-display, #{$font-fam-heading});
+    font-size: 1.25rem;
   }
 
-  small {
-    display: block;
-    line-height: 1.3;
+  p {
+    font-size: 0.875rem;
   }
-}
-
-.tone-0 .program-song-card__art {
-  background: linear-gradient(135deg, $magenta, #ff5bb9);
-}
-
-.tone-1 .program-song-card__art {
-  background: linear-gradient(135deg, $green-alt, $theme-color-accent);
-}
-
-.tone-2 .program-song-card__art {
-  background: linear-gradient(135deg, $black, $tundora);
-}
-
-.tone-3 .program-song-card__art {
-  background: linear-gradient(135deg, $red, #ff8b4d);
 }
 </style>

@@ -1,0 +1,41 @@
+.program-theme--double-impact {
+  --program-font-display: #{$font-fam-program-display};
+  --program-font-title: #{$font-fam-program-title};
+  --program-font-body: #{$font-fam-program-body};
+  --program-font-body-strong: #{$font-fam-program-body-strong};
+  --program-font-weight-title: #{$font-weight-program-title};
+  --program-font-weight-body: #{$font-weight-program-body};
+  --program-font-weight-body-strong: #{$font-weight-program-body-strong};
+  --program-color-accent: #{$pimple};
+  --program-color-contrast: #{$purple};
+  --program-color-surface: #fff8fc;
+
+  .feedbackform,
+  .feedback-form,
+  form {
+    font-family: var(--program-font-body);
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.program-preview,
+.program-theme--double-impact {
+  min-height: 100vh;
+  padding-bottom: 4rem;
+  background:
+    radial-gradient(circle at top left, rgba($purple, 0.14), transparent 35%),
+    linear-gradient(180deg, $white 0%, $smoke 100%);
+  color: var(--program-color-contrast);
+  font-family: var(--program-font-body);
+}
+
+.program-preview__lede,
+.program-theme--double-impact .program-hero__lede {
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  text-shadow: 0 6px 18px rgba($black, 0.35);
+}

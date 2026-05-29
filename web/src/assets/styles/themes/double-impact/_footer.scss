@@ -24,3 +24,19 @@
   margin: 0;
   max-width: 28rem;
 }
+
+.program-theme--double-impact .program-footer__maker {
+  margin: 0;
+  flex: 1 0 100%;
+
+  a {
+    color: inherit;
+    font: inherit;
+    text-decoration: none;
+
+    &:hover,
+    &:focus-visible {
+      text-decoration: underline;
+    }
+  }
+}

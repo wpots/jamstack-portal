@@ -311,7 +311,12 @@ function getTeaserColumns(value: TeaserCms | undefined): TeaserColumnItem[] {
 function extractFeaturedContentItems(value: TeaserCms | undefined): PreviewFeaturedContent[] {
   return getTeaserColumns(value)
     .filter((item) => item.__typename === 'FeaturedContent')
-    .filter((item) => Boolean((item.title && item.title.trim()) || (item.ctaText && item.ctaText.trim() && item.ctaUrl && item.ctaUrl.trim())))
+    .filter((item) =>
+      Boolean(
+        (item.title && item.title.trim()) ||
+        (item.ctaText && item.ctaText.trim() && item.ctaUrl && item.ctaUrl.trim()),
+      ),
+    )
     .map((item) => ({
       label: item.label || 'Website',
       title: item.title || '',

@@ -202,7 +202,12 @@ function extractTeaserDescriptions(value: TeaserCms | undefined): string[] {
 function extractFeaturedContentItems(value: TeaserCms | undefined): FeaturedContentCardProps[] {
   return getTeaserColumns(value)
     .filter((item) => item.__typename === 'FeaturedContent')
-    .filter((item) => Boolean((item.title && item.title.trim()) || (item.ctaText && item.ctaText.trim() && item.ctaUrl && item.ctaUrl.trim())))
+    .filter((item) =>
+      Boolean(
+        (item.title && item.title.trim()) ||
+        (item.ctaText && item.ctaText.trim() && item.ctaUrl && item.ctaUrl.trim()),
+      ),
+    )
     .map((item) => ({
       label: resolveEyebrow(item.label, 'Website'),
       title: item.title || '',

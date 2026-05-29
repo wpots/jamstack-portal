@@ -26,6 +26,12 @@ export function ensurePostRequest(event: NetlifyEvent) {
   }
 }
 
+export function ensureGetRequest(event: NetlifyEvent) {
+  if (event.httpMethod !== 'GET') {
+    throw new Error('METHOD_NOT_ALLOWED');
+  }
+}
+
 export function parseJsonBody<T>(event: NetlifyEvent): T {
   if (!event.body) {
     throw new Error('EMPTY_BODY');
@@ -38,6 +44,47 @@ export function parseJsonBody<T>(event: NetlifyEvent): T {
   }
 }
 
+function getRequestOrigin(event: NetlifyEvent): string | null {
+  const origin = event.headers?.origin || event.headers?.Origin;
+
+  if (origin) {
+    return origin;
+  }
+
+  const referer = event.headers?.referer || event.headers?.Referer;
+
+  if (!referer) {
+    return null;
+  }
+
+  try {
+    return new URL(referer).origin;
+  } catch {
+    return null;
+  }
+}
+
+function isLocalhostOrigin(origin: string): boolean {
+  try {
+    const { hostname } = new URL(origin);
+    return hostname === 'localhost' || hostname === '127.0.0.1';
+  } catch {
+    return false;
+  }
+}
+
+function isAllowedFeedbackOrigin(origin: string, allowedOrigins: string[]): boolean {
+  if (allowedOrigins.includes(origin)) {
+    return true;
+  }
+
+  if (!isLocalhostOrigin(origin)) {
+    return false;
+  }
+
+  return allowedOrigins.some((allowedOrigin) => isLocalhostOrigin(allowedOrigin));
+}
+
 export function assertAllowedOrigin(event: NetlifyEvent) {
   const allowList = process.env.FEEDBACK_ALLOWED_ORIGINS;
 
@@ -45,7 +92,7 @@ export function assertAllowedOrigin(event: NetlifyEvent) {
     return;
   }
 
-  const origin = event.headers?.origin || event.headers?.Origin;
+  const origin = getRequestOrigin(event);
 
   if (!origin) {
     throw new Error('ORIGIN_REQUIRED');
@@ -56,7 +103,7 @@ export function assertAllowedOrigin(event: NetlifyEvent) {
     .map((value) => value.trim())
     .filter(Boolean);
 
-  if (!allowedOrigins.includes(origin)) {
+  if (!isAllowedFeedbackOrigin(origin, allowedOrigins)) {
     throw new Error('ORIGIN_NOT_ALLOWED');
   }
 }
@@ -136,6 +183,18 @@ export function validateRating(rating?: number | null): number {
   return rating;
 }
 
+export function validatePerformedByUs(performedByUs?: boolean | null): boolean {
+  if (performedByUs === undefined || performedByUs === null) {
+    return true;
+  }
+
+  if (typeof performedByUs !== 'boolean') {
+    throw new Error('INVALID_PERFORMED_BY_US');
+  }
+
+  return performedByUs;
+}
+
 export function mapApiError(error: unknown) {
   const message = error instanceof Error ? error.message : 'UNKNOWN_ERROR';
 
@@ -146,6 +205,7 @@ export function mapApiError(error: unknown) {
     case 'INVALID_JSON':
     case 'INVALID_SONG_ID':
     case 'INVALID_RATING':
+    case 'INVALID_PERFORMED_BY_US':
     case 'INVALID_PARTICIPANT_ID':
     case 'MESSAGE_REQUIRED':
       return createJsonResponse(400, { message: 'Ongeldige aanvraag.' });

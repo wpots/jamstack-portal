@@ -14,7 +14,7 @@
           <svg class="location__icon"><use href="#icon-map-marker"></use></svg>{{ event.venue }}
         </p>
       </div>
-      <div class="col-auto align-self-end">
+      <div v-if="showToggle" class="col-auto align-self-end">
         <button
           @click="showDetails = !showDetails"
           type="button"
@@ -26,7 +26,7 @@
         </button>
       </div>
 
-      <div v-if="showDetails" class="event-body col-xs-12">
+      <div v-if="isDetailsVisible" class="event-body col-xs-12">
         <p>{{ event.description }}</p>
         <CallToAction v-if="actionLink" :cms="actionLink" />
       </div>
@@ -49,6 +49,14 @@ export default defineComponent({
       default: () => {
         return {};
       },
+    },
+    defaultExpanded: {
+      type: Boolean,
+      default: false,
+    },
+    showToggle: {
+      type: Boolean,
+      default: true,
     },
   },
   setup(props) {
@@ -90,9 +98,16 @@ export default defineComponent({
       };
     });
 
-    const showDetails = ref(false);
+    const showDetails = ref(props.defaultExpanded);
+    const isDetailsVisible = computed(() => {
+      if (!props.showToggle) {
+        return Boolean(props.event?.description);
+      }
 
-    return { actionLink, formattedDate, showDetails };
+      return showDetails.value;
+    });
+
+    return { actionLink, formattedDate, isDetailsVisible, showDetails, showToggle: props.showToggle };
   },
 });
 </script>

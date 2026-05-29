@@ -60,6 +60,8 @@ export default defineComponent({
     const linksScrollRef = ref<HTMLElement | null>(null);
     const activeSectionId = ref<string>('');
     let animationFrame = 0;
+    let isProgrammaticScroll = false;
+    let programmaticScrollTimeout: ReturnType<typeof globalThis.setTimeout> | undefined;
 
     const formatNavigationIndex = (index: number): string => {
       return String(index + 1).padStart(2, '0');
@@ -80,7 +82,7 @@ export default defineComponent({
     };
 
     const updateActiveSection = (): void => {
-      if (globalThis.window === undefined) {
+      if (globalThis.window === undefined || isProgrammaticScroll) {
         return;
       }
 
@@ -91,11 +93,11 @@ export default defineComponent({
         return;
       }
 
-      const scrollPosition = globalThis.window.scrollY + getNavigationOffset();
+      const offset = getNavigationOffset();
       let nextActiveSectionId = sections[0].id;
 
       sections.forEach(section => {
-        if (section.offsetTop <= scrollPosition) {
+        if (section.getBoundingClientRect().top <= offset) {
           nextActiveSectionId = section.id;
         }
       });
@@ -116,10 +118,14 @@ export default defineComponent({
         return;
       }
 
-      activeLink.scrollIntoView({
+      const linkLeft = activeLink.offsetLeft;
+      const linkWidth = activeLink.offsetWidth;
+      const containerWidth = scrollContainer.clientWidth;
+      const targetScrollLeft = linkLeft - (containerWidth - linkWidth) / 2;
+
+      scrollContainer.scrollTo({
+        left: Math.max(0, targetScrollLeft),
         behavior: 'smooth',
-        block: 'nearest',
-        inline: 'center',
       });
     };
 
@@ -152,6 +158,12 @@ export default defineComponent({
       requestActiveSectionUpdate();
     };
 
+    const clearProgrammaticScroll = (): void => {
+      isProgrammaticScroll = false;
+      programmaticScrollTimeout = undefined;
+      updateActiveSection();
+    };
+
     const handleNavigation = (sectionId: string): void => {
       if (typeof document === 'undefined' || globalThis.window === undefined) {
         return;
@@ -163,6 +175,11 @@ export default defineComponent({
         return;
       }
 
+      if (programmaticScrollTimeout) {
+        globalThis.clearTimeout(programmaticScrollTimeout);
+      }
+
+      isProgrammaticScroll = true;
       activeSectionId.value = sectionId;
 
       const top =
@@ -170,6 +187,8 @@ export default defineComponent({
 
       globalThis.window.history.replaceState(null, '', `#${sectionId}`);
       globalThis.window.scrollTo({ top: Math.max(top, 0), behavior: 'smooth' });
+
+      programmaticScrollTimeout = globalThis.setTimeout(clearProgrammaticScroll, 900);
     };
 
     const handleHashChange = (): void => {
@@ -212,6 +231,10 @@ export default defineComponent({
 
         if (animationFrame) {
           globalThis.cancelAnimationFrame(animationFrame);
+        }
+
+        if (programmaticScrollTimeout) {
+          globalThis.clearTimeout(programmaticScrollTimeout);
         }
       }
     });

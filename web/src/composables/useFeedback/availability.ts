@@ -102,6 +102,142 @@ function resolveFeatureAvailability({
   };
 }
 
+export type OpenFeedbackWindow = {
+  startAt: number | null;
+  endAt: number | null;
+};
+
+export type VotingWindow = OpenFeedbackWindow;
+
+function getFeatureWindow(
+  openAtKey: string,
+  closeAtKey: string,
+  fallbackOpenAtKey?: string,
+  fallbackCloseAtKey?: string,
+) {
+  const openAt = parseDateValue(readEnvValue(openAtKey, fallbackOpenAtKey));
+  const closeAt = parseDateValue(readEnvValue(closeAtKey, fallbackCloseAtKey));
+
+  return {
+    startAt: openAt,
+    endAt: closeAt,
+  };
+}
+
+export function getVotingWindow(): VotingWindow {
+  return getFeatureWindow(
+    'VITE_VOTING_OPEN_AT',
+    'VITE_VOTING_CLOSE_AT',
+    'VUE_APP_VOTING_OPEN_AT',
+    'VUE_APP_VOTING_CLOSE_AT',
+  );
+}
+
+export function getOpenFeedbackWindow(concertDateRaw?: string): OpenFeedbackWindow {
+  const feedbackOpenAt = parseDateValue(
+    readEnvValue('VITE_FEEDBACK_OPEN_AT', 'VUE_APP_FEEDBACK_OPEN_AT'),
+  );
+  const feedbackCloseAt = parseDateValue(
+    readEnvValue('VITE_FEEDBACK_CLOSE_AT', 'VUE_APP_FEEDBACK_CLOSE_AT'),
+  );
+
+  let concertStartAt: number | null = null;
+
+  if (concertDateRaw) {
+    const concertDate = new Date(concertDateRaw);
+
+    if (!Number.isNaN(concertDate.getTime())) {
+      concertStartAt = concertDate.getTime();
+    }
+  }
+
+  const startCandidates = [feedbackOpenAt, concertStartAt].filter(
+    (value): value is number => value !== null,
+  );
+
+  let startAt: number | null = null;
+
+  if (startCandidates.length > 0) {
+    startAt = Math.min(...startCandidates);
+  } else if (import.meta.env.DEV) {
+    startAt = 0;
+  }
+
+  return {
+    startAt,
+    endAt: feedbackCloseAt,
+  };
+}
+
+export function resolveFeedbackEntryTimestamp(
+  entryDate?: number | string,
+  updatedAt?: string,
+): number | null {
+  if (typeof entryDate === 'number' && Number.isFinite(entryDate)) {
+    return entryDate;
+  }
+
+  if (typeof entryDate === 'string' && entryDate.trim()) {
+    const parsedDate = Number(entryDate);
+
+    if (Number.isFinite(parsedDate)) {
+      return parsedDate;
+    }
+  }
+
+  if (updatedAt) {
+    const parsedUpdatedAt = Date.parse(updatedAt);
+
+    if (!Number.isNaN(parsedUpdatedAt)) {
+      return parsedUpdatedAt;
+    }
+  }
+
+  return null;
+}
+
+export function isEntryInOpenFeedbackWindow(
+  entryDate: number | string | undefined,
+  window: OpenFeedbackWindow,
+  updatedAt?: string,
+): boolean {
+  const timestamp = resolveFeedbackEntryTimestamp(entryDate, updatedAt);
+
+  if (timestamp === null) {
+    return false;
+  }
+
+  if (window.startAt !== null && timestamp < window.startAt) {
+    return false;
+  }
+
+  if (window.endAt !== null && timestamp > window.endAt) {
+    return false;
+  }
+
+  return true;
+}
+
+export function isVoteInVotingWindow(
+  voteDate: number | string | undefined,
+  window: VotingWindow,
+  updatedAt?: string,
+): boolean {
+  const hasWindow = window.startAt !== null || window.endAt !== null;
+
+  if (!hasWindow) {
+    return true;
+  }
+
+  const timestamp = resolveFeedbackEntryTimestamp(voteDate, updatedAt);
+
+  if (timestamp === null) {
+    return true;
+  }
+
+  return isEntryInOpenFeedbackWindow(voteDate, window, updatedAt);
+}
+
 export function getFeedbackAvailability(now = Date.now()): FeedbackAvailabilityState {
   const votingAvailability = resolveFeatureAvailability({
     enabled: readEnvValue('VITE_VOTING_ENABLED', 'VUE_APP_VOTING_ENABLED'),

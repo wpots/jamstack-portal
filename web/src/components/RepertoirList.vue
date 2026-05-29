@@ -1,12 +1,20 @@
 <template>
   <div class="list__items" v-if="songs?.length > 0">
-    <transition-group class="list list--figure row shuffle" name="shuffle" tag="div">
+    <transition-group
+      class="list list--figure shuffle"
+      :class="{ 'list--cards': showRatings, row: !showRatings }"
+      name="shuffle"
+      tag="div"
+    >
       <component
         :is="componentType"
         :interactive="false"
         v-for="song in songs"
-        class="list__item shuffle-item col-6 col-md-4"
+        class="list__item shuffle-item"
+        :class="{ 'col-6 col-md-4': !showRatings }"
         :key="song.title"
+        :layout="showRatings ? 'grid' : 'default'"
+        :performed-by-us="performedByUs"
         :song="song"
       />
     </transition-group>
@@ -31,11 +39,15 @@ export default defineComponent({
         return [];
       },
     },
+    performedByUs: {
+      type: Boolean,
+      default: true,
+    },
   },
   setup(props) {
     const componentType = props.showRatings ? AppRatingItem : RepertoirItem;
 
-    return { componentType };
+    return { componentType, performedByUs: props.performedByUs };
   },
 });
 </script>
@@ -44,6 +56,31 @@ export default defineComponent({
 @use '@/assets/styles/common/mixins' as *;
 h3 {
   font-size: 1em !important;
+}
+
+.list--cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(256px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  margin: 0;
+  align-items: stretch;
+}
+
+.shuffle {
+  align-items: stretch;
+}
+
+:deep(.list--cards .list__item) {
+  display: flex;
+  min-width: 0;
+  height: 100%;
+  padding: 0;
+}
+
+:deep(.list--cards .rating-item--grid) {
+  flex: 1 1 auto;
+  width: 100%;
 }
 
 .shuffle-item {

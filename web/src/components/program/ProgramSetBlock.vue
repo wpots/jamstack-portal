@@ -6,7 +6,7 @@
     </header>
 
     <ProgramSongGrid :songs="songs" />
-    <ProgramFeedbackCTA />
+    <ProgramFeedbackCTA v-if="songs.length === 1" />
   </section>
 </template>
 
@@ -48,5 +48,6 @@ export default defineComponent({
   box-sizing: border-box;
   flex-direction: column;
   padding: 2rem 1rem;
+  scroll-margin-top: calc(var(--program-nav-offset, 5rem) + 1.5rem);
 }
 </style>

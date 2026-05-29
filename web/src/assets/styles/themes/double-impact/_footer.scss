@@ -1,6 +1,5 @@
 .program-theme--double-impact .program-footer {
-  margin-top: 3rem;
-  padding: 2rem 0 3rem;
+  padding: 0 0 3rem;
   border-top: 1px solid rgba($black, 0.08);
   color: rgba($tundora, 0.72);
   font-family: var(--program-font-body);
@@ -13,6 +12,7 @@
   gap: 1rem 2rem;
   align-items: flex-end;
   justify-content: space-between;
+  padding-top: 1rem;
 }
 
 .program-theme--double-impact .program-footer__copyright {

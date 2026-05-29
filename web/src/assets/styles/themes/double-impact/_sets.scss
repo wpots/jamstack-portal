@@ -24,12 +24,18 @@
     background: $white;
     border-radius: 1rem;
     box-shadow: 0 16px 30px rgba($black, 0.08);
-    min-width: 228px;
+    min-width: 256px;
     max-width: 100dvw;
-    &:only-of-type {
+
+    &:only-of-type:not(.program-set__song--single) {
       margin-left: -1rem;
       margin-right: -1rem;
     }
+  }
+
+  .program-set__song--single {
+    min-width: 0;
+    max-width: var(--program-text-max, 44rem);
   }
 
   .program-set__song-art {
@@ -50,11 +56,12 @@
   }
 
   .rating-item__footer {
-    display: flex;
     align-items: flex-end;
-    justify-content: flex-end;
-    gap: 1rem;
-    padding: 0 1rem 1rem;
+  }
+
+  .rating-summary {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 
   .rating-item .song-meta {

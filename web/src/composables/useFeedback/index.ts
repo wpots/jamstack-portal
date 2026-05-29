@@ -2,18 +2,22 @@ import { computed, ref } from 'vue';
 import { useStore } from '../../store';
 import fireBase from './firebase.js';
 import { getDatabase, ref as dbRef, child, get } from 'firebase/database';
-import { getFeedbackAvailability } from './availability';
+import { getFeedbackAvailability, getVotingWindow, isVoteInVotingWindow } from './availability';
+import { markFeedbackSubmitted } from './submission';
 
 export type FeedbackEntry = {
   id: string;
   tiptop: string;
   naam?: string;
+  date?: number;
+  updatedAt?: string;
 };
 
 export type SongRating = {
   id: string;
   rating?: number;
   key?: string;
+  performedByUs?: boolean;
   average?: number | string | null;
   votes?: {
     count: number;
@@ -27,8 +31,10 @@ type FeedbackFormPayload = {
   website?: string;
 };
 
-type FeedbackResultMap = Record<string, FeedbackEntry>;
-type SongRatingResultMap = Record<string, Record<string, { rating: number }>>;
+type SongRatingResultMap = Record<
+  string,
+  Record<string, { rating: number; performedByUs?: boolean; id?: number; updatedAt?: string }>
+>;
 
 const db = getDatabase(fireBase);
 const feedbackParticipantStorageKey = 'goed-gebekt-feedback-participant-id';
@@ -61,6 +67,25 @@ function getParticipantId() {
   return participantId;
 }
 
+function getDevApiUnavailableMessage() {
+  return 'Stemmen API niet bereikbaar. Start `npm run dev` in web/ en open http://localhost:8888.';
+}
+
+async function parseFeedbackResponse<T>(response: Response) {
+  const rawBody = await response.text();
+  return rawBody ? (JSON.parse(rawBody) as { message?: string } & T) : null;
+}
+
+function assertFeedbackResponseOk(response: Response, body: { message?: string } | null) {
+  if (!response.ok) {
+    if (import.meta.env.DEV && response.status === 404) {
+      throw new Error(getDevApiUnavailableMessage());
+    }
+
+    throw new Error(body?.message || 'Er ging iets mis bij het versturen.');
+  }
+}
+
 async function postFeedbackRequest<T>(path: string, payload: Record<string, unknown>) {
   const response = await fetch(getApiPath(path), {
     method: 'POST',
@@ -70,45 +95,46 @@ async function postFeedbackRequest<T>(path: string, payload: Record<string, unkn
     body: JSON.stringify(payload),
   });
 
-  const rawBody = await response.text();
-  const body = rawBody ? (JSON.parse(rawBody) as { message?: string } & T) : null;
+  const body = await parseFeedbackResponse<T>(response);
+  assertFeedbackResponseOk(response, body);
+  return body;
+}
 
-  if (!response.ok) {
-    throw new Error(body?.message || 'Er ging iets mis bij het versturen.');
-  }
+async function getFeedbackRequest<T>(path: string) {
+  const response = await fetch(getApiPath(path), {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+    },
+  });
 
+  const body = await parseFeedbackResponse<T>(response);
+  assertFeedbackResponseOk(response, body);
   return body;
 }
 
 const ratingMapper = (result: SongRatingResultMap) => {
+  const votingWindow = getVotingWindow();
   const ratings: SongRating[] = [];
   for (const songId in result) {
-    const votes = Object.values(result[songId]).map((vote) => vote.rating);
+    const performanceVotes = Object.values(result[songId])
+      .filter((vote) => vote.performedByUs !== false)
+      .filter((vote) => isVoteInVotingWindow(vote.id, votingWindow, vote.updatedAt))
+      .map((vote) => vote.rating);
     const averageVote = () => {
-      const sum = votes.reduce((total, value) => total + value, 0);
-      return sum / votes.length;
+      const sum = performanceVotes.reduce((total, value) => total + value, 0);
+      return sum / performanceVotes.length;
     };
     const rating = {
       id: songId,
       votes: {
-        count: votes.length,
-        average: averageVote(),
+        count: performanceVotes.length,
+        average: performanceVotes.length ? averageVote() : undefined,
       },
     };
     ratings.push(rating);
   }
   return ratings;
-};
-
-const feedbackMapper = (result: FeedbackResultMap) => {
-  const feedback: FeedbackEntry[] = [];
-  for (const feedbackId in result) {
-    feedback.push({
-      id: feedbackId,
-      ...result[feedbackId],
-    });
-  }
-  return feedback;
 };
 
 export function useFeedback() {
@@ -157,6 +183,7 @@ export function useFeedback() {
           participantId,
           rating: songRating.rating,
           songId: songRating.id,
+          performedByUs: songRating.performedByUs !== false,
         });
         songRating.key = songRating.key ?? participantId;
         await store.dispatch('feedback/setUserRating', songRating);
@@ -189,15 +216,10 @@ export function useFeedback() {
 
   const fetchFeedback = async () => {
     try {
-      const result = await get(child(dbRef(db), `feedback`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          return feedbackMapper(snapshot.val() as FeedbackResultMap);
-        }
+      const result = await getFeedbackRequest<{ feedback?: FeedbackEntry[] }>('list-feedback');
+      const feedback = Array.isArray(result?.feedback) ? result.feedback : [];
 
-        return [];
-      });
-
-      await store.dispatch('feedback/setAllFeedback', result);
+      await store.dispatch('feedback/setAllFeedback', feedback);
     } catch (error) {
       console.error('Feedback', error);
       throw error;
@@ -220,11 +242,15 @@ export function useFeedback() {
     }
 
     try {
-      return await postFeedbackRequest<{ id: string }>('submit-feedback', {
+      const result = await postFeedbackRequest<{ id: string }>('submit-feedback', {
         naam: trimmedName || null,
         tiptop: trimmedMessage,
         website: form.website || '',
       });
+      markFeedbackSubmitted();
+      await store.dispatch('feedback/setFeedbackSubmitted');
+      await fetchFeedback();
+      return result;
     } catch (error) {
       console.error('Feedback', error);
       throw error;

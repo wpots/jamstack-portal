@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 .list--figure {
   @include media-breakpoint-up(sm) {
     width: 100%;
@@ -7,7 +7,7 @@
 
   .list-item__title {
     margin: 0.4em 0;
-      font-size: 1em !important;
+    font-size: 1em !important;
   }
 
   .list-item__figure {
@@ -22,7 +22,7 @@
 
   .list-item__details {
     @extend .flex--space;
-    background: $smoke;
+    // background: $smoke;
     @include media-breakpoint-down(sm) {
       font-size: 1rem;
     }
@@ -132,9 +132,8 @@
   }
 }
 
-
-    .list__items {
-      ul {
-        @extend %reset-ul;
-      }
-    }
+.list__items {
+  ul {
+    @extend %reset-ul;
+  }
+}

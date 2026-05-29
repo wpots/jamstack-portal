@@ -6,6 +6,14 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [graphql(), vue()],
   envPrefix: ["VITE_", "VUE_APP_"],
+  server: {
+    proxy: {
+      "/api/v1": {
+        target: "http://127.0.0.1:8888",
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
@@ -15,6 +23,7 @@ export default defineConfig({
     preprocessorOptions: {
       scss: {
         quietDeps: true,
+        silenceDeprecations: ["import"],
       },
     },
   },

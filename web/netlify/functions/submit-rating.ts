@@ -8,6 +8,7 @@ import {
   mapApiError,
   parseJsonBody,
   validateParticipantId,
+  validatePerformedByUs,
   validateRating,
   validateSongId,
 } from './_shared/feedback';
@@ -22,6 +23,7 @@ type SubmitRatingPayload = {
   songId?: string;
   rating?: number;
   participantId?: string;
+  performedByUs?: boolean;
 };
 
 export async function handler(event: NetlifyEvent) {
@@ -33,6 +35,7 @@ export async function handler(event: NetlifyEvent) {
     const songId = validateSongId(payload.songId);
     const rating = validateRating(payload.rating);
     const participantId = validateParticipantId(payload.participantId);
+    const performedByUs = validatePerformedByUs(payload.performedByUs);
     const clientIp = getClientIp(event);
 
     enforceRateLimit(`rating:${clientIp}`, 60, 5 * 60 * 1000);
@@ -42,6 +45,7 @@ export async function handler(event: NetlifyEvent) {
       id: Date.now(),
       participantId,
       rating,
+      performedByUs,
       updatedAt: new Date().toISOString(),
     });
 

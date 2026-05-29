@@ -2,7 +2,11 @@
   <article
     v-bind="$attrs"
     class="rating-item"
-    :class="{ 'rating-item--interactive': interactive, 'rating-item--rated': isRated }"
+    :class="{
+      'rating-item--interactive': interactive,
+      'rating-item--rated': isRated,
+      'rating-item--grid': layout === 'grid',
+    }"
     :aria-controls="interactive ? dialogId : undefined"
     :aria-expanded="interactive ? String(Boolean(modal?.open)) : undefined"
     :aria-haspopup="interactive ? 'dialog' : undefined"
@@ -30,6 +34,7 @@
         <small v-if="currentRating?.count" class="muted"
           >{{ currentRating.count }} beoordelingen</small
         >
+        <small v-else class="muted">geen beoordelingen</small>
       </div>
 
       <div v-if="interactive" class="rating-item__action">
@@ -48,62 +53,65 @@
     </div>
   </article>
 
-  <dialog
-    v-if="interactive"
-    ref="modal"
-    :id="dialogId"
-    class="modal"
-    :aria-labelledby="dialogTitleId"
-    aria-modal="true"
-    @click="handleDialogBackdropClick"
-  >
-    <div class="modal-card">
-      <div class="modal-header">
-        <slot name="modal-card">
-          <AppSongCard
-            :artist="songArtist"
-            :heading-id="dialogTitleId"
-            :image-url="songAlbumArt"
-            :title="songTitle"
-          />
-        </slot>
-        <p>jouw beoordeling...</p>
-      </div>
-
-      <div class="modal-content">
-        <div class="rating-hearts rating-hearts--selectable">
-          <button
-            v-for="i in rating.range"
-            :key="i"
-            ref="rateSelect"
-            type="button"
-            class="rating-heart-button"
-            :aria-label="`${i} hart${i > 1 ? 'en' : ''}`"
-            @click="handleRatingSelect(i)"
-          >
-            <svg class="icon-heart">
-              <use href="#icon-heart"></use>
-            </svg>
-          </button>
+  <teleport to="body">
+    <dialog
+      v-if="interactive"
+      ref="modal"
+      :id="dialogId"
+      class="modal"
+      :aria-labelledby="dialogTitleId"
+      aria-modal="true"
+      @close="handleDialogClosed"
+      @click="handleDialogBackdropClick"
+    >
+      <div class="modal-card" @click.stop>
+        <div class="modal-header">
+          <slot name="modal-card">
+            <AppSongCard
+              :artist="songArtist"
+              :heading-id="dialogTitleId"
+              :image-url="songAlbumArt"
+              :title="songTitle"
+            />
+          </slot>
+          <p>Jouw beoordeling...</p>
         </div>
-      </div>
 
-      <div class="modal-actions">
-        <button type="button" class="btn--default" @click="handleModalClose">annuleer</button>
-        <button type="submit" class="btn--primary" @click="handleSubmit">
-          {{ submitText }}
-        </button>
-        <small>
-          <span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span>
-          <span v-if="submissionError">{{ submissionError }}</span>
-        </small>
+        <div class="modal-content">
+          <div class="rating-hearts rating-hearts--selectable">
+            <button
+              v-for="i in rating.range"
+              :key="i"
+              ref="rateSelect"
+              type="button"
+              class="rating-heart-button"
+              :aria-label="`${i} hart${i > 1 ? 'en' : ''}`"
+              @click="handleRatingSelect(i)"
+            >
+              <svg class="icon-heart">
+                <use href="#icon-heart"></use>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <form class="modal-actions" @submit.prevent="handleSubmit">
+          <button type="button" class="btn--default" @click="handleModalClose">annuleer</button>
+          <button type="submit" class="btn--primary" :disabled="loading">
+            {{ submitText }}
+          </button>
+          <small>
+            <span v-if="isRated && !loading">Bedankt voor jouw beoordeling!</span>
+            <span v-if="submissionError">{{ submissionError }}</span>
+          </small>
+        </form>
       </div>
-    </div>
-  </dialog>
+    </dialog>
+  </teleport>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, nextTick, reactive, ref } from 'vue';
 import AppSongCard from '@/components/AppSongCard.vue';
 import { useFeedback } from '../composables/useFeedback';
 
@@ -134,6 +142,15 @@ export default defineComponent({
       type: Boolean,
       default: true,
     },
+    performedByUs: {
+      type: Boolean,
+      default: true,
+    },
+    layout: {
+      type: String,
+      default: 'default',
+      validator: (value: string) => ['default', 'grid'].includes(value),
+    },
   },
   setup(props) {
     const loading = ref(false);
@@ -162,7 +179,7 @@ export default defineComponent({
     const submitText = computed(() => (isRated.value ? 'aanpassen' : 'verstuur'));
     const currentRatingLabel = computed(() => {
       if (!currentRating.value?.avg || !currentRating.value?.count) {
-        return 'Nog geen beoordelingen';
+        return 'geen beoordelingen';
       }
 
       return `${currentRating.value.avg} op 5, ${currentRating.value.count} beoordelingen`;
@@ -192,15 +209,42 @@ export default defineComponent({
 
     const resetRating = () => {
       if (rateSelect.value) {
-        rateSelect.value.forEach((el) => {
+        rateSelect.value.forEach(el => {
           el.classList.remove('love', 'pulse');
         });
       }
     };
 
-    const openModal = () => {
+    let savedScrollY = 0;
+
+    const restoreScrollPosition = () => {
+      if (globalThis.window === undefined) {
+        return;
+      }
+
+      globalThis.requestAnimationFrame(() => {
+        globalThis.window.scrollTo(0, savedScrollY);
+      });
+    };
+
+    const openModal = async () => {
       if (props.interactive && modal.value && !modal.value.open) {
+        savedScrollY = globalThis.window?.scrollY ?? 0;
         submissionError.value = '';
+
+        // If the user already rated this song, reflect that selection in the modal
+        const userRating = isRatedSong(songId.value);
+
+        // Wait for DOM refs to be available then apply selection classes
+        await nextTick();
+
+        if (userRating?.rating) {
+          handleRatingSelect(userRating.rating);
+        } else {
+          rating.selected = null;
+          resetRating();
+        }
+
         modal.value.showModal();
       }
     };
@@ -237,10 +281,15 @@ export default defineComponent({
     const handleSubmit = async () => {
       submissionError.value = '';
       loading.value = true;
+      savedScrollY = globalThis.window?.scrollY ?? savedScrollY;
 
       try {
         if (rating.selected) {
-          await setUserRating({ id: songId.value, rating: rating.selected });
+          await setUserRating({
+            id: songId.value,
+            rating: rating.selected,
+            performedByUs: props.performedByUs,
+          });
         }
 
         modal.value?.close();
@@ -252,13 +301,21 @@ export default defineComponent({
       }
     };
 
-    const handleModalClose = () => {
-      if (modal.value?.open) {
-        modal.value.close();
+    const handleDialogClosed = () => {
+      if (globalThis.document !== undefined) {
+        (globalThis.document.activeElement as HTMLElement | null)?.blur();
       }
+
+      restoreScrollPosition();
 
       if (!isRated.value) {
         resetRating();
+      }
+    };
+
+    const handleModalClose = () => {
+      if (modal.value?.open) {
+        modal.value.close();
       }
     };
 
@@ -276,6 +333,7 @@ export default defineComponent({
       getSongRatings,
       handleClick,
       handleDialogBackdropClick,
+      handleDialogClosed,
       handleKeydown,
       handleModalClose,
       handleRatingSelect,
@@ -311,7 +369,7 @@ export default defineComponent({
 
   margin-top: 0.5rem;
   height: 100%;
-  max-width: 228px;
+  max-width: 256px;
   background: $white;
   box-shadow: 1px 2px 5px rgba($black, 0.2);
 
@@ -328,6 +386,85 @@ export default defineComponent({
     outline: 2px solid $magenta;
     outline-offset: 4px;
   }
+
+  &.rating-item--grid {
+    width: 100%;
+    max-width: none;
+    margin-top: 0;
+
+    & > * {
+      flex: unset;
+    }
+
+    .rating-item__body {
+      flex: 1 1 auto;
+      padding: 0.85rem 0.85rem 0.65rem;
+      display: flex;
+      flex-direction: column;
+
+      & > * {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+    }
+
+    .rating-item__footer {
+      flex: 0 0 auto;
+      width: 100%;
+      padding: 0.65rem 0.85rem 0.85rem;
+      margin-top: auto;
+      border-top: 1px solid rgba($black, 0.06);
+      align-items: flex-start;
+    }
+
+    :deep(.song-meta) {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      width: 100%;
+
+      img,
+      .song-art-fallback {
+        flex: 0 0 4.5rem;
+        width: 4.5rem;
+        height: 4.5rem;
+        max-width: none;
+      }
+
+      .song-art-fallback {
+        aspect-ratio: 1;
+        font-size: 0.95rem;
+      }
+
+      .song-title {
+        flex: 1 1 auto;
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 0.2rem;
+
+        h3,
+        h4 {
+          margin: 0;
+          font-size: 0.95rem;
+          line-height: 1.25;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+
+        small {
+          display: block;
+          line-height: 1.25;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+    }
+  }
 }
 
 .rating-item__body {
@@ -341,12 +478,17 @@ export default defineComponent({
 }
 
 .rating-item__footer {
-  display: contents;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0 1rem 1rem;
+  margin-top: auto;
 }
 
 .icon-change,
 .icon-add {
-  margin-right: 1rem;
+  margin-right: 0;
   padding: 0.3rem;
   width: 1.5rem;
   height: 1.5rem;
@@ -368,7 +510,11 @@ export default defineComponent({
 }
 
 .rating-summary {
-  display: contents;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-width: 0;
 }
 
 .rating-item__action {
@@ -376,10 +522,13 @@ export default defineComponent({
   align-items: center;
   justify-content: flex-end;
   gap: 0.55rem;
+  flex-shrink: 0;
 }
 
 .rating {
-  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 .rating-hearts--selectable {
@@ -404,15 +553,13 @@ export default defineComponent({
 
 .meta {
   font-weight: bold;
-  margin-left: 0.5rem;
-  align-self: flex-end;
+  margin-left: 0;
 }
 
 .muted {
   color: $gray;
   font-size: 0.7em;
   font-style: italic;
-  align-self: flex-end;
 }
 
 @keyframes pulse-animation {

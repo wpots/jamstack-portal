@@ -3,7 +3,8 @@
     v-if="singleSong"
     :class="['program-set__song', { 'program-set__song--single': isVotingOpen === false }]"
     :interactive="isVotingOpen"
-    :show-summary="true"
+    :performed-by-us="getPerformedByUs(singleSong)"
+    :show-summary="showVotingSummary"
     :song="getRatingSong(singleSong)"
   >
     <ProgramSongCard :song="singleSong" tag="div" tone="tone-0" />
@@ -15,7 +16,8 @@
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
       class="program-set__song"
       :interactive="isVotingOpen"
-      :show-summary="true"
+      :performed-by-us="getPerformedByUs(song)"
+      :show-summary="showVotingSummary"
       :song="getRatingSong(song)"
     >
       <ProgramSongCard :song="song" tag="div" :tone="`tone-${index % 4}`" />
@@ -26,7 +28,9 @@
 import { computed, defineComponent, onMounted, PropType } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
 import ProgramSongCard from '@/components/program/ProgramSongCard.vue';
+import { useContent } from '@/composables/useContent';
 import { useFeedback } from '@/composables/useFeedback';
+import { isProgramSongPerformed } from '@/composables/useFeedback/programSongLists';
 import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
 import type { LinkedScore } from '@/composables/useContent/program.types';
 
@@ -45,28 +49,41 @@ export default defineComponent({
   },
   setup(props) {
     const { fetchSongRatings, getSongRatings } = useFeedback();
-    const { isVotingOpen } = useFeedbackAvailability();
+    const { getSongs, fetchSongs } = useContent();
+    const { isVotingOpen, votingStatus } = useFeedbackAvailability();
     const singleSong = computed<ProgramSongGridItem | undefined>(() =>
       props.songs.length === 1 ? props.songs[0] : undefined,
     );
+    const showVotingSummary = computed(() => votingStatus.value !== 'disabled');
+
+    const getPerformedByUs = (song: ProgramSongGridItem) =>
+      isProgramSongPerformed(song, getSongs.value || []);
 
     const getRatingSong = (song: ProgramSongGridItem): LinkedScore => {
+      const repertoireMatch = (getSongs.value || []).find(
+        (entry) => (entry.title || '').toLowerCase() === (song.title || '').toLowerCase(),
+      );
+
       return {
         albumart:
-          song.linkedScore?.albumart || (song.imageUrl ? { url: song.imageUrl } : undefined),
-        artist: song.linkedScore?.artist || song.artist,
-        sys: song.linkedScore?.sys,
-        title: song.linkedScore?.title || song.title,
+          song.linkedScore?.albumart ||
+          repertoireMatch?.albumart ||
+          (song.imageUrl ? { url: song.imageUrl } : undefined),
+        artist: song.linkedScore?.artist || repertoireMatch?.artist || song.artist,
+        sys: song.linkedScore?.sys || repertoireMatch?.sys,
+        title: song.linkedScore?.title || repertoireMatch?.title || song.title,
       };
     };
 
     onMounted(async () => {
-      if (!getSongRatings.value) {
+      await fetchSongs();
+
+      if (votingStatus.value !== 'disabled' && !getSongRatings.value) {
         await fetchSongRatings();
       }
     });
 
-    return { getRatingSong, isVotingOpen, singleSong };
+    return { getPerformedByUs, getRatingSong, isVotingOpen, showVotingSummary, singleSong };
   },
 });
 </script>
@@ -89,6 +106,13 @@ export default defineComponent({
 .program-set__song--single {
   width: 100%;
   max-width: 100%;
+}
+
+@media (min-width: 992px) {
+  .program-set__song--single {
+    max-width: var(--program-text-max, 44rem);
+    margin-inline: auto;
+  }
 }
 
 @media (max-width: 900px) {

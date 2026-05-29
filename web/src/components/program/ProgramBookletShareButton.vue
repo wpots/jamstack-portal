@@ -22,7 +22,7 @@
           />
         </svg>
       </span>
-      <span class="program-booklet-share__label">Deel boekje</span>
+      <span class="program-booklet-share__label">Deel programma</span>
     </button>
 
     <teleport to="body">
@@ -38,8 +38,7 @@
         <article class="program-booklet-share__card">
           <header class="program-booklet-share__header">
             <div>
-              <p class="program-booklet-share__eyebrow">Programma boekje</p>
-              <h2 :id="titleId">Laat iemand naast je scannen</h2>
+              <h2 :id="titleId">Programma boekje</h2>
             </div>
             <button
               type="button"
@@ -363,6 +362,21 @@ export default defineComponent({
   &:focus-visible {
     outline: 3px solid var(--program-color-ink, #111111);
     outline-offset: 3px;
+  }
+}
+
+@media (min-width: 992px) {
+  .program-booklet-share--floating {
+    top: 0.85rem;
+    right: max(1rem, calc((100vw - 76rem) / 2 + 0.5rem));
+    padding: 0.62rem 0.85rem;
+    background: rgba($purple, 0.92);
+    color: $white;
+    box-shadow: 0 10px 24px rgba($black, 0.18);
+  }
+
+  .program-booklet-share--floating .program-booklet-share__icon {
+    background: rgba($white, 0.14);
   }
 }
 

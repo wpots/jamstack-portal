@@ -1,0 +1,80 @@
+@media (min-width: 992px) {
+  .program-theme--double-impact {
+    --program-content-max: 72rem;
+    --program-content-gutter: 2rem;
+    --program-text-max: 44rem;
+  }
+
+  .program-theme--double-impact .program-hero__copy {
+    max-width: var(--program-content-max);
+    margin-inline: auto;
+    padding-inline: var(--program-content-gutter);
+  }
+
+  .program-theme--double-impact .program-hero__lede {
+    max-width: 40rem;
+    font-size: 1.125rem;
+    line-height: 1.55;
+  }
+
+  .program-theme--double-impact .program-hero__meta {
+    width: fit-content;
+    max-width: 100%;
+    grid-template-columns: auto auto;
+    gap: 2rem 3.5rem;
+  }
+
+  .program-theme--double-impact .program-stats-cloud {
+    max-width: var(--program-content-max);
+    margin-inline: auto;
+    padding-inline: var(--program-content-gutter);
+  }
+
+  .program-theme--double-impact .program-nav-inner.container-fluid {
+    max-width: calc(var(--program-content-max) + 2 * var(--program-content-gutter));
+    margin-inline: auto;
+  }
+
+  .program-theme--double-impact .program-nav-links-scroll {
+    padding-right: 0;
+  }
+
+  .program-theme--double-impact .program-nav-link {
+    font-size: 0.92rem;
+    letter-spacing: 0.04em;
+  }
+
+  .program-theme--double-impact .program-nav-links {
+    flex-wrap: wrap;
+    width: auto;
+    row-gap: 0.35rem;
+  }
+
+  .program-theme--double-impact .timetableblock > .container-fluid {
+    max-width: calc(var(--program-content-max) + 2 * var(--program-content-gutter));
+    margin-inline: auto;
+  }
+
+  .program-theme--double-impact .program-item--text .program-preview__teaser-stack {
+    width: min(100%, var(--program-text-max));
+  }
+
+  .program-theme--double-impact .program-set {
+    padding-inline: 0;
+  }
+
+  .program-theme--double-impact .program-set__song-grid {
+    grid-template-columns: repeat(auto-fill, minmax(12.5rem, 1fr));
+    gap: 1rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .program-theme--double-impact {
+    --program-content-max: 76rem;
+  }
+
+  .program-theme--double-impact .program-nav-link {
+    font-size: 0.95rem;
+  }
+}

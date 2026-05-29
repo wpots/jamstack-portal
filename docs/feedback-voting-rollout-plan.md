@@ -386,22 +386,29 @@ Deze checklist is bedoeld voor direct na deploy op Netlify.
 - Firebase Admin env vars staan op productie.
 - Eventuele `FEEDBACK_ALLOWED_ORIGINS` bevat het productie-domein.
 
-### 2. Voting gesloten scenario
+### 2. Voting disabled scenario
 
 - Zet `VITE_VOTING_ENABLED=false`.
 - Open de programmapagina.
 - Controleer dat song cards wel zichtbaar zijn.
 - Controleer dat de rating dialoog niet opent.
-- Controleer dat bestaande gemiddelden zichtbaar blijven.
+- Controleer dat hartjes en gemiddelden **niet** zichtbaar zijn.
 
-### 3. Feedback gesloten scenario
+### 3. Voting closed scenario (buiten venster)
+
+- Zet `VITE_VOTING_ENABLED=true` met `OPEN_AT` in de toekomst of `CLOSE_AT` in het verleden.
+- Open de programmapagina.
+- Controleer dat de rating dialoog niet opent.
+- Controleer dat bestaande gemiddelden en hartjes **wel** zichtbaar zijn.
+
+### 4. Feedback gesloten scenario
 
 - Zet `VITE_FEEDBACK_ENABLED=false`.
 - Open de programmapagina.
 - Controleer dat de CTA-knop niet zichtbaar is.
 - Controleer dat de melding “Feedback opent binnenkort.” zichtbaar is.
 
-### 4. Voting open scenario
+### 5. Voting open scenario
 
 - Zet `VITE_VOTING_ENABLED=true` en publiceer opnieuw.
 - Open een programmapagina.
@@ -412,7 +419,7 @@ Deze checklist is bedoeld voor direct na deploy op Netlify.
 - Geef een andere rating op hetzelfde nummer.
 - Controleer dat de wijziging slaagt en geen dubbele flow zichtbaar wordt.
 
-### 5. Feedback open scenario
+### 6. Feedback open scenario
 
 - Zet `VITE_FEEDBACK_ENABLED=true` en publiceer opnieuw.
 - Open de feedback CTA.
@@ -422,25 +429,25 @@ Deze checklist is bedoeld voor direct na deploy op Netlify.
 - Controleer dat validatie blokkeert.
 - Vul het honeypot-veld niet in tijdens normale test.
 
-### 6. Function health
+### 7. Function health
 
 - Controleer in Netlify function logs dat `submit-rating` requests binnenkomen.
 - Controleer in Netlify function logs dat `submit-feedback` requests binnenkomen.
 - Controleer dat er geen 500 responses zijn.
 - Controleer dat rate limiting niet onbedoeld normale traffic blokkeert.
 
-### 7. Database check
+### 8. Database check
 
 - Controleer in Realtime Database dat ratings nu per `songId/{participantId}` landen.
 - Controleer dat feedbackinzendingen in `feedback/` landen.
 - Controleer dat directe client writes niet meer mogelijk zijn na rules update.
 
-### 8. Rollback check
+### 9. Rollback check
 
 - Zet `VITE_VOTING_ENABLED=false`.
 - Zet `VITE_FEEDBACK_ENABLED=false`.
 - Trigger een nieuwe deploy.
-- Controleer dat voting en feedback direct uit de publieksflow verdwijnen.
+- Controleer dat voting en feedback direct uit de publieksflow verdwijnen (geen hartjes, geen CTA).
 
 ## Go-live notities
 

@@ -40,8 +40,8 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 import FeedBackForm from '@/components/FeedBackForm.vue';
+import { useFeedbackSubmissionState } from '@/composables/useFeedback/submission';
 import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
-import { useStore } from '@/store';
 
 export default defineComponent({
   name: 'ProgramFeedbackCTA',
@@ -60,11 +60,10 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const store = useStore();
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
     const { feedbackReason, feedbackStatus, isFeedbackOpen } = useFeedbackAvailability();
-    const hasSubmittedFeedback = computed(() => store.state.feedback.hasSubmittedFeedback);
+    const { hasSubmittedFeedback, markFeedbackSubmitted } = useFeedbackSubmissionState();
 
     const showFeedbackBar = computed(() => {
       if (hasSubmittedFeedback.value) {
@@ -115,6 +114,7 @@ export default defineComponent({
     };
 
     const handleSubmitted = () => {
+      markFeedbackSubmitted();
       handleClose();
     };
 

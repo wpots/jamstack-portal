@@ -6,6 +6,7 @@ type SongRating = {
   id: string;
   rating: number;
   key?: string;
+  performedByUs?: boolean;
 };
 
 export type FeedbackState = {
@@ -14,6 +15,7 @@ export type FeedbackState = {
   userId: string | null;
   allRatings: SongRating[] | null;
   allFeedback: FeedbackEntry[] | null;
+  hasSubmittedFeedback: boolean;
 };
 
 const feedbackModule: Module<FeedbackState, RootState> = {
@@ -24,6 +26,7 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     userRatings: [],
     allRatings: null,
     allFeedback: null,
+    hasSubmittedFeedback: false,
   },
   getters: {
     lookupSongRating: (state) => (songId: string) => {
@@ -51,6 +54,9 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     setAllFeedback(state, feedback) {
       state.allFeedback = feedback;
     },
+    setFeedbackSubmitted(state) {
+      state.hasSubmittedFeedback = true;
+    },
   },
   actions: {
     setUserId({ commit }, id) {
@@ -64,6 +70,9 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     },
     setAllFeedback({ commit }, feedback) {
       commit('setAllFeedback', feedback);
+    },
+    setFeedbackSubmitted({ commit }) {
+      commit('setFeedbackSubmitted');
     },
   },
 };

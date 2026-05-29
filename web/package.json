@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "vite",
+    "dev": "cd .. && netlify dev --cwd web",
     "build": "vite build",
     "test:unit": "jest",
     "lint": "eslint --ext .js,.ts,.vue src"

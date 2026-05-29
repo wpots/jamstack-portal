@@ -6,17 +6,25 @@
     aria-label="Programma navigatie"
   >
     <div class="container-fluid program-nav-inner">
-      <a
-        v-for="(item, index) in navigationItems"
-        :key="item.id"
-        :href="`#${item.id}`"
-        :class="['program-nav-link', { 'program-nav-link--active': activeSectionId === item.id }]"
-        :aria-current="activeSectionId === item.id ? 'location' : undefined"
-        @click.prevent="handleNavigation(item.id)"
-      >
-        <span class="program-nav-link__index">{{ formatNavigationIndex(index) }}.</span>
-        <span class="program-nav-link__title">{{ item.title }}</span>
-      </a>
+      <p class="program-nav-heading">Programma</p>
+      <div class="program-nav-links-scroll">
+        <div class="program-nav-links">
+          <a
+            v-for="(item, index) in navigationItems"
+            :key="item.id"
+            :href="`#${item.id}`"
+            :class="[
+              'program-nav-link',
+              { 'program-nav-link--active': activeSectionId === item.id },
+            ]"
+            :aria-current="activeSectionId === item.id ? 'location' : undefined"
+            @click.prevent="handleNavigation(item.id)"
+          >
+            <span class="program-nav-link__index">{{ formatNavigationIndex(index) }}.</span>
+            <span class="program-nav-link__title">{{ item.title }}</span>
+          </a>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
@@ -47,18 +55,13 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const navigationItems = computed(() => props.sections || []);
     const navRef = ref<HTMLElement | null>(null);
-    const activeSectionId = ref('');
+    const activeSectionId = ref<string>('');
     let animationFrame = 0;
 
-    const navigationItems = computed<ProgramPageNavigationItem[]>(() => {
-      const items: ProgramPageNavigationItem[] = [];
-
-      return [...items, ...props.sections];
-    });
-
     const formatNavigationIndex = (index: number): string => {
-      return String(index + 1);
+      return String(index + 1).padStart(2, '0');
     };
 
     const getNavigationOffset = (): number => {
@@ -200,7 +203,41 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.program-nav-inner {
+  display: flex;
+  gap: 1.35rem;
+  align-items: center;
+  padding-right: 4rem;
+  position: relative;
+}
+
+.program-nav-heading {
+  flex: 0 0 auto;
+  margin: 0;
+  color: rgba(17, 17, 17, 0.72);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  position: sticky;
+  left: 1rem;
+  z-index: 3;
+  background: #fff;
+  padding-right: 0.5rem;
+}
+
+.program-nav-links {
+  display: flex;
+  gap: 1rem;
+  flex: 1 1 auto;
+  overflow-x: auto;
+  padding-right: 0.75rem;
+  /* keep links visually to the right of the sticky heading */
+  margin-left: 8rem;
+}
+
 .program-nav-link {
+  flex: 0 0 auto;
   position: relative;
   display: inline-flex;
   gap: 0.35rem;
@@ -244,5 +281,26 @@ export default defineComponent({
 
 .program-nav-link__index {
   font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 767px) {
+  .program-nav-inner {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-right: 4.25rem;
+  }
+
+  .program-nav-heading {
+    position: static;
+    left: auto;
+    padding-right: 0;
+  }
+
+  .program-nav-links {
+    width: 100%;
+    padding-right: 1rem;
+    margin-left: 0;
+  }
 }
 </style>

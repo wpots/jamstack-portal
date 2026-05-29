@@ -9,6 +9,7 @@
     <ProgramStatsCloud :programItems="getTimeTable.programItems" />
     <ProgramPageNavigation :sections="setSections" />
     <TimeTableBlock :cms="getTimeTable" />
+    <ProgramBookletShareButton />
   </ProgramThemeProvider>
 </template>
 
@@ -18,6 +19,7 @@ import { useRoute } from 'vue-router';
 import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
 import { useContent } from '../../composables/useContent';
 import { useFeedback } from '../../composables/useFeedback';
+import ProgramBookletShareButton from '@/components/program/ProgramBookletShareButton.vue';
 import ProgramHero from '@/components/program/ProgramHero.vue';
 import { ProgramMetaItem } from '@/components/program/ProgramMeta.vue';
 import ProgramPageNavigation from '@/components/program/ProgramPageNavigation.vue';
@@ -66,6 +68,7 @@ function formatConcertDate(value: string | undefined): string {
 
 export default defineComponent({
   components: {
+    ProgramBookletShareButton,
     TimeTableBlock,
     ProgramHero,
     ProgramPageNavigation,

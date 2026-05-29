@@ -1,10 +1,7 @@
 <template>
   <AppRatingItem
     v-if="singleSong"
-    :class="[
-      'program-set__song',
-      { 'program-set__song--single': isVotingOpen === false },
-    ]"
+    :class="['program-set__song', { 'program-set__song--single': isVotingOpen === false }]"
     :interactive="isVotingOpen"
     :show-summary="showVotingSummary"
     :song="getRatingSong(singleSong)"
@@ -57,8 +54,7 @@ export default defineComponent({
     const getRatingSong = (song: ProgramSongGridItem): LinkedScore => {
       return {
         albumart:
-          song.linkedScore?.albumart ||
-          (song.imageUrl ? { url: song.imageUrl } : undefined),
+          song.linkedScore?.albumart || (song.imageUrl ? { url: song.imageUrl } : undefined),
         artist: song.linkedScore?.artist || song.artist,
         sys: song.linkedScore?.sys,
         title: song.linkedScore?.title || song.title,
@@ -105,7 +101,7 @@ export default defineComponent({
     overscroll-behavior-x: contain;
     margin-right: -1rem;
     padding-right: 1rem;
-    padding-bottom: 0.5rem;
+    padding-bottom: 2.5rem;
     scroll-padding-inline: 0 1rem;
     scroll-snap-type: x mandatory;
     gap: 0.7rem;

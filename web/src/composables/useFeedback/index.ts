@@ -73,7 +73,20 @@ function getDevApiUnavailableMessage() {
 
 async function parseFeedbackResponse<T>(response: Response) {
   const rawBody = await response.text();
-  return rawBody ? (JSON.parse(rawBody) as { message?: string } & T) : null;
+
+  if (!rawBody) {
+    return null;
+  }
+
+  try {
+    return JSON.parse(rawBody) as { message?: string } & T;
+  } catch {
+    throw new Error(
+      response.status === 404
+        ? 'Stemmen API niet gevonden. Probeer het later opnieuw.'
+        : 'Stemmen API gaf een ongeldig antwoord. Probeer het later opnieuw.',
+    );
+  }
 }
 
 function assertFeedbackResponseOk(response: Response, body: { message?: string } | null) {

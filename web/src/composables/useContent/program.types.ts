@@ -12,6 +12,7 @@ export interface ProgramRichTextItem {
   type: 'richText';
   eyebrow?: string;
   title?: string;
+  knockout?: boolean;
   body: {
     json: Record<string, unknown>;
   };

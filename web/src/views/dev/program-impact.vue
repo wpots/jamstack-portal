@@ -106,7 +106,7 @@
 
         <ProgramTextBlock
           v-else-if="block.type === 'pause'"
-          variant="knockout"
+          variant="spotlight"
           kicker="Pauze"
           :title="block.title"
           :description="block.description"
@@ -114,7 +114,7 @@
 
         <div v-else class="program-preview__teaser-stack">
           <ProgramTextBlock
-            variant="knockout"
+            variant="spotlight"
             kicker="Verder kijken"
             :title="block.title"
             :description="block.description"

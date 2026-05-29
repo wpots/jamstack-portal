@@ -29,7 +29,7 @@
 <script lang="ts">
 import { computed, defineComponent, PropType } from 'vue';
 
-type ProgramTextBlockVariant = 'default' | 'knockout';
+type ProgramTextBlockVariant = 'default' | 'spotlight' | 'knockout';
 
 export default defineComponent({
   name: 'ProgramTextBlock',
@@ -37,7 +37,7 @@ export default defineComponent({
     variant: {
       type: String as PropType<ProgramTextBlockVariant>,
       default: 'default',
-      validator: (value: string) => ['default', 'knockout'].includes(value),
+      validator: (value: string) => ['default', 'spotlight', 'knockout'].includes(value),
     },
     kicker: {
       type: String,
@@ -65,12 +65,12 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const descriptionTag = computed(() => {
-      return props.variant === 'knockout' ? 'small' : 'p';
+    const isInverseVariant = computed(() => {
+      return props.variant === 'spotlight';
     });
 
     const headerClass = computed(() => {
-      return props.variant === 'knockout'
+      return isInverseVariant.value
         ? 'program-section-header inverse'
         : 'program-section-header';
     });
@@ -85,7 +85,6 @@ export default defineComponent({
     });
 
     return {
-      descriptionTag,
       hasImage,
       normalizedDescriptions,
       headerClass,
@@ -95,8 +94,6 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-@use '@/assets/styles/common/variables' as *;
-
 .program-preview__text-block {
   max-width: 44rem;
   overflow: hidden;
@@ -132,74 +129,5 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-.program-preview__text-block--default {
-  padding: 2rem;
-  background: rgba($white, 0.88);
-  box-shadow: 0 20px 40px rgba($black, 0.06);
-}
-
-.program-preview__text-block--knockout {
-  padding: 2.5rem;
-  background: linear-gradient(135deg, $magenta, $black);
-  color: $white;
-  margin: 1rem -1rem;
-
-  .program-preview__kicker {
-    color: rgba($white, 0.78);
-  }
-
-  h2 {
-    margin-bottom: 0.5rem;
-    font-size: clamp(2.4rem, 6vw, 4rem);
-  }
-
-  .program-preview__text-block-extra {
-    margin-top: 1.75rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba($white, 0.14);
-  }
-}
-
-.program-preview__text-block--knockout.program-preview__text-block--with-image {
-  display: grid;
-  grid-template-columns: minmax(12rem, 17rem) minmax(0, 1fr);
-  max-width: 62rem;
-  padding: 0;
-
-  .program-preview__text-block-media {
-    min-height: 100%;
-  }
-
-  .program-preview__text-block-copy {
-    padding: 2.5rem;
-  }
-
-  .program-preview__text-block-extra {
-    grid-column: 1 / -1;
-    margin-top: 0;
-    padding: 1.75rem 2.5rem 2.5rem;
-    background: linear-gradient(180deg, rgba($black, 0.04), rgba($black, 0.18));
-    border-top: 1px solid rgba($white, 0.12);
-  }
-}
-
-@media (max-width: 900px) {
-  .program-preview__text-block--knockout.program-preview__text-block--with-image {
-    grid-template-columns: 1fr;
-
-    .program-preview__text-block-media {
-      max-height: 16rem;
-    }
-
-    .program-preview__text-block-copy {
-      padding: 1.5rem;
-    }
-
-    .program-preview__text-block-extra {
-      padding: 1.25rem 1.5rem 1.5rem;
-    }
-  }
 }
 </style>

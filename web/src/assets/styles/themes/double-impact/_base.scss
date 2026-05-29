@@ -1,3 +1,5 @@
+@use 'sass:color';
+
 .program-theme--double-impact {
   --program-font-display: #{$font-fam-program-display};
   --program-font-title: #{$font-fam-program-title};
@@ -8,7 +10,7 @@
   --program-font-weight-body-strong: #{$font-weight-program-body-strong};
   --program-color-accent: #{$pimple};
   --program-color-contrast: #{$purple};
-  --program-color-surface: #fff8fc;
+  --program-color-surface: #{color.mix($white, $purple, 40%)};
 
   .feedbackform,
   .feedback-form,

@@ -40,6 +40,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 @use '@/assets/styles/common/variables' as *;
 @use '@/assets/styles/common/mixins' as *;
+
 .rich-text {
   &__eyebrow {
     margin-bottom: 0.75rem;

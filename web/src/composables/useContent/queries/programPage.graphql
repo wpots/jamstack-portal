@@ -12,6 +12,7 @@ query getProgramPageQuery($concertId: String!) {
           ... on ContentTypeRichText {
             eyebrow
             title
+            knockout
             body {
               json
             }
@@ -21,6 +22,7 @@ query getProgramPageQuery($concertId: String!) {
           ... on TeaserBlock {
             eyebrow
             title
+            knockout
             fullWidth
             backgroundImage {
               url
@@ -32,6 +34,7 @@ query getProgramPageQuery($concertId: String!) {
                 ... on ContentTypeRichText {
                   eyebrow
                   title
+                  knockout
                   body {
                     json
                   }

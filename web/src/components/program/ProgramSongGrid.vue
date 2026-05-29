@@ -3,7 +3,7 @@
     v-if="singleSong"
     :class="['program-set__song', { 'program-set__song--single': isVotingOpen === false }]"
     :interactive="isVotingOpen"
-    :show-summary="showVotingSummary"
+    :show-summary="true"
     :song="getRatingSong(singleSong)"
   >
     <ProgramSongCard :song="singleSong" tag="div" tone="tone-0" />
@@ -15,7 +15,7 @@
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
       class="program-set__song"
       :interactive="isVotingOpen"
-      :show-summary="showVotingSummary"
+      :show-summary="true"
       :song="getRatingSong(song)"
     >
       <ProgramSongCard :song="song" tag="div" :tone="`tone-${index % 4}`" />
@@ -45,11 +45,10 @@ export default defineComponent({
   },
   setup(props) {
     const { fetchSongRatings, getSongRatings } = useFeedback();
-    const { isVotingOpen, votingStatus } = useFeedbackAvailability();
+    const { isVotingOpen } = useFeedbackAvailability();
     const singleSong = computed<ProgramSongGridItem | undefined>(() =>
       props.songs.length === 1 ? props.songs[0] : undefined,
     );
-    const showVotingSummary = computed(() => votingStatus.value !== 'disabled');
 
     const getRatingSong = (song: ProgramSongGridItem): LinkedScore => {
       return {
@@ -62,12 +61,12 @@ export default defineComponent({
     };
 
     onMounted(async () => {
-      if (votingStatus.value !== 'disabled' && !getSongRatings.value) {
+      if (!getSongRatings.value) {
         await fetchSongRatings();
       }
     });
 
-    return { getRatingSong, isVotingOpen, showVotingSummary, singleSong };
+    return { getRatingSong, isVotingOpen, singleSong };
   },
 });
 </script>

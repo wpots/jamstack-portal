@@ -32,9 +32,24 @@ npm run lint
 
 ### Run Netlify Functions + app locally
 
+Run from the **repository root** (niet vanuit `web/`), anders zoekt Netlify naar `web/web`:
+
+```bash
+cd ..   # jamstack-portal root
+npx netlify dev --cwd web
 ```
-netlify dev
-```
+
+App + functions: [http://localhost:8888](http://localhost:8888). Zet in `.env`:
+
+`FEEDBACK_ALLOWED_ORIGINS=http://localhost:8888`
+
+**Troubleshooting**
+
+- `Base directory does not exist: .../web/web` → je draait `netlify dev` in `web/` terwijl de
+  gekoppelde site `base = web` heeft; gebruik `--cwd web` vanaf de repo root.
+- `Could not resolve "react-dom/server"` bij `submission-created` → `react` en `react-dom` moeten in
+  `package.json` staan (peer dependency van `resend` / `@react-email/render`).
+- `submit-rating` / `submit-feedback` laden wel, maar de CLI crasht als een andere function faalt.
 
 ### Connect to Services
 

@@ -107,6 +107,7 @@ interface TeaserMedia {
 interface TeaserCms {
   eyebrow?: string;
   title?: string;
+  knockout?: boolean;
   backgroundImage?: TeaserMedia;
   columnContentCollection?: {
     items?: TeaserColumnItem[];
@@ -114,7 +115,7 @@ interface TeaserCms {
 }
 
 interface ProgramTextBlockProps {
-  variant: 'default' | 'knockout';
+  variant: 'default' | 'spotlight' | 'knockout';
   kicker: string;
   title: string;
   description: string;
@@ -243,7 +244,7 @@ function createTextBlock(item: ProgramRichTextItem, occurrence: number): Program
     'Compact tekstblok voor een overgang, toelichting of ritmische onderbreking.';
 
   return {
-    variant: isPause ? 'knockout' : 'default',
+    variant: item.knockout ? 'knockout' : isPause ? 'spotlight' : 'default',
     kicker: resolveEyebrow(item.eyebrow, isPause ? 'Pauze' : 'Tussenstuk'),
     title,
     description,
@@ -257,7 +258,7 @@ function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): Program
   const backgroundImage = getTeaserMedia(teaser);
 
   return {
-    variant: 'knockout',
+    variant: teaser?.knockout ? 'knockout' : 'spotlight',
     kicker: resolveEyebrow(teaser?.eyebrow, 'Verder kijken'),
     title: title || 'Meer van Goed Gebekt',
     description:

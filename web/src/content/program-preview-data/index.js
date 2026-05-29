@@ -122,6 +122,21 @@ export function getProgramPreviewData(concertId) {
   return programPreviewData[concertId] || null;
 }
 
+export function getProgramPreviewFooter(concertId) {
+  const source = getProgramPreviewData(concertId);
+
+  if (!source?.footer || !isObject(source.footer)) {
+    return null;
+  }
+
+  const { copyright, credits } = source.footer;
+
+  return {
+    copyright: typeof copyright === 'string' ? copyright : '',
+    credits: typeof credits === 'string' ? credits : '',
+  };
+}
+
 export function getProgramPreviewPage(concertId) {
   const source = getProgramPreviewData(concertId);
 

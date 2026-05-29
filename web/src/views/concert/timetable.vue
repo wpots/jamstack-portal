@@ -10,6 +10,7 @@
     <ProgramPageNavigation :sections="setSections" />
     <TimeTableBlock :cms="getTimeTable" />
     <ProgramBookletShareButton />
+    <ProgramFooter />
   </ProgramThemeProvider>
 </template>
 
@@ -20,6 +21,7 @@ import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
 import { useContent } from '../../composables/useContent';
 import { useFeedback } from '../../composables/useFeedback';
 import ProgramBookletShareButton from '@/components/program/ProgramBookletShareButton.vue';
+import ProgramFooter from '@/components/program/ProgramFooter.vue';
 import ProgramHero from '@/components/program/ProgramHero.vue';
 import { ProgramMetaItem } from '@/components/program/ProgramMeta.vue';
 import ProgramPageNavigation from '@/components/program/ProgramPageNavigation.vue';
@@ -69,6 +71,7 @@ function formatConcertDate(value: string | undefined): string {
 export default defineComponent({
   components: {
     ProgramBookletShareButton,
+    ProgramFooter,
     TimeTableBlock,
     ProgramHero,
     ProgramPageNavigation,

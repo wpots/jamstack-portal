@@ -75,7 +75,7 @@ export default defineComponent({
       }
 
       return navigationItems.value
-        .map((item) => document.getElementById(item.id))
+        .map(item => document.getElementById(item.id))
         .filter((element): element is HTMLElement => element instanceof HTMLElement);
     };
 
@@ -94,7 +94,7 @@ export default defineComponent({
       const scrollPosition = globalThis.window.scrollY + getNavigationOffset();
       let nextActiveSectionId = sections[0].id;
 
-      sections.forEach((section) => {
+      sections.forEach(section => {
         if (section.offsetTop <= scrollPosition) {
           nextActiveSectionId = section.id;
         }
@@ -110,9 +110,7 @@ export default defineComponent({
         return;
       }
 
-      const activeLink = scrollContainer.querySelector<HTMLElement>(
-        '.program-nav-link--active',
-      );
+      const activeLink = scrollContainer.querySelector<HTMLElement>('.program-nav-link--active');
 
       if (!activeLink) {
         return;
@@ -239,12 +237,13 @@ export default defineComponent({
   padding-bottom: 1rem;
   position: relative;
   overflow: visible;
+  background: #fff;
 }
 
 .program-nav-heading {
   flex: 0 0 auto;
   margin: 0;
-  color: rgba(17, 17, 17, 0.72);
+  color: var(--program-color-contrast);
   font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: 0.12em;

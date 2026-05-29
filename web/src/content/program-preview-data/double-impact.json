@@ -3,6 +3,10 @@
   "pageTitle": "Double Impact",
   "eyebrow": "Firma Vocaal & Goed Gebekt",
   "intro": "onder muzikale leiding van Rolinde Zieverink",
+  "footer": {
+    "copyright": "© 2026 Firma Vocaal & Goed Gebekt. Alle rechten voorbehouden.",
+    "credits": "Dit digitale programma hoort bij Double Impact en is bedoeld voor gebruik tijdens het concert."
+  },
   "programItems": [
     {
       "type": "set",

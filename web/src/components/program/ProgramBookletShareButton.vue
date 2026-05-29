@@ -57,25 +57,10 @@
 
           <div class="program-booklet-share__qr-shell">
             <img
-              v-if="qrCodeDataUrl"
               class="program-booklet-share__qr"
               :src="qrCodeDataUrl"
               alt="QR-code om het programma-boekje te openen"
-            >
-            <p
-              v-else-if="isGeneratingQr"
-              class="program-booklet-share__status"
-              aria-live="polite"
-            >
-              QR-code wordt geladen…
-            </p>
-            <p
-              v-else
-              class="program-booklet-share__status program-booklet-share__status--error"
-              aria-live="polite"
-            >
-              QR-code kon niet worden gemaakt.
-            </p>
+            />
           </div>
 
           <p class="program-booklet-share__link-label">Directe link</p>
@@ -90,7 +75,6 @@
 
 <script lang="ts">
 import { computed, defineComponent, onBeforeUnmount, onMounted, ref } from 'vue';
-import QRCode from 'qrcode';
 
 export default defineComponent({
   name: 'ProgramBookletShareButton',
@@ -103,44 +87,16 @@ export default defineComponent({
   setup(props) {
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
-    const qrCodeDataUrl = ref('');
-    const isGeneratingQr = ref(false);
+    // Use the provided static QR image and hardcoded URL
+    const qrCodeDataUrl = ref(
+      '/img/concerts/https_goedgebekt_com_concerts_double-impact_programma.png',
+    );
     const isCompact = ref(false);
     const dialogId = 'program-booklet-share-dialog';
     const titleId = `${dialogId}-title`;
-    const shareUrl = computed(() => {
-      if (globalThis.window === undefined) {
-        return '';
-      }
+    const shareUrl = computed(() => 'https://goedgebekt.com/concerts/double-impact/programma');
 
-      return globalThis.window.location.href.split('#')[0];
-    });
-
-    const generateQrCode = async () => {
-      if (!shareUrl.value || qrCodeDataUrl.value || isGeneratingQr.value) {
-        return;
-      }
-
-      isGeneratingQr.value = true;
-
-      try {
-        qrCodeDataUrl.value = await QRCode.toDataURL(shareUrl.value, {
-          errorCorrectionLevel: 'M',
-          margin: 1,
-          width: 360,
-          color: {
-            dark: '#111111',
-            light: '#ffffff',
-          },
-        });
-      } finally {
-        isGeneratingQr.value = false;
-      }
-    };
-
-    const handleOpen = async () => {
-      await generateQrCode();
-
+    const handleOpen = () => {
       if (!modal.value?.open) {
         modal.value?.showModal();
       }
@@ -198,7 +154,6 @@ export default defineComponent({
       handleDialogClose,
       handleOpen,
       isCompact,
-      isGeneratingQr,
       modal,
       qrCodeDataUrl,
       shareUrl,
@@ -251,12 +206,7 @@ export default defineComponent({
 
 .program-booklet-share--floating {
   top: 1rem;
-  background: linear-gradient(
-    90deg,
-    rgba($green-alt, 0.9),
-    rgba($green, 0.72),
-    rgba($yellow, 0.9)
-  );
+  background: linear-gradient(90deg, rgba($green-alt, 0.9), rgba($green, 0.72), rgba($yellow, 0.9));
   color: $black;
   box-shadow: 0 12px 28px rgba($black, 0.2);
 }

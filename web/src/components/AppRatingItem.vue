@@ -315,8 +315,9 @@ export default defineComponent({
   background: $white;
   box-shadow: 1px 2px 5px rgba($black, 0.2);
 
+  /* Remove flex: 1 0 100% to prevent children from stretching and overlapping image */
   & > * {
-    flex: 1 0 100%;
+    flex: initial;
   }
 
   &.rating-item--interactive {

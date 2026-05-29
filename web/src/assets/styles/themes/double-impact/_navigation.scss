@@ -10,7 +10,7 @@
 .program-theme--double-impact .program-nav-inner {
   display: flex;
   gap: 1rem;
-  overflow-x: auto;
+  overflow: visible;
   padding-top: 1rem;
   padding-bottom: 1rem;
 
@@ -22,8 +22,9 @@
     text-decoration: none;
     white-space: nowrap;
 
-    &:hover {
-      color: $magenta;
+    &:hover,
+    &.program-nav-link--active {
+      color: $pimple;
     }
   }
 }

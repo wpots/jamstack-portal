@@ -99,7 +99,7 @@ export default defineComponent({
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
-    margin-right: -1rem;
+    margin-right: -2rem;
     padding-right: 1rem;
     padding-bottom: 2.5rem;
     scroll-padding-inline: 0 1rem;
@@ -116,7 +116,7 @@ export default defineComponent({
   }
 
   :deep(.program-set__song--single.rating-item) {
-    flex: 1 0 100%;
+    /* Remove flex: 1 0 100% to prevent stretching/overlay */
     width: 100%;
     max-width: 100%;
   }

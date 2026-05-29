@@ -7,7 +7,7 @@
   >
     <div class="container-fluid program-nav-inner">
       <p class="program-nav-heading">Programma</p>
-      <div class="program-nav-links-scroll">
+      <div ref="linksScrollRef" class="program-nav-links-scroll">
         <div class="program-nav-links">
           <a
             v-for="(item, index) in navigationItems"
@@ -57,6 +57,7 @@ export default defineComponent({
   setup(props) {
     const navigationItems = computed(() => props.sections || []);
     const navRef = ref<HTMLElement | null>(null);
+    const linksScrollRef = ref<HTMLElement | null>(null);
     const activeSectionId = ref<string>('');
     let animationFrame = 0;
 
@@ -100,6 +101,28 @@ export default defineComponent({
       });
 
       activeSectionId.value = nextActiveSectionId;
+    };
+
+    const scrollActiveLinkIntoView = (): void => {
+      const scrollContainer = linksScrollRef.value;
+
+      if (!scrollContainer || !activeSectionId.value) {
+        return;
+      }
+
+      const activeLink = scrollContainer.querySelector<HTMLElement>(
+        '.program-nav-link--active',
+      );
+
+      if (!activeLink) {
+        return;
+      }
+
+      activeLink.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      });
     };
 
     const requestActiveSectionUpdate = (): void => {
@@ -169,6 +192,10 @@ export default defineComponent({
       void syncActiveSection();
     });
 
+    watch(activeSectionId, () => {
+      void nextTick(scrollActiveLinkIntoView);
+    });
+
     onMounted(() => {
       void syncActiveSection();
 
@@ -195,6 +222,7 @@ export default defineComponent({
       activeSectionId,
       formatNavigationIndex,
       handleNavigation,
+      linksScrollRef,
       navigationItems,
       navRef,
     };
@@ -207,8 +235,10 @@ export default defineComponent({
   display: flex;
   gap: 1.35rem;
   align-items: center;
-  padding-right: 4rem;
+  padding-top: 1rem;
+  padding-bottom: 1rem;
   position: relative;
+  overflow: visible;
 }
 
 .program-nav-heading {
@@ -219,21 +249,26 @@ export default defineComponent({
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  position: sticky;
-  left: 1rem;
-  z-index: 3;
+  z-index: 1;
   background: #fff;
   padding-right: 0.5rem;
+}
+
+.program-nav-links-scroll {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-right: 3.5rem;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
 }
 
 .program-nav-links {
   display: flex;
   gap: 1rem;
-  flex: 1 1 auto;
-  overflow-x: auto;
-  padding-right: 0.75rem;
-  /* keep links visually to the right of the sticky heading */
-  margin-left: 8rem;
+  width: max-content;
 }
 
 .program-nav-link {
@@ -242,8 +277,12 @@ export default defineComponent({
   display: inline-flex;
   gap: 0.35rem;
   align-items: baseline;
+  color: rgba(17, 17, 17, 0.58);
   font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
   transition:
+    color 180ms ease,
     font-weight 180ms ease,
     opacity 180ms ease;
 
@@ -272,6 +311,7 @@ export default defineComponent({
 }
 
 .program-nav-link--active {
+  color: var(--program-color-accent, #5b017b);
   font-weight: 700;
 
   &::after {
@@ -288,19 +328,15 @@ export default defineComponent({
     align-items: flex-start;
     flex-direction: column;
     gap: 0.75rem;
-    padding-right: 4.25rem;
   }
 
   .program-nav-heading {
-    position: static;
-    left: auto;
     padding-right: 0;
   }
 
-  .program-nav-links {
+  .program-nav-links-scroll {
     width: 100%;
-    padding-right: 1rem;
-    margin-left: 0;
+    padding-right: 3.75rem;
   }
 }
 </style>

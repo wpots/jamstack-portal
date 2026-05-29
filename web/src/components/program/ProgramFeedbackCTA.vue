@@ -1,6 +1,9 @@
 <template>
   <div v-if="showFeedbackBar" class="program-preview__feedback-bar">
-    <p>{{ displayMessage }}</p>
+    <div class="program-preview__feedback-bar-content">
+      <p class="program-preview__feedback-bar-title">Jouw mening telt</p>
+      <p>{{ displayMessage }}</p>
+    </div>
     <button v-if="isFeedbackOpen" ref="triggerButton" type="button" @click="handleOpen">
       {{ buttonLabel }}
     </button>
@@ -35,9 +38,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, onBeforeUnmount, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import FeedBackForm from '@/components/FeedBackForm.vue';
 import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
+import { useStore } from '@/store';
 
 export default defineComponent({
   name: 'ProgramFeedbackCTA',
@@ -48,7 +52,7 @@ export default defineComponent({
   props: {
     message: {
       type: String,
-      default: 'Na deze set: snelle vote + open feedback blijft beschikbaar.',
+      default: 'Laat hier je feedback achter. De leukste berichten plaatsen wij graag op onze site',
     },
     buttonLabel: {
       type: String,
@@ -56,21 +60,21 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const store = useStore();
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
-    const confirmationMessage = ref('');
     const { feedbackReason, feedbackStatus, isFeedbackOpen } = useFeedbackAvailability();
-    let confirmationTimeout: ReturnType<typeof setTimeout> | null = null;
+    const hasSubmittedFeedback = computed(() => store.state.feedback.hasSubmittedFeedback);
 
     const showFeedbackBar = computed(() => {
-      return feedbackStatus.value !== 'disabled' || Boolean(confirmationMessage.value);
+      if (hasSubmittedFeedback.value) {
+        return false;
+      }
+
+      return feedbackStatus.value !== 'disabled';
     });
 
     const displayMessage = computed(() => {
-      if (confirmationMessage.value) {
-        return confirmationMessage.value;
-      }
-
       if (feedbackStatus.value === 'closed') {
         if (feedbackReason.value === 'scheduled') {
           return 'Feedback opent binnenkort.';
@@ -81,13 +85,6 @@ export default defineComponent({
 
       return props.message;
     });
-
-    const clearConfirmationTimeout = () => {
-      if (confirmationTimeout) {
-        clearTimeout(confirmationTimeout);
-        confirmationTimeout = null;
-      }
-    };
 
     const handleOpen = () => {
       if (isFeedbackOpen.value === false) {
@@ -118,23 +115,12 @@ export default defineComponent({
     };
 
     const handleSubmitted = () => {
-      confirmationMessage.value = 'Bedankt, je feedback is verstuurd.';
-      clearConfirmationTimeout();
-      confirmationTimeout = setTimeout(() => {
-        confirmationMessage.value = '';
-        confirmationTimeout = null;
-      }, 4000);
       handleClose();
     };
-
-    onBeforeUnmount(() => {
-      clearConfirmationTimeout();
-    });
 
     return {
       displayMessage,
       feedbackStatus,
-      confirmationMessage,
       isFeedbackOpen,
       modal,
       showFeedbackBar,
@@ -172,7 +158,7 @@ export default defineComponent({
     padding: 0.7rem 1rem;
     border: 0;
     border-radius: 999px;
-    background: var(--program-color-accent);
+    background: linear-gradient(135deg, $pimple, $purple);
     color: $white;
     font-family: var(--program-font-body);
     font-size: 0.75rem;
@@ -184,6 +170,17 @@ export default defineComponent({
       outline-offset: 3px;
     }
   }
+}
+
+.program-preview__feedback-bar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.program-preview__feedback-bar-title {
+  font-family: var(--program-font-body);
+  font-weight: 700;
 }
 
 .program-preview__feedback-modal {
@@ -259,9 +256,6 @@ export default defineComponent({
 
 @media (max-width: 900px) {
   .program-preview__feedback-bar {
-    position: sticky;
-    bottom: 1rem;
-    z-index: 10;
     flex-direction: column;
     align-items: stretch;
 

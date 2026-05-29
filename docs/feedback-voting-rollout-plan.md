@@ -7,11 +7,14 @@ veilige opzet voor een publieke livegang.
 
 ## Samenvatting
 
-De huidige flow schrijft ratings en feedback direct vanuit de browser naar Firebase. Functioneel is
-dat snel, maar voor een publieke livegang is het te kwetsbaar voor spam, foutieve success states en
-dubbele of inconsistente stemmen.
+De oorspronkelijke flow schreef ratings en feedback direct vanuit de browser naar Firebase. In de
+codebase lopen **writes** inmiddels via Netlify Functions; **reads** voor ratings blijven client-side
+op `songRatings`, feedback-lijsten via `list-feedback`.
 
-Daarom is het voorstel:
+Nog open voor livegang: smoke test op productie. Productie-env en Firebase rules zijn bevestigd
+gezet (29 mei 2026).
+
+Het oorspronkelijke voorstel was:
 
 1. writes uit de browser halen;
 2. writes via Netlify Functions laten lopen;
@@ -21,55 +24,81 @@ Daarom is het voorstel:
 
 ## RAG status
 
-Statussnapshot per 29 mei 2026.
+Statussnapshot: codebase + bevestigde productie-config, 29 mei 2026.
 
 ### Overall
 
-- **Amber**
+- **Amber** — klaar om flags open te zetten na smoke test; geen blocker meer op env/rules.
 
 ### Green
 
-- Feature flags en datumvensters zitten in de frontend.
-- Writes lopen via Netlify Functions.
-- Inputvalidatie, honeypot en basis rate limiting zijn aanwezig.
-- Rating writes zijn idempotent gemaakt per `songId/{participantId}`.
-- UI toont nu echte foutmeldingen bij mislukte submits.
+- Feature flags en datumvensters: `web/src/composables/useFeedback/availability.ts`,
+  `useFeedbackAvailability()` in programma-UI.
+- Writes via Netlify Functions: `submit-rating`, `submit-feedback`
+  (`web/netlify/functions/`); client POST naar `/api/v1/*` in `useFeedback/index.ts`.
+- Server-side validatie, honeypot (`website`), origin-check en rate limiting:
+  `web/netlify/functions/_shared/feedback.ts`.
+- Idempotente ratings: `songRatings/{songId}/{participantId}` in `submit-rating.ts`; zelfde pad in
+  client met `participantId` uit local storage.
+- Foutafhandeling UI: `FeedBackForm.vue` (success alleen na geslaagde submit),
+  `AppRatingItem.vue` (`submissionError`).
+- Feedback ophalen zonder Firebase client-read: `fetchFeedback()` → GET `list-feedback` (past bij
+  `feedback.read = false` in `web/firebase.database.rules.json`).
+- Rating-aggregaten: client-read op `songRatings` (toegestaan door rules).
+- Programma-flow gated: `ProgramSongGrid.vue` (stemmen open/gesloten/disabled),
+  `ProgramFeedbackCTA.vue` (feedback open/gesloten/disabled).
+- Productie-env gezet (flags, `FEEDBACK_ALLOWED_ORIGINS`, Firebase Admin) — bevestigd.
+- Firebase Realtime Database rules live (`web/firebase.database.rules.json`) — bevestigd.
 
 ### Amber
 
-- Closed-state UX wijkt nog deels af van het plan.
-- De publieke feedbackpagina leest nog direct uit Firebase en botst daarmee met gesloten
-  `feedback.read` rules.
+- **Disabled vs closed UX:** bij `VITE_FEEDBACK_ENABLED=false` verdwijnt de hele CTA-balk
+  (`ProgramFeedbackCTA`); smoke test §4 verwacht nog zichtbare copy “Feedback opent binnenkort.”
+- **`list-feedback`:** levert alle entries; vensterfilter alleen client-side in
+  `web/src/views/concert/feedback.vue` — geen server-side filter op concert/venster.
+- **Misbruik / eikel:** origin + rate limit houden casual spam tegen; gemotiveerde `curl`-aanvaller
+  kan nog stemmen/feedback sturen zolang voting/feedback API open is (geen server-side flags,
+  geen CAPTCHA op submit-endpoints).
+- **Rate limiting:** in-memory per function instance; reset bij cold start.
+- **Legacy component:** `SetList.vue` gebruikt `AppRatingItem` met default `interactive=true` zonder
+  availability-gating (component lijkt niet meer in routes gebruikt; risico bij hergebruik).
 
 ### Red
 
-- Productie-env voor go-live is nog niet bevestigd.
-- Firebase Realtime Database rules zijn nog niet als uitgevoerde productiestap bevestigd.
-- Smoke test na deploy is nog niet bevestigd.
+- Smoke test checklist onderaan dit document nog niet bevestigd.
 
-### Eerstvolgende acties op red
+### Eerstvolgende acties
 
-1. productie-env zetten voor flags, origins en Firebase Admin;
-2. database rules deployen uit `web/firebase.database.rules.json`;
-3. smoke test checklist onderaan dit document volledig afwerken;
-4. pas daarna flags openen voor publiek verkeer.
+1. smoke test checklist onderaan dit document op productie afwerken;
+2. pas daarna `VITE_VOTING_ENABLED` / `VITE_FEEDBACK_ENABLED` (en vensters) open zetten;
+3. tijdens openstelling Netlify function logs + Firebase monitoren.
 
-## Huidige situatie
+### Eerstvolgende acties op amber (code/doc, niet blokkerend)
+
+1. smoke test §4 afstemmen op `ProgramFeedbackCTA` (disabled = verborgen) of CTA-copy tonen bij
+   `disabled`;
+2. optioneel: server-side flag/window-check in functions; reCAPTCHA op submit; server-side filter op
+   `list-feedback`.
+
+## Huidige situatie (code)
 
 ### Songrating
 
-- Ratings worden direct vanuit de client naar Firebase Realtime Database geschreven.
-- De huidige flow zit in web/src/composables/useFeedback/index.ts.
-- De UI gebruikt web/src/components/AppRatingItem.vue.
-- De rating-overzichten worden client-side opnieuw opgehaald.
+- **Write:** browser → `POST /api/v1/submit-rating` → Firebase Admin
+  (`web/netlify/functions/submit-rating.ts`).
+- **Read:** browser → Firebase `songRatings` (publieke read in rules).
+- **UI:** programma via `ProgramSongGrid.vue` + `AppRatingItem.vue`; concertpagina via
+  `RepertoirList.vue` met `interactive=false` (alleen samenvatting).
 
 ### Feedback
 
-- Feedback wordt ook direct vanuit de client naar Firebase geschreven.
-- Het formulier zit in web/src/components/FeedBackForm.vue.
-- Het formulier toont nu een success state zonder harde garantie dat de write echt geslaagd is.
-- Er staat een Netlify reCAPTCHA placeholder in het formulier, maar die beschermt deze
-  Firebase-write niet.
+- **Write:** browser → `POST /api/v1/submit-feedback` → Firebase Admin
+  (`web/netlify/functions/submit-feedback.ts`).
+- **Read (publieke lijst):** browser → `GET /api/v1/list-feedback` → Admin read
+  (`web/netlify/functions/list-feedback.ts`); gebruikt op `web/src/views/concert/feedback.vue`.
+- **Formulier:** `FeedBackForm.vue` met honeypot, pending state en echte error/success states.
+- Netlify reCAPTCHA placeholder in het formulier beschermt deze flow niet; bescherming zit in
+  function-validatie, rate limit en (op productie) origin allowlist.
 
 ## Belangrijkste risico’s
 

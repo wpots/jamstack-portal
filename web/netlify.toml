@@ -14,9 +14,6 @@
 [functions]
   node_bundler = "esbuild"
 
-[build.environment]
-  NODE_VERSION = "22"
-
 [dev]
   command = "npm run serve"
   port = 8888

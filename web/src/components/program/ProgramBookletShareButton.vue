@@ -88,9 +88,7 @@ export default defineComponent({
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
     // Use the provided static QR image and hardcoded URL
-    const qrCodeDataUrl = ref(
-      '/img/concerts/https_goedgebekt_com_concerts_double-impact_programma.png',
-    );
+    const qrCodeDataUrl = ref('/img/concerts/double-impact-programma.png');
     const isCompact = ref(false);
     const dialogId = 'program-booklet-share-dialog';
     const titleId = `${dialogId}-title`;
@@ -282,6 +280,7 @@ export default defineComponent({
     margin: 0;
     font-size: 1.4rem;
     line-height: 1.15;
+    font-family: var(--program-font-display);
   }
 }
 

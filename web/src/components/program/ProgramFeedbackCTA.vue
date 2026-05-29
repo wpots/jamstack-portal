@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isFeedbackOpen || confirmationMessage" class="program-preview__feedback-bar">
+  <div v-if="showFeedbackBar" class="program-preview__feedback-bar">
     <p>{{ displayMessage }}</p>
     <button v-if="isFeedbackOpen" ref="triggerButton" type="button" @click="handleOpen">
       {{ buttonLabel }}
@@ -59,12 +59,24 @@ export default defineComponent({
     const modal = ref<HTMLDialogElement | null>(null);
     const triggerButton = ref<HTMLButtonElement | null>(null);
     const confirmationMessage = ref('');
-    const { isFeedbackOpen } = useFeedbackAvailability();
+    const { feedbackReason, feedbackStatus, isFeedbackOpen } = useFeedbackAvailability();
     let confirmationTimeout: ReturnType<typeof setTimeout> | null = null;
+
+    const showFeedbackBar = computed(() => {
+      return feedbackStatus.value !== 'disabled' || Boolean(confirmationMessage.value);
+    });
 
     const displayMessage = computed(() => {
       if (confirmationMessage.value) {
         return confirmationMessage.value;
+      }
+
+      if (feedbackStatus.value === 'closed') {
+        if (feedbackReason.value === 'scheduled') {
+          return 'Feedback opent binnenkort.';
+        }
+
+        return 'Feedback is gesloten.';
       }
 
       return props.message;
@@ -121,9 +133,11 @@ export default defineComponent({
 
     return {
       displayMessage,
+      feedbackStatus,
       confirmationMessage,
       isFeedbackOpen,
       modal,
+      showFeedbackBar,
       triggerButton,
       handleOpen,
       handleClose,

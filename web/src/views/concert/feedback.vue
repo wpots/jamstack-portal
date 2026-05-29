@@ -9,12 +9,11 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <h2>Inzendingen op het gehele Concert</h2>
-        <ul>
-          <li v-for="(entry, idx) in feedback" :key="idx" class="cite">
-            {{ entry.tiptop }} <span v-if="entry.naam">({{ entry.naam }})</span>
-          </li>
-        </ul>
+        <h2>Open feedback</h2>
+        <p class="feedback-note">
+          Nieuwe feedbackinzendingen worden nog wel opgeslagen, maar niet meer publiek op deze
+          pagina getoond.
+        </p>
       </div>
     </div>
   </div>
@@ -28,28 +27,23 @@ import RepertoirList from '@/components/RepertoirList.vue';
 
 export default defineComponent({
   components: { RepertoirList },
-  name:'FeedbackPage',
+  name: 'FeedbackPage',
   setup() {
     const { getSongs, fetchSongs } = useContent();
-    const { getFeedback, fetchFeedback, fetchSongRatings, resolveSongRating } = useFeedback();
-    const songs = computed(() => getSongs.value?.filter(song => resolveSongRating(song.sys.id)));
-    const feedback = computed(() => getFeedback.value);
+    const { fetchSongRatings, resolveSongRating } = useFeedback();
+    const songs = computed(() => getSongs.value?.filter((song) => resolveSongRating(song.sys.id)));
+
     onMounted(async () => {
       await fetchSongs();
       await fetchSongRatings();
-      await fetchFeedback();
     });
-    return { songs, feedback, getSongs };
+
+    return { songs };
   },
 });
 </script>
 <style lang="scss">
-@use "@/assets/styles/common/variables" as *;
-@use "@/assets/styles/common/mixins" as *;
-cite {
-  margin-bottom: 0.5rem;
-  span {
-    font-style: italic;
-  }
+.feedback-note {
+  max-width: 42rem;
 }
 </style>

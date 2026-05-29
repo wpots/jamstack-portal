@@ -15,14 +15,15 @@
               class="program-item program-item--text"
             >
               <div class="program-preview__teaser-stack">
-                <ProgramTextBlock v-bind="createTeaserBlock(item, index + 1)" />
-                <div v-if="hasFeaturedContent(item)" class="program-preview__featured-grid">
-                  <ProgramPageFeaturedContent
-                    v-for="(featuredItem, featuredIndex) in getFeaturedContentItems(item)"
-                    :key="featuredItem.title || `${index}-${featuredIndex}`"
-                    v-bind="featuredItem"
-                  />
-                </div>
+                <ProgramTextBlock v-bind="createTeaserBlock(item, index + 1)">
+                  <div v-if="hasFeaturedContent(item)" class="program-preview__featured-grid">
+                    <ProgramPageFeaturedContent
+                      v-for="(featuredItem, featuredIndex) in getFeaturedContentItems(item)"
+                      :key="featuredItem.title || `${index}-${featuredIndex}`"
+                      v-bind="featuredItem"
+                    />
+                  </div>
+                </ProgramTextBlock>
               </div>
             </div>
             <RichText v-else-if="item.type === 'richText'" :cms="item" class="intermezzo" />
@@ -201,14 +202,15 @@ function extractTeaserDescriptions(value: TeaserCms | undefined): string[] {
 function extractFeaturedContentItems(value: TeaserCms | undefined): FeaturedContentCardProps[] {
   return getTeaserColumns(value)
     .filter((item) => item.__typename === 'FeaturedContent')
-    .map((item, index) => ({
-      label: resolveEyebrow(item.label, 'Featured'),
-      title: item.title || `Link ${index + 1}`,
+    .filter((item) => Boolean((item.title && item.title.trim()) || (item.ctaText && item.ctaText.trim() && item.ctaUrl && item.ctaUrl.trim())))
+    .map((item) => ({
+      label: resolveEyebrow(item.label, 'Website'),
+      title: item.title || '',
       description: extractRichText(getRichTextNode(item.lead?.json)),
-      ctaText: item.ctaText || 'Meer informatie',
+      ctaText: item.ctaText || '',
       ctaUrl: item.ctaUrl || '',
     }))
-    .filter((item) => item.title || item.ctaUrl);
+    .filter((item) => Boolean(item.title || (item.ctaText && item.ctaUrl)));
 }
 
 function extractTeaserTitle(value: TeaserCms | undefined, occurrence: number): string {
@@ -248,17 +250,13 @@ function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): Program
   const title = extractTeaserTitle(teaser, occurrence);
   const descriptions = extractTeaserDescriptions(teaser);
   const backgroundImage = getTeaserMedia(teaser);
-  const featuredContentItems = extractFeaturedContentItems(teaser);
 
   return {
     variant: 'knockout',
-    kicker: resolveEyebrow(teaser?.eyebrow, 'Teaser'),
-    title,
+    kicker: resolveEyebrow(teaser?.eyebrow, 'Verder kijken'),
+    title: title || 'Meer van Goed Gebekt',
     description:
-      descriptions[0] ||
-      (featuredContentItems.length
-        ? 'Snelle links naar de plekken waar het koornieuws verder leeft.'
-        : 'Visueel tussenblok met beeld en copy uit de teasercomponent.'),
+      descriptions[0] || 'Hier vind je meer over onze projecten, aankomende optredens en socials.',
     descriptions,
     imageSrc: backgroundImage?.url || '',
     mediaAlt: backgroundImage?.title || title,
@@ -412,5 +410,6 @@ export default defineComponent({
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
   gap: 1rem;
+  align-items: stretch;
 }
 </style>

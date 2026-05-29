@@ -16,9 +16,9 @@
   .program-set__song-card,
   .program-set__song {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-flow: row wrap;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-flow: column nowrap;
     height: 100%;
     overflow: hidden;
     background: $white;

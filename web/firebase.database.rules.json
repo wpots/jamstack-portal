@@ -1,0 +1,14 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    "songRatings": {
+      ".read": true,
+      ".write": false
+    },
+    "feedback": {
+      ".read": false,
+      ".write": false
+    }
+  }
+}

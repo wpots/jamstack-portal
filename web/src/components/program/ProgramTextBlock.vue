@@ -20,6 +20,9 @@
         </p>
       </div>
     </div>
+    <div v-if="$slots.default" class="program-preview__text-block-extra">
+      <slot />
+    </div>
   </article>
 </template>
 
@@ -104,6 +107,11 @@ export default defineComponent({
   z-index: 1;
 }
 
+.program-preview__text-block-extra {
+  position: relative;
+  z-index: 1;
+}
+
 .program-preview__text-block-body {
   display: grid;
   gap: 0.85rem;
@@ -146,6 +154,12 @@ export default defineComponent({
     margin-bottom: 0.5rem;
     font-size: clamp(2.4rem, 6vw, 4rem);
   }
+
+  .program-preview__text-block-extra {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba($white, 0.14);
+  }
 }
 
 .program-preview__text-block--knockout.program-preview__text-block--with-image {
@@ -161,6 +175,14 @@ export default defineComponent({
   .program-preview__text-block-copy {
     padding: 2.5rem;
   }
+
+  .program-preview__text-block-extra {
+    grid-column: 1 / -1;
+    margin-top: 0;
+    padding: 1.75rem 2.5rem 2.5rem;
+    background: linear-gradient(180deg, rgba($black, 0.04), rgba($black, 0.18));
+    border-top: 1px solid rgba($white, 0.12);
+  }
 }
 
 @media (max-width: 900px) {
@@ -173,6 +195,10 @@ export default defineComponent({
 
     .program-preview__text-block-copy {
       padding: 1.5rem;
+    }
+
+    .program-preview__text-block-extra {
+      padding: 1.25rem 1.5rem 1.5rem;
     }
   }
 }

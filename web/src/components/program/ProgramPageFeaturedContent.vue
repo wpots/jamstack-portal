@@ -1,22 +1,17 @@
 <template>
-  <article class="program-featured-content">
-    <p v-if="label" class="program-featured-content__label">{{ label }}</p>
-    <h3 class="program-featured-content__title">{{ title }}</h3>
-    <p v-if="description" class="program-featured-content__description">
-      {{ description }}
+  <component
+    :is="rootTag"
+    class="program-featured-content"
+    :href="hasCta ? ctaUrl : undefined"
+    :target="hasCta ? linkTarget : undefined"
+    :rel="hasCta ? linkRel : undefined"
+    :aria-label="hasCta ? linkAriaLabel : undefined"
+  >
+    <h3 v-if="title" class="program-featured-content__title">{{ title }}</h3>
+    <p v-if="displayCopy" class="program-featured-content__copy">
+      {{ displayCopy }}
     </p>
-    <a
-      v-if="hasCta"
-      class="program-featured-content__link"
-      :href="ctaUrl"
-      :target="linkTarget"
-      :rel="linkRel"
-      :aria-label="linkAriaLabel"
-    >
-      <span>{{ ctaLabel }}</span>
-      <span aria-hidden="true">↗</span>
-    </a>
-  </article>
+  </component>
 </template>
 
 <script lang="ts">
@@ -53,21 +48,29 @@ export default defineComponent({
   setup(props) {
     const hasCta = computed(() => Boolean(props.ctaUrl));
     const isExternal = computed(() => isExternalUrl(props.ctaUrl));
-    const ctaLabel = computed(() => props.ctaText || 'Meer informatie');
+    const displayCopy = computed(() => props.ctaText || props.title);
+    const rootTag = computed(() => (hasCta.value ? 'a' : 'article'));
     const linkTarget = computed(() => (isExternal.value ? '_blank' : undefined));
     const linkRel = computed(() => (isExternal.value ? 'noopener noreferrer' : undefined));
     const linkAriaLabel = computed(() => {
-      const destination = props.title ? ` ${props.title}` : '';
+      if (props.title) {
+        return props.title;
+      }
 
-      return `${ctaLabel.value}${destination}`;
+      if (displayCopy.value) {
+        return displayCopy.value;
+      }
+
+      return 'Meer informatie';
     });
 
     return {
-      ctaLabel,
+      displayCopy,
       hasCta,
       linkAriaLabel,
       linkRel,
       linkTarget,
+      rootTag,
     };
   },
 });
@@ -82,12 +85,14 @@ export default defineComponent({
   min-height: 100%;
   flex-direction: column;
   gap: 0.9rem;
-  padding: 1.35rem;
+  padding: 1.1rem 1.15rem 1rem;
   overflow: hidden;
-  background: linear-gradient(160deg, rgba($white, 0.98), rgba($magenta, 0.08));
-  box-shadow: 0 20px 40px rgba($black, 0.08);
-  border: 1px solid rgba($black, 0.08);
-  border-radius: 1.25rem;
+  color: $white;
+  background: rgba($white, 0.06);
+  box-shadow: inset 0 1px 0 rgba($white, 0.08);
+  border: 1px solid rgba($white, 0.1);
+  border-radius: 0.9rem;
+  text-decoration: none;
 }
 
 .program-featured-content::after {
@@ -95,51 +100,50 @@ export default defineComponent({
   position: absolute;
   inset: 0 auto auto 0;
   width: 100%;
-  height: 0.35rem;
-  background: linear-gradient(90deg, $magenta, $green-alt);
-}
-
-.program-featured-content__label {
-  margin: 0;
-  color: var(--program-color-accent);
-  font-family: var(--program-font-display);
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
+  height: 0.24rem;
+  background: linear-gradient(90deg, rgba($yellow, 0.9), rgba($green, 0.72), rgba($green-alt, 0.9));
 }
 
 .program-featured-content__title {
   margin: 0;
-  font-family: var(--program-font-display);
-  font-size: clamp(1.45rem, 3vw, 1.85rem);
-  line-height: 0.95;
+  font-family: var(--program-font-title, var(--program-font-body));
+  font-size: clamp(1.1rem, 1.8vw, 1.3rem);
+  font-weight: var(--program-font-weight-body-strong, 600);
+  line-height: 1.1;
+  max-width: 18ch;
 }
 
-.program-featured-content__description {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.program-featured-content__link {
-  display: inline-flex;
-  width: fit-content;
-  align-items: center;
-  gap: 0.55rem;
-  margin-top: auto;
-  padding: 0.75rem 1rem;
-  color: $white;
-  font-family: var(--program-font-display);
-  font-size: 0.85rem;
+.program-featured-content__copy {
+  margin: auto 0 0;
+  color: rgba($yellow, 0.92);
+  font-family: var(--program-font-body);
+  font-size: 0.77rem;
+  font-weight: 700;
   letter-spacing: 0.06em;
-  text-decoration: none;
   text-transform: uppercase;
-  background: linear-gradient(135deg, $black, $magenta);
-  border-radius: 999px;
+  transition:
+    transform 160ms ease,
+    color 160ms ease;
 }
 
-.program-featured-content__link:hover,
-.program-featured-content__link:focus-visible {
+.program-featured-content:hover .program-featured-content__copy,
+.program-featured-content:focus-visible .program-featured-content__copy {
   color: $white;
-  box-shadow: 0 0 0 3px rgba($magenta, 0.18);
+  transform: translateY(-1px);
+}
+
+.program-featured-content:focus-visible {
+  outline: 2px solid rgba($yellow, 0.55);
+  outline-offset: 0.2rem;
+}
+
+@media (max-width: 640px) {
+  .program-featured-content {
+    padding: 1rem 1rem 0.95rem;
+  }
+
+  .program-featured-content__title {
+    font-size: 1.3rem;
+  }
 }
 </style>

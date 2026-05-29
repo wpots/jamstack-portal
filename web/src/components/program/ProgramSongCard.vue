@@ -60,21 +60,25 @@ export default defineComponent({
 @use '@/assets/styles/common/variables' as *;
 
 .program-song-card {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  width: 100%;
   height: 100%;
   overflow: hidden;
 }
 
 .program-song-card__art {
   display: flex;
+  width: 100%;
   aspect-ratio: 1;
   align-items: center;
   justify-content: center;
+  align-self: start;
   overflow: hidden;
 }
 
 .program-song-card__art-image {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;

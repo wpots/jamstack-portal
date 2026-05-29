@@ -305,11 +305,12 @@ export default defineComponent({
 .rating-item {
   position: relative;
   display: flex;
-  flex-flow: row wrap;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
 
   margin-top: 0.5rem;
+  height: 100%;
   max-width: 228px;
   background: $white;
   box-shadow: 1px 2px 5px rgba($black, 0.2);
@@ -329,7 +330,13 @@ export default defineComponent({
 }
 
 .rating-item__body {
-  flex: 1 0 100%;
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+
+  & > * {
+    flex: 1 1 auto;
+  }
 }
 
 .rating-item__footer {

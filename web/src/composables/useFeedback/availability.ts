@@ -7,8 +7,21 @@ type FeatureWindowOptions = {
   now?: number;
 };
 
+export type FeatureAvailabilityStatus = 'disabled' | 'open' | 'closed';
+
+type FeatureClosedReason = 'scheduled' | 'ended' | null;
+
+type FeatureAvailability = {
+  status: FeatureAvailabilityStatus;
+  reason: FeatureClosedReason;
+};
+
 type FeedbackAvailabilityState = {
+  votingStatus: FeatureAvailabilityStatus;
+  votingReason: FeatureClosedReason;
   isVotingOpen: boolean;
+  feedbackStatus: FeatureAvailabilityStatus;
+  feedbackReason: FeatureClosedReason;
   isFeedbackOpen: boolean;
 };
 
@@ -52,45 +65,64 @@ function parseDateValue(value?: string): number | null {
   return Number.isNaN(parsedValue) ? null : parsedValue;
 }
 
-function isFeatureOpen({
+function resolveFeatureAvailability({
   enabled,
   openAt,
   closeAt,
   now = Date.now(),
-}: FeatureWindowOptions): boolean {
+}: FeatureWindowOptions): FeatureAvailability {
   const isEnabled = parseBooleanValue(enabled);
   const openAtTimestamp = parseDateValue(openAt);
   const closeAtTimestamp = parseDateValue(closeAt);
 
   if (isEnabled === false) {
-    return false;
+    return {
+      status: 'disabled',
+      reason: null,
+    };
   }
 
   if (openAtTimestamp !== null && now < openAtTimestamp) {
-    return false;
+    return {
+      status: 'closed',
+      reason: 'scheduled',
+    };
   }
 
   if (closeAtTimestamp !== null && now > closeAtTimestamp) {
-    return false;
+    return {
+      status: 'closed',
+      reason: 'ended',
+    };
   }
 
-  return true;
+  return {
+    status: 'open',
+    reason: null,
+  };
 }
 
 export function getFeedbackAvailability(now = Date.now()): FeedbackAvailabilityState {
+  const votingAvailability = resolveFeatureAvailability({
+    enabled: readEnvValue('VITE_VOTING_ENABLED', 'VUE_APP_VOTING_ENABLED'),
+    openAt: readEnvValue('VITE_VOTING_OPEN_AT', 'VUE_APP_VOTING_OPEN_AT'),
+    closeAt: readEnvValue('VITE_VOTING_CLOSE_AT', 'VUE_APP_VOTING_CLOSE_AT'),
+    now,
+  });
+  const feedbackAvailability = resolveFeatureAvailability({
+    enabled: readEnvValue('VITE_FEEDBACK_ENABLED', 'VUE_APP_FEEDBACK_ENABLED'),
+    openAt: readEnvValue('VITE_FEEDBACK_OPEN_AT', 'VUE_APP_FEEDBACK_OPEN_AT'),
+    closeAt: readEnvValue('VITE_FEEDBACK_CLOSE_AT', 'VUE_APP_FEEDBACK_CLOSE_AT'),
+    now,
+  });
+
   return {
-    isVotingOpen: isFeatureOpen({
-      enabled: readEnvValue('VITE_VOTING_ENABLED', 'VUE_APP_VOTING_ENABLED'),
-      openAt: readEnvValue('VITE_VOTING_OPEN_AT', 'VUE_APP_VOTING_OPEN_AT'),
-      closeAt: readEnvValue('VITE_VOTING_CLOSE_AT', 'VUE_APP_VOTING_CLOSE_AT'),
-      now,
-    }),
-    isFeedbackOpen: isFeatureOpen({
-      enabled: readEnvValue('VITE_FEEDBACK_ENABLED', 'VUE_APP_FEEDBACK_ENABLED'),
-      openAt: readEnvValue('VITE_FEEDBACK_OPEN_AT', 'VUE_APP_FEEDBACK_OPEN_AT'),
-      closeAt: readEnvValue('VITE_FEEDBACK_CLOSE_AT', 'VUE_APP_FEEDBACK_CLOSE_AT'),
-      now,
-    }),
+    votingStatus: votingAvailability.status,
+    votingReason: votingAvailability.reason,
+    isVotingOpen: votingAvailability.status === 'open',
+    feedbackStatus: feedbackAvailability.status,
+    feedbackReason: feedbackAvailability.reason,
+    isFeedbackOpen: feedbackAvailability.status === 'open',
   };
 }
 
@@ -114,7 +146,11 @@ export function useFeedbackAvailability() {
   const availability = computed(() => getFeedbackAvailability(now.value));
 
   return {
+    votingStatus: computed(() => availability.value.votingStatus),
+    votingReason: computed(() => availability.value.votingReason),
     isVotingOpen: computed(() => availability.value.isVotingOpen),
+    feedbackStatus: computed(() => availability.value.feedbackStatus),
+    feedbackReason: computed(() => availability.value.feedbackReason),
     isFeedbackOpen: computed(() => availability.value.isFeedbackOpen),
   };
 }

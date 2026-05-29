@@ -115,18 +115,18 @@
         <div v-else class="program-preview__teaser-stack">
           <ProgramTextBlock
             variant="knockout"
-            kicker="Featured"
+            kicker="Verder kijken"
             :title="block.title"
             :description="block.description"
-          />
-
-          <div class="program-preview__featured-grid">
-            <ProgramPageFeaturedContent
-              v-for="(featuredItem, featuredIndex) in block.featuredContent"
-              :key="featuredItem.title || `${block.id}-${featuredIndex}`"
-              v-bind="featuredItem"
-            />
-          </div>
+          >
+            <div class="program-preview__featured-grid">
+              <ProgramPageFeaturedContent
+                v-for="(featuredItem, featuredIndex) in block.featuredContent"
+                :key="featuredItem.title || `${block.id}-${featuredIndex}`"
+                v-bind="featuredItem"
+              />
+            </div>
+          </ProgramTextBlock>
         </div>
       </section>
     </main>
@@ -311,14 +311,15 @@ function getTeaserColumns(value: TeaserCms | undefined): TeaserColumnItem[] {
 function extractFeaturedContentItems(value: TeaserCms | undefined): PreviewFeaturedContent[] {
   return getTeaserColumns(value)
     .filter((item) => item.__typename === 'FeaturedContent')
-    .map((item, index) => ({
-      label: item.label || 'Featured',
-      title: item.title || `Link ${index + 1}`,
+    .filter((item) => Boolean((item.title && item.title.trim()) || (item.ctaText && item.ctaText.trim() && item.ctaUrl && item.ctaUrl.trim())))
+    .map((item) => ({
+      label: item.label || 'Website',
+      title: item.title || '',
       description: extractRichText(getRichTextNode(item.lead?.json)),
-      ctaText: item.ctaText || 'Meer informatie',
+      ctaText: item.ctaText || '',
       ctaUrl: item.ctaUrl || '',
     }))
-    .filter((item) => item.title || item.ctaUrl);
+    .filter((item) => Boolean(item.title || (item.ctaText && item.ctaUrl)));
 }
 
 function createSetBlock(item: ProgramSetItem, occurrence: number): PreviewSetBlock {
@@ -364,10 +365,8 @@ function createTeaserBlock(item: ProgramTeaserItem, occurrence: number): Preview
   return {
     id: `${slugify(title)}-${occurrence}`,
     type: 'teaser',
-    title,
-    description:
-      featuredContent[0]?.description ||
-      'Snelle links naar de plekken waar het koornieuws verder leeft.',
+    title: title || 'Meer van Goed Gebekt',
+    description: 'Hier vind je meer over ons, projecten, aankomende optredens en socials.',
     featuredContent,
   };
 }

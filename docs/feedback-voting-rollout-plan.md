@@ -19,6 +19,41 @@ Daarom is het voorstel:
 4. inputvalidatie en basis rate limiting toevoegen;
 5. rollback eenvoudig maken via env toggles.
 
+## RAG status
+
+Statussnapshot per 29 mei 2026.
+
+### Overall
+
+- **Amber**
+
+### Green
+
+- Feature flags en datumvensters zitten in de frontend.
+- Writes lopen via Netlify Functions.
+- Inputvalidatie, honeypot en basis rate limiting zijn aanwezig.
+- Rating writes zijn idempotent gemaakt per `songId/{participantId}`.
+- UI toont nu echte foutmeldingen bij mislukte submits.
+
+### Amber
+
+- Closed-state UX wijkt nog deels af van het plan.
+- De publieke feedbackpagina leest nog direct uit Firebase en botst daarmee met gesloten
+  `feedback.read` rules.
+
+### Red
+
+- Productie-env voor go-live is nog niet bevestigd.
+- Firebase Realtime Database rules zijn nog niet als uitgevoerde productiestap bevestigd.
+- Smoke test na deploy is nog niet bevestigd.
+
+### Eerstvolgende acties op red
+
+1. productie-env zetten voor flags, origins en Firebase Admin;
+2. database rules deployen uit `web/firebase.database.rules.json`;
+3. smoke test checklist onderaan dit document volledig afwerken;
+4. pas daarna flags openen voor publiek verkeer.
+
 ## Huidige situatie
 
 ### Songrating

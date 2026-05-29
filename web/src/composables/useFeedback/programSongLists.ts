@@ -1,4 +1,5 @@
 import type { ProgramItem, ProgramSongEntry } from '@/composables/useContent/program.types';
+import { findRepertoireMatch } from '@/composables/useFeedback/resolveRatingSong.ts';
 
 export type FeedbackDisplaySong = {
   sys?: { id?: string };
@@ -10,19 +11,6 @@ export type FeedbackDisplaySong = {
 type RepertoireSong = FeedbackDisplaySong & {
   sys?: { id?: string };
 };
-
-function findRepertoireMatch(
-  song: ProgramSongEntry,
-  repertoire: RepertoireSong[],
-): RepertoireSong | undefined {
-  const titleKey = (song.title || '').toLowerCase();
-
-  if (!titleKey) {
-    return undefined;
-  }
-
-  return repertoire.find((entry) => (entry.title || '').toLowerCase() === titleKey);
-}
 
 export function isProgramSongPerformed(
   song: ProgramSongEntry,

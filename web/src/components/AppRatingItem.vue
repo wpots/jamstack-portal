@@ -114,16 +114,7 @@
 import { computed, defineComponent, nextTick, reactive, ref } from 'vue';
 import AppSongCard from '@/components/AppSongCard.vue';
 import { useFeedback } from '../composables/useFeedback';
-
-function normalizeId(value: string) {
-  return value
-    .toLowerCase()
-    .trim()
-    .normalize('NFD')
-    .replaceAll(/[\u0300-\u036f]/g, '')
-    .replaceAll(/[^a-z0-9]+/g, '-')
-    .replaceAll(/(^-|-$)/g, '');
-}
+import { normalizeRatingId } from '../composables/useFeedback/resolveRatingSong.ts';
 
 export default defineComponent({
   name: 'AppRatingItem',
@@ -151,6 +142,14 @@ export default defineComponent({
       default: 'default',
       validator: (value: string) => ['default', 'grid'].includes(value),
     },
+    ratingId: {
+      type: String,
+      default: '',
+    },
+    ratingIdAliases: {
+      type: Array as () => string[],
+      default: () => [],
+    },
   },
   setup(props) {
     const loading = ref(false);
@@ -170,12 +169,17 @@ export default defineComponent({
       return url ? `${url}?w=150` : '';
     });
     const songId = computed(() => {
-      return props.song?.sys?.id || `rating-${normalizeId(songTitle.value)}`;
+      if (props.ratingId) {
+        return props.ratingId;
+      }
+
+      return props.song?.sys?.id || `rating-${normalizeRatingId(songTitle.value)}`;
     });
-    const dialogId = computed(() => `rating-dialog-${normalizeId(songId.value)}`);
+    const songIdAliases = computed(() => props.ratingIdAliases || []);
+    const dialogId = computed(() => `rating-dialog-${normalizeRatingId(songId.value)}`);
     const dialogTitleId = computed(() => `${dialogId.value}-title`);
-    const currentRating = computed(() => resolveSongRating(songId.value));
-    const isRated = computed(() => isRatedSong(songId.value));
+    const currentRating = computed(() => resolveSongRating(songId.value, songIdAliases.value));
+    const isRated = computed(() => Boolean(isRatedSong(songId.value, songIdAliases.value)));
     const submitText = computed(() => (isRated.value ? 'aanpassen' : 'verstuur'));
     const currentRatingLabel = computed(() => {
       if (!currentRating.value?.avg || !currentRating.value?.count) {
@@ -233,7 +237,7 @@ export default defineComponent({
         submissionError.value = '';
 
         // If the user already rated this song, reflect that selection in the modal
-        const userRating = isRatedSong(songId.value);
+        const userRating = isRatedSong(songId.value, songIdAliases.value);
 
         // Wait for DOM refs to be available then apply selection classes
         await nextTick();
@@ -289,6 +293,7 @@ export default defineComponent({
             id: songId.value,
             rating: rating.selected,
             performedByUs: props.performedByUs,
+            aliasIds: songIdAliases.value,
           });
         }
 

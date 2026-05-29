@@ -9,6 +9,11 @@ type SongRating = {
   performedByUs?: boolean;
 };
 
+type SetUserRatingPayload = {
+  songRating: SongRating;
+  aliasIds?: string[];
+};
+
 export type FeedbackState = {
   message: string | null;
   userRatings: SongRating[];
@@ -38,7 +43,10 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     setUserId(state, id) {
       state.userId = id;
     },
-    setUserRating(state, songRating: SongRating) {
+    setUserRating(state, { songRating, aliasIds = [] }: SetUserRatingPayload) {
+      const aliasLookup = new Set(aliasIds.filter((id) => id !== songRating.id));
+      state.userRatings = state.userRatings.filter((song) => !aliasLookup.has(song.id));
+
       const currentIndex = state.userRatings.findIndex((song) => song.id === songRating.id);
 
       if (currentIndex >= 0) {
@@ -62,8 +70,8 @@ const feedbackModule: Module<FeedbackState, RootState> = {
     setUserId({ commit }, id) {
       commit('setUserId', id);
     },
-    setUserRating({ commit }, songRating: SongRating) {
-      commit('setUserRating', songRating);
+    setUserRating({ commit }, payload: SetUserRatingPayload) {
+      commit('setUserRating', payload);
     },
     setAllRatings({ commit }, ratings) {
       commit('setAllRatings', ratings);

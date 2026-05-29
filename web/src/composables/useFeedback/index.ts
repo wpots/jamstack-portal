@@ -3,6 +3,7 @@ import { useStore } from '../../store';
 import fireBase from './firebase.js';
 import { getDatabase, ref as dbRef, child, get } from 'firebase/database';
 import { getFeedbackAvailability, getVotingWindow, isVoteInVotingWindow } from './availability';
+import { mergeSongRatingSummaries } from './resolveRatingSong.ts';
 import { markFeedbackSubmitted } from './submission';
 
 export type FeedbackEntry = {
@@ -18,6 +19,7 @@ export type SongRating = {
   rating?: number;
   key?: string;
   performedByUs?: boolean;
+  aliasIds?: string[];
   average?: number | string | null;
   votes?: {
     count: number;
@@ -131,7 +133,6 @@ const ratingMapper = (result: SongRatingResultMap) => {
   const ratings: SongRating[] = [];
   for (const songId in result) {
     const performanceVotes = Object.values(result[songId])
-      .filter((vote) => vote.performedByUs !== false)
       .filter((vote) => isVoteInVotingWindow(vote.id, votingWindow, vote.updatedAt))
       .map((vote) => vote.rating);
     const averageVote = () => {
@@ -155,30 +156,16 @@ export function useFeedback() {
 
   const songRatings = ref<SongRating[] | null>(null);
   const getSongRatings = computed(() => store.state.feedback.allRatings);
-  const resolveSongRating = (id: string) => {
-    if (getSongRatings.value?.length) {
-      const votes = getSongRatings.value.find((song) => song.id === id)?.votes;
-
-      if (votes?.average) {
-        const avg = Math.round(votes.average * 10) / 10;
-        const modulus = avg % 1;
-        const decimals = modulus === 0 ? false : Math.round(modulus * 10) / 10;
-        const percentage = decimals ? `${decimals * 100}%` : false;
-
-        return {
-          count: votes.count,
-          avg,
-          trunc: Math.trunc(avg),
-          decimals,
-          percentage,
-        };
-      }
-    }
-
-    return null;
+  const resolveSongRating = (id: string, aliases: string[] = []) => {
+    const lookupIds = [...new Set([id, ...aliases])];
+    return mergeSongRatingSummaries(getSongRatings.value, lookupIds);
   };
 
-  const isRatedSong = (id: string) => store.getters['feedback/lookupSongRating'](id);
+  const isRatedSong = (id: string, aliases: string[] = []) => {
+    const lookupIds = new Set([id, ...aliases]);
+
+    return store.state.feedback.userRatings.find((song) => lookupIds.has(song.id));
+  };
 
   const setUserRating = async (songRating: SongRating) => {
     const { isVotingOpen } = getFeedbackAvailability();
@@ -187,7 +174,8 @@ export function useFeedback() {
       throw new Error('Voting is momenteel gesloten.');
     }
 
-    const currentRating = isRatedSong(songRating.id);
+    const aliasIds = songRating.aliasIds || [];
+    const currentRating = isRatedSong(songRating.id, aliasIds);
     const participantId = currentRating?.key || getParticipantId();
 
     try {
@@ -199,7 +187,10 @@ export function useFeedback() {
           performedByUs: songRating.performedByUs !== false,
         });
         songRating.key = songRating.key ?? participantId;
-        await store.dispatch('feedback/setUserRating', songRating);
+        await store.dispatch('feedback/setUserRating', {
+          songRating,
+          aliasIds,
+        });
       }
     } catch (error) {
       console.error('{SENDING SONG}', error);

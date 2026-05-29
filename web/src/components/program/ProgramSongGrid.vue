@@ -2,8 +2,10 @@
   <AppRatingItem
     v-if="singleSong"
     :class="['program-set__song', { 'program-set__song--single': isVotingOpen === false }]"
-    :interactive="isVotingOpen"
-    :performed-by-us="getPerformedByUs(singleSong)"
+    :interactive="isVotingOpen && repertoireReady"
+    :performed-by-us="getSongIdentity(singleSong).performedByUs"
+    :rating-id="getSongIdentity(singleSong).id"
+    :rating-id-aliases="getSongIdentity(singleSong).aliases"
     :show-summary="showVotingSummary"
     :song="getRatingSong(singleSong)"
   >
@@ -15,8 +17,10 @@
       v-for="(song, index) in songs"
       :key="song.linkedScore?.sys?.id || `${song.title}-${index}`"
       class="program-set__song"
-      :interactive="isVotingOpen"
-      :performed-by-us="getPerformedByUs(song)"
+      :interactive="isVotingOpen && repertoireReady"
+      :performed-by-us="getSongIdentity(song).performedByUs"
+      :rating-id="getSongIdentity(song).id"
+      :rating-id-aliases="getSongIdentity(song).aliases"
       :show-summary="showVotingSummary"
       :song="getRatingSong(song)"
     >
@@ -25,12 +29,12 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, PropType } from 'vue';
+import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
 import AppRatingItem from '@/components/AppRatingItem.vue';
 import ProgramSongCard from '@/components/program/ProgramSongCard.vue';
 import { useContent } from '@/composables/useContent';
 import { useFeedback } from '@/composables/useFeedback';
-import { isProgramSongPerformed } from '@/composables/useFeedback/programSongLists';
+import { resolveRatingSongIdentity } from '@/composables/useFeedback/resolveRatingSong.ts';
 import { useFeedbackAvailability } from '@/composables/useFeedback/availability';
 import type { LinkedScore } from '@/composables/useContent/program.types';
 
@@ -51,18 +55,25 @@ export default defineComponent({
     const { fetchSongRatings, getSongRatings } = useFeedback();
     const { getSongs, fetchSongs } = useContent();
     const { isVotingOpen, votingStatus } = useFeedbackAvailability();
+    const repertoireReady = ref(false);
     const singleSong = computed<ProgramSongGridItem | undefined>(() =>
       props.songs.length === 1 ? props.songs[0] : undefined,
     );
     const showVotingSummary = computed(() => votingStatus.value !== 'disabled');
 
-    const getPerformedByUs = (song: ProgramSongGridItem) =>
-      isProgramSongPerformed(song, getSongs.value || []);
+    const getSongIdentity = (song: ProgramSongGridItem) =>
+      resolveRatingSongIdentity(
+        {
+          title: song.title,
+          artist: song.artist,
+          linkedScore: song.linkedScore,
+        },
+        getSongs.value || [],
+      );
 
     const getRatingSong = (song: ProgramSongGridItem): LinkedScore => {
-      const repertoireMatch = (getSongs.value || []).find(
-        (entry) => (entry.title || '').toLowerCase() === (song.title || '').toLowerCase(),
-      );
+      const identity = getSongIdentity(song);
+      const repertoireMatch = identity.repertoireMatch;
 
       return {
         albumart:
@@ -70,20 +81,28 @@ export default defineComponent({
           repertoireMatch?.albumart ||
           (song.imageUrl ? { url: song.imageUrl } : undefined),
         artist: song.linkedScore?.artist || repertoireMatch?.artist || song.artist,
-        sys: song.linkedScore?.sys || repertoireMatch?.sys,
+        sys: identity.id.startsWith('rating-') ? undefined : { id: identity.id },
         title: song.linkedScore?.title || repertoireMatch?.title || song.title,
       };
     };
 
     onMounted(async () => {
       await fetchSongs();
+      repertoireReady.value = true;
 
       if (votingStatus.value !== 'disabled' && !getSongRatings.value) {
         await fetchSongRatings();
       }
     });
 
-    return { getPerformedByUs, getRatingSong, isVotingOpen, showVotingSummary, singleSong };
+    return {
+      getRatingSong,
+      getSongIdentity,
+      isVotingOpen,
+      repertoireReady,
+      showVotingSummary,
+      singleSong,
+    };
   },
 });
 </script>

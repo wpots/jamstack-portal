@@ -63,10 +63,7 @@
             />
           </div>
 
-          <p class="program-booklet-share__link-label">Directe link</p>
-          <a class="program-booklet-share__link" :href="shareUrl">
-            {{ shareUrl }}
-          </a>
+          <a class="program-booklet-share__link" :href="shareUrl"> directe link naar programma</a>
         </article>
       </dialog>
     </teleport>
@@ -295,12 +292,15 @@ export default defineComponent({
 
 .program-booklet-share__close {
   display: inline-flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
+  box-sizing: border-box;
   width: 2.5rem;
   height: 2.5rem;
+  padding: 0;
   border: 0;
-  border-radius: 999px;
+  border-radius: 50%;
   background: rgba($black, 0.08);
   color: $black;
   font-size: 1.5rem;
@@ -316,6 +316,7 @@ export default defineComponent({
 .program-booklet-share__description,
 .program-booklet-share__link-label {
   margin: 1rem 0 0;
+  font-family: var(--program-font-body);
 }
 
 .program-booklet-share__qr-shell {

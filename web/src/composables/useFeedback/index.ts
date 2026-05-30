@@ -2,8 +2,12 @@ import { computed, ref } from 'vue';
 import { useStore } from '../../store';
 import fireBase from './firebase.js';
 import { getDatabase, ref as dbRef, child, get } from 'firebase/database';
-import { getFeedbackAvailability, getVotingWindow, isVoteInVotingWindow } from './availability';
-import { mergeSongRatingSummaries } from './resolveRatingSong.ts';
+import { getFeedbackAvailability, getVotingWindow } from './availability';
+import {
+  consolidateStoredRatings,
+  mergeSongRatingSummaries,
+  type RepertoireEntry,
+} from './resolveRatingSong.ts';
 import { markFeedbackSubmitted } from './submission';
 
 export type FeedbackEntry = {
@@ -128,37 +132,21 @@ async function getFeedbackRequest<T>(path: string) {
   return body;
 }
 
-const ratingMapper = (result: SongRatingResultMap) => {
-  const votingWindow = getVotingWindow();
-  const ratings: SongRating[] = [];
-  for (const songId in result) {
-    const performanceVotes = Object.values(result[songId])
-      .filter((vote) => isVoteInVotingWindow(vote.id, votingWindow, vote.updatedAt))
-      .map((vote) => vote.rating);
-    const averageVote = () => {
-      const sum = performanceVotes.reduce((total, value) => total + value, 0);
-      return sum / performanceVotes.length;
-    };
-    const rating = {
-      id: songId,
-      votes: {
-        count: performanceVotes.length,
-        average: performanceVotes.length ? averageVote() : undefined,
-      },
-    };
-    ratings.push(rating);
-  }
-  return ratings;
-};
+const ratingMapper = (
+  result: SongRatingResultMap,
+  repertoire: RepertoireEntry[] = [],
+) => consolidateStoredRatings(result, repertoire, getVotingWindow());
+
+let ratingsFetchPromise: Promise<void> | null = null;
+let lastRepertoire: RepertoireEntry[] = [];
 
 export function useFeedback() {
   const store = useStore();
 
   const songRatings = ref<SongRating[] | null>(null);
   const getSongRatings = computed(() => store.state.feedback.allRatings);
-  const resolveSongRating = (id: string, aliases: string[] = []) => {
-    const lookupIds = [...new Set([id, ...aliases])];
-    return mergeSongRatingSummaries(getSongRatings.value, lookupIds);
+  const resolveSongRating = (id: string) => {
+    return mergeSongRatingSummaries(getSongRatings.value, [id]);
   };
 
   const isRatedSong = (id: string, aliases: string[] = []) => {
@@ -200,22 +188,38 @@ export function useFeedback() {
     await fetchSongRatings();
   };
 
-  const fetchSongRatings = async () => {
-    try {
-      const result = await get(child(dbRef(db), `songRatings`)).then((snapshot) => {
-        if (snapshot.exists()) {
-          return ratingMapper(snapshot.val() as SongRatingResultMap);
-        }
-
-        return [];
-      });
-
-      songRatings.value = result;
-      await store.dispatch('feedback/setAllRatings', result);
-    } catch (error) {
-      console.error('SongRatings', error);
-      throw error;
+  const fetchSongRatings = async (repertoire: RepertoireEntry[] = []) => {
+    if (repertoire.length) {
+      lastRepertoire = repertoire;
     }
+
+    const activeRepertoire = repertoire.length ? repertoire : lastRepertoire;
+
+    if (ratingsFetchPromise) {
+      return ratingsFetchPromise;
+    }
+
+    ratingsFetchPromise = (async () => {
+      try {
+        const result = await get(child(dbRef(db), `songRatings`)).then((snapshot) => {
+          if (snapshot.exists()) {
+            return ratingMapper(snapshot.val() as SongRatingResultMap, activeRepertoire);
+          }
+
+          return [];
+        });
+
+        songRatings.value = result;
+        await store.dispatch('feedback/setAllRatings', result);
+      } catch (error) {
+        console.error('SongRatings', error);
+        throw error;
+      } finally {
+        ratingsFetchPromise = null;
+      }
+    })();
+
+    return ratingsFetchPromise;
   };
 
   const fetchFeedback = async () => {

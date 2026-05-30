@@ -109,7 +109,7 @@ export default defineComponent({
 
     onMounted(async () => {
       await fetchSongs();
-      await fetchSongRatings();
+      await fetchSongRatings(getSongs.value || []);
       await fetchFeedback();
     });
 

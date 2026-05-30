@@ -1,3 +1,5 @@
+import { isVoteInVotingWindow, type VotingWindow } from './availability.ts';
+
 export type RatingSongInput = {
   title?: string;
   artist?: string;
@@ -127,6 +129,96 @@ export function resolveRatingSongIdentity(
     title,
     repertoireMatch,
   };
+}
+
+export function resolveCanonicalIdForStoredKey(
+  storedSongId: string,
+  repertoire: RepertoireEntry[] = [],
+): string {
+  const repertoireById = repertoire.find((entry) => entry.sys?.id === storedSongId);
+
+  if (repertoireById?.sys?.id) {
+    return repertoireById.sys.id;
+  }
+
+  if (!storedSongId.startsWith('rating-')) {
+    return storedSongId;
+  }
+
+  const normalizedSuffix = storedSongId.slice('rating-'.length);
+  const titleMatch = repertoire.find((entry) => {
+    const title = entry.title || '';
+    return normalizeRatingId(title) === normalizedSuffix;
+  });
+
+  if (titleMatch?.sys?.id) {
+    return titleMatch.sys.id;
+  }
+
+  const pseudoTitle = normalizedSuffix.replaceAll('-', ' ');
+  const fuzzyMatch = repertoire.find((entry) => titlesMatch(pseudoTitle, entry.title || ''));
+
+  if (fuzzyMatch?.sys?.id) {
+    return fuzzyMatch.sys.id;
+  }
+
+  return storedSongId;
+}
+
+type StoredVote = {
+  rating: number;
+  performedByUs?: boolean;
+  id?: number;
+  updatedAt?: string;
+};
+
+type StoredRatingMap = Record<string, Record<string, StoredVote>>;
+
+function isVoteNewer(next: StoredVote, current: StoredVote): boolean {
+  const nextTimestamp = Date.parse(next.updatedAt || '') || next.id || 0;
+  const currentTimestamp = Date.parse(current.updatedAt || '') || current.id || 0;
+
+  return nextTimestamp >= currentTimestamp;
+}
+
+export function consolidateStoredRatings(
+  result: StoredRatingMap,
+  repertoire: RepertoireEntry[] = [],
+  votingWindow: VotingWindow,
+): SongRatingSummary[] {
+  const canonicalVotes = new Map<string, Map<string, StoredVote>>();
+
+  for (const storedSongId of Object.keys(result)) {
+    const canonicalId = resolveCanonicalIdForStoredKey(storedSongId, repertoire);
+    const participantBucket = canonicalVotes.get(canonicalId) || new Map<string, StoredVote>();
+
+    for (const [participantId, vote] of Object.entries(result[storedSongId])) {
+      if (!isVoteInVotingWindow(vote.id, votingWindow, vote.updatedAt)) {
+        continue;
+      }
+
+      const existing = participantBucket.get(participantId);
+
+      if (!existing || isVoteNewer(vote, existing)) {
+        participantBucket.set(participantId, vote);
+      }
+    }
+
+    canonicalVotes.set(canonicalId, participantBucket);
+  }
+
+  return [...canonicalVotes.entries()].map(([id, participantBucket]) => {
+    const ratings = [...participantBucket.values()].map((vote) => vote.rating);
+    const count = ratings.length;
+
+    return {
+      id,
+      votes: {
+        count,
+        average: count ? ratings.reduce((sum, value) => sum + value, 0) / count : undefined,
+      },
+    };
+  });
 }
 
 export function mergeSongRatingSummaries(

@@ -52,7 +52,7 @@ export default defineComponent({
     songs: { type: Array as PropType<ProgramSongGridItem[]>, default: () => [] },
   },
   setup(props) {
-    const { fetchSongRatings, getSongRatings } = useFeedback();
+    const { fetchSongRatings } = useFeedback();
     const { getSongs, fetchSongs } = useContent();
     const { isVotingOpen, votingStatus } = useFeedbackAvailability();
     const repertoireReady = ref(false);
@@ -90,8 +90,8 @@ export default defineComponent({
       await fetchSongs();
       repertoireReady.value = true;
 
-      if (votingStatus.value !== 'disabled' && !getSongRatings.value) {
-        await fetchSongRatings();
+      if (showVotingSummary.value) {
+        await fetchSongRatings(getSongs.value || []);
       }
     });
 

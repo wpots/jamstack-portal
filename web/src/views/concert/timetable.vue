@@ -15,11 +15,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, onMounted } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import TimeTableBlock from '../../components/Partials/TimeTableBlock.vue';
 import { useContent } from '../../composables/useContent';
-import { useFeedback } from '../../composables/useFeedback';
 import ProgramBookletShareButton from '@/components/program/ProgramBookletShareButton.vue';
 import ProgramFooter from '@/components/program/ProgramFooter.vue';
 import ProgramHero from '@/components/program/ProgramHero.vue';
@@ -79,10 +78,9 @@ export default defineComponent({
     ProgramThemeProvider,
   },
   name: 'TimeTablePage',
-  setup() {
+    setup() {
     const route = useRoute();
     const { getTimeTable } = useContent('timetable', { route });
-    const { fetchSongRatings, getSongRatings } = useFeedback();
     const slug = computed(() => `${route.params.id || route.meta.previewConcertId || ''}`);
     const isDoubleImpactTheme = computed(() => slug.value === 'double-impact');
     const metaItems = computed<ProgramMetaItem[]>(() => {
@@ -131,12 +129,7 @@ export default defineComponent({
       return sections;
     });
 
-    onMounted(async () => {
-      if (!getSongRatings.value) await fetchSongRatings();
-    });
-
     return {
-      getSongRatings,
       getTimeTable,
       isDoubleImpactTheme,
       metaItems,

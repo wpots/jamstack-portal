@@ -178,7 +178,7 @@ export default defineComponent({
     const songIdAliases = computed(() => props.ratingIdAliases || []);
     const dialogId = computed(() => `rating-dialog-${normalizeRatingId(songId.value)}`);
     const dialogTitleId = computed(() => `${dialogId.value}-title`);
-    const currentRating = computed(() => resolveSongRating(songId.value, songIdAliases.value));
+    const currentRating = computed(() => resolveSongRating(songId.value));
     const isRated = computed(() => Boolean(isRatedSong(songId.value, songIdAliases.value)));
     const submitText = computed(() => (isRated.value ? 'aanpassen' : 'verstuur'));
     const currentRatingLabel = computed(() => {
